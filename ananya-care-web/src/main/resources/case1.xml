@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<case>
+    <case_id>3F2504E04F8911D39A0C0305E82C3301</case_id>
+    <date_modified>11/10/09 21:23:43</date_modified>
+    <create>
+        <case_type_id>houshold_rollout_ONICAF</case_type_id>
+        <case_name>Smith</case_name>
+    </create>
+    <update>
+        <household_id>24/F23/3</household_id>
+        <primary_contact_name>Tom Smith</primary_contact_name>
+        <visit_number>1</visit_number>
+    </update>
+</case>
