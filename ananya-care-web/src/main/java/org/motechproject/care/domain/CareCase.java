@@ -13,6 +13,10 @@ public class CareCase {
     private String action;
     private String caseTypeId;
     private String caseName;
+    private String household_id;
+    private String primary_contact_name;
+    private String visit_number;
+
 
     public String getCaseId() {
         return caseId;
@@ -46,9 +50,6 @@ public class CareCase {
         this.caseName = caseName;
     }
 
-    private String household_id;
-    private String primary_contact_name;
-    private String visit_number;
 
     public String getHousehold_id() {
         return household_id;

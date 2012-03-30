@@ -32,11 +32,11 @@ public class DomainMapperTest extends TestCase{
 
     }
 
-    public void testShouldMapValuesFromDomainObjectCorrectly(){
+   /* public void testShouldMapValuesFromDomainObjectCorrectly(){
         CareCase careCase = createCareCase();
         DomainMapper<CareCase> mapper = new DomainMapper<CareCase>(CareCase.class);
         Case ccCase = mapper.mapFromDomainObject(careCase);
-    }
+    }*/
 
 
 
