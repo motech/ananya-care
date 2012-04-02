@@ -8,46 +8,46 @@ package org.motechproject.care.domain;
  * To change this template use File | Settings | File Templates.
  */
 public class CareCase {
-    private String caseId;
-    private String dateModified;
+    private String case_id;
+    private String date_modified;
     private String action;
-    private String caseTypeId;
-    private String caseName;
+    private String case_type_id;
+    private String case_name;
     private String household_id;
     private String primary_contact_name;
     private String visit_number;
 
 
-    public String getCaseId() {
-        return caseId;
+    public String getCase_id() {
+        return case_id;
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
+    public void setCase_id(String case_id) {
+        this.case_id = case_id;
     }
 
-    public String getDateModified() {
-        return dateModified;
+    public String getDate_modified() {
+        return date_modified;
     }
 
-    public void setDateModified(String dateModified) {
-        this.dateModified = dateModified;
+    public void setDate_modified(String date_modified) {
+        this.date_modified = date_modified;
     }
 
-    public String getCaseTypeId() {
-        return caseTypeId;
+    public String getCase_type_id() {
+        return case_type_id;
     }
 
-    public void setCaseTypeId(String caseTypeId) {
-        this.caseTypeId = caseTypeId;
+    public void setCase_type_id(String case_type_id) {
+        this.case_type_id = case_type_id;
     }
 
-    public String getCaseName() {
-        return caseName;
+    public String getCase_name() {
+        return case_name;
     }
 
-    public void setCaseName(String caseName) {
-        this.caseName = caseName;
+    public void setCase_name(String case_name) {
+        this.case_name = case_name;
     }
 
 
