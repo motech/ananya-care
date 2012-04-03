@@ -1,20 +1,26 @@
 package org.motechproject.care.domain;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 3/25/12
- * Time: 7:04 AM
- * To change this template use File | Settings | File Templates.
- */
-public class CareCase {
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.ektorp.support.TypeDiscriminator;
+import org.motechproject.model.MotechBaseDataObject;
+
+@TypeDiscriminator("doc.type == 'CallLog'")
+public class CareCase extends MotechBaseDataObject {
+    @JsonProperty
     private String case_id;
+    @JsonProperty
     private String date_modified;
+    @JsonProperty
     private String action;
+    @JsonProperty
     private String case_type_id;
+    @JsonProperty
     private String case_name;
+    @JsonProperty
     private String household_id;
+    @JsonProperty
     private String primary_contact_name;
+    @JsonProperty
     private String visit_number;
 
 
