@@ -168,7 +168,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>ananya-care-web</finalName>
+        <finalName>ananya-care-web-1.0</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
