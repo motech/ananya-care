@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<case xmlns="http://commcarehq.org/case/transaction/v2" case_id="45134cf7-90f8-4284-8ca1-16392fc0ce57" date_modified="2012-04-03" user_id="d823ea3d392a06f8b991e9e4933348bd">
+  <create>
+    <case_type>cc_bihar_newborn</case_type>
+    <case_name>RAM</case_name>
+    <owner_id>d823ea3d392a06f8b991e9e49394ce45</owner_id>
+  </create>
+  <update>
+    <gender>male</gender>
+  </update>
+  <index>
+    <mother_id case_type="cc_bihar_pregnancy">8b5bc990-921c-4bc1-95d6-b5430c264db2</mother_id>
+  </index>
+</case>
