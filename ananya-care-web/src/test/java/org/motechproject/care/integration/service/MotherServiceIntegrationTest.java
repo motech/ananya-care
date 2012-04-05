@@ -1,4 +1,4 @@
-package org.motechproject.care.service;
+package org.motechproject.care.integration.service;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.repository.SpringIntegrationTest;
+import org.motechproject.care.service.MotherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;

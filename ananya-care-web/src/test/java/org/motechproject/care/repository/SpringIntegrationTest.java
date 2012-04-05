@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
@@ -18,8 +19,12 @@ public abstract class SpringIntegrationTest {
 
     @Qualifier("ananyaCareDbConnector")
     @Autowired
-
     protected CouchDbConnector ananyaCareDbConnector;
+
+
+    @Qualifier("ananyaCareProperties")
+    @Autowired
+    protected Properties ananyaCareProperties;
 
     protected ArrayList<BulkDeleteDocument> toDelete;
 
@@ -35,5 +40,13 @@ public abstract class SpringIntegrationTest {
 
     protected void markForDeletion(Object document) {
         toDelete.add(BulkDeleteDocument.of(document));
+    }
+
+    protected String getAppServerPort() {
+        return ananyaCareProperties.getProperty("app.server.port");
+    }
+
+    protected String getAppServerHostUrl() {
+        return "http://localhost:" + getAppServerPort();
     }
 }
