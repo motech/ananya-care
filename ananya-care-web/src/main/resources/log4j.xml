@@ -2,15 +2,25 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+<appender name="production" class="org.apache.log4j.RollingFileAppender">
+    <param value="logs/care.log" name="File"/>
+    <param name="Append" value="true"/>
+    <param name="MaxFileSize" value="4096KB"/>
+    <param name="maxBackupIndex" value="5"/>
+    <param name="immediateFlush" value="true"/>
+    <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value="[%d{ISO8601}] [%c] [%p] [ThreadId:%t] - %m%n"/>
+    </layout>
+</appender>
 
-  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] %m%n"/>
     </layout>
   </appender>
 
   <logger name="org.motechproject">
-    <level value="CONSOLE"/>
+    <level value="INFO"/>
   </logger>
 
   <logger name="org.quartz">

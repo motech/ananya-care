@@ -6,9 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.io.IOException;
-import java.io.Writer;
-
 @Controller
 @RequestMapping("/case/**")
 public class CareCaseService extends CaseService<CareCase> {
@@ -18,21 +15,16 @@ public class CareCaseService extends CaseService<CareCase> {
     }
    
     @Override
-    public void closeCase(CareCase ccCase,Writer writer) {
+    public void closeCase(CareCase ccCase) {
         String household_id = ccCase.getHousehold_id();
     }
 
     @Override
-    public void updateCase(CareCase ccCase,Writer writer) {
+    public void updateCase(CareCase ccCase) {
     }
 
     @Override
-    public void createCase(CareCase ccCase,Writer writer) {
-        try {
-            writer.write("success");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void createCase(CareCase ccCase) {
 
         System.out.println("Case received: " +ccCase.getCase_name());
         System.out.println("primary contact name: " +ccCase.getPrimary_contact_name());
