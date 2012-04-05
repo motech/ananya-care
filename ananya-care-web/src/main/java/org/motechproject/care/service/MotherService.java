@@ -16,6 +16,12 @@ public class MotherService{
     }
 
     public void process(Mother mother) {
-        //To change body of created methods use File | Settings | File Templates.
+        Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
+        if(motherFromDb ==null){
+           allMothers.add(mother);
+            return;
+        }
+        motherFromDb.setValuesFrom(mother);
+        allMothers.update(motherFromDb);
     }
 }

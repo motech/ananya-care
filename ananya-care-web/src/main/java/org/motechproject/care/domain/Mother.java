@@ -3,7 +3,9 @@ package org.motechproject.care.domain;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
+import org.motechproject.care.service.NullAwareBeanUtilsBean;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type == 'Mother'")
 public class Mother extends MotechBaseDataObject {
@@ -47,7 +49,7 @@ public class Mother extends MotechBaseDataObject {
     }
 
     public DateTime getDateModified() {
-        return dateModified;
+        return DateUtil.setTimeZone(dateModified);
     }
 
     public void setDateModified(DateTime dateModified) {
@@ -79,7 +81,7 @@ public class Mother extends MotechBaseDataObject {
     }
 
     public DateTime getEdd() {
-        return edd;
+        return DateUtil.setTimeZone(edd);
     }
 
     public void setEdd(DateTime edd) {
@@ -87,10 +89,20 @@ public class Mother extends MotechBaseDataObject {
     }
 
     public DateTime getAdd() {
-        return add;
+        return DateUtil.setTimeZone(add);
     }
 
     public void setAdd(DateTime add) {
         this.add = add;
+    }
+
+    public void setValuesFrom(Mother mother) {
+        try{
+            NullAwareBeanUtilsBean nullAwareBeanUtilsBean = new NullAwareBeanUtilsBean();
+            nullAwareBeanUtilsBean.copyProperties(this, mother);
+        }
+        catch (Exception e){
+            // do something
+        }
     }
 }
