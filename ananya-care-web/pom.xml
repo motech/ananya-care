@@ -62,7 +62,7 @@
     </dependencies>
 
     <build>
-        <finalName>ananya-care-web-1.0</finalName>
+        <finalName>ananya-care-web-0.1-SNAPSHOT</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
