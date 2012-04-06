@@ -38,7 +38,7 @@ public class CareCaseServiceTest  {
 
         careCaseService.ProcessCase(xml, null);
         ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
-        verify(motherService).process(captor.capture());
+        verify(motherService).createUpdateCase(captor.capture());
 
         Mother mother = captor.getValue();
         Assert.assertEquals("8055b3ec-bec6-46cc-9e72-435ebc4eaec1",mother.getCaseId());
@@ -48,6 +48,15 @@ public class CareCaseServiceTest  {
         Assert.assertNull(mother.getAdd());
         Assert.assertEquals(DateTime.parse("2012-10-20"),mother.getEdd());
         Assert.assertEquals(DateTime.parse("2012-04-03"),mother.getDateModified());
+    }
 
+    @Test
+    public void shouldSetMotherAsNotActiveIfCaseIsClosedAndCaseIdIsAMother() throws IOException {
+        String path = getClass().getResource("/sampleMotherCaseForClose.xml").getPath();
+        File file = new File(path);
+        String xml = FileUtils.readFileToString(file);
+
+        careCaseService.ProcessCase(xml, null);
+        verify(motherService).closeCase("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
     }
 }

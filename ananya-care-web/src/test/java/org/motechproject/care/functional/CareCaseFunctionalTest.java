@@ -37,6 +37,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
         Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
         Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
+        Assert.assertTrue(motherFromDb.isActive());
     }
 
     @Test
@@ -60,5 +61,24 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
         Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
         Assert.assertEquals(DateTime.parse("2012-01-02"),motherFromDb.getTt2Date());
+        Assert.assertFalse(motherFromDb.isActive());
+    }
+
+    @Test
+    public void shouldCloseMother() throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+
+        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
+        String body = FileUtils.readFileToString(file);
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+        Mother motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
+        Assert.assertTrue(motherFromDb.isActive());
+
+        file = new File(getClass().getResource("/sampleMotherCaseForClose.xml").getPath());
+        body = FileUtils.readFileToString(file);
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+
+        motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
+        Assert.assertFalse(motherFromDb.isActive());
     }
 }

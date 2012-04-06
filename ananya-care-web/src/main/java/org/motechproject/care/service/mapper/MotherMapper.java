@@ -9,7 +9,7 @@ public class MotherMapper {
 
     public static Mother map(CareCase careCase){
 
-        boolean last_preg_tt = careCase.getLast_preg_tt().equalsIgnoreCase("yes") ? true : false;
+        boolean last_preg_tt = careCase.getLast_preg_tt()!=null && careCase.getLast_preg_tt().equalsIgnoreCase("yes") ? true : false;
         boolean isMotherActive = careCase.getMother_alive()!=null && careCase.getMother_alive().equalsIgnoreCase("no") ? false : true;
         return new Mother(
                 careCase.getCase_id(),  get_date_obj(careCase.getDate_modified()), careCase.getUser_id(), careCase.getCase_name(),

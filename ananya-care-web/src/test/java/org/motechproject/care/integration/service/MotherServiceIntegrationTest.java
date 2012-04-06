@@ -29,7 +29,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         String caseId = "caseId";
         assertNull(allMothers.findByCaseId(caseId));
         Mother mother = new Mother(caseId);
-        motherService.process(mother);
+        motherService.createUpdateCase(mother);
         markForDeletion(mother);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
         assertEquals(mother.getId(),motherFromDb.getId());
@@ -46,7 +46,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         Mother motherToBeUpdated = new Mother(caseId);
         motherToBeUpdated.setFlwId("flwid");
 
-        motherService.process(motherToBeUpdated);
+        motherService.createUpdateCase(motherToBeUpdated);
 
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
@@ -55,6 +55,18 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         assertEquals(mother.getId(), motherFromDb.getId());
         assertEquals(mother.getCaseId(), motherFromDb.getCaseId());
         assertEquals("flwid", motherFromDb.getFlwId());
+    }
 
+    @Test
+    public void shouldCloseMotherCase(){
+        String caseId = "caseId";
+        Mother mother = new Mother(caseId);
+        allMothers.add(mother);
+        motherService.closeCase(caseId);
+
+        Mother motherFromDb = allMothers.findByCaseId(caseId);
+
+        markForDeletion(motherFromDb);
+        assertEquals(false, motherFromDb.isActive());
     }
 }

@@ -15,7 +15,7 @@ public class MotherService{
         this.allMothers = allMothers;
     }
 
-    public void process(Mother mother) {
+    public void createUpdateCase(Mother mother) {
         Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
         if(motherFromDb ==null){
            allMothers.add(mother);
@@ -23,5 +23,14 @@ public class MotherService{
         }
         motherFromDb.setValuesFrom(mother);
         allMothers.update(motherFromDb);
+    }
+
+    public boolean closeCase(String case_id) {
+        Mother mother = allMothers.findByCaseId(case_id);
+        if(mother==null)
+            return false;
+        mother.setActive(false);
+        allMothers.update(mother);
+        return true;
     }
 }

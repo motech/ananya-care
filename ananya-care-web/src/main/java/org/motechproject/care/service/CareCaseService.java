@@ -23,7 +23,11 @@ public class CareCaseService extends CaseService<CareCase>{
 
     @Override
     public void closeCase(CareCase careCase) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        boolean wasClosed = motherService.closeCase(careCase.getCase_id());
+         // if wasClosed is false
+        // then
+        //     Handle Child case close
+        // end
     }
 
     @Override
@@ -35,7 +39,7 @@ public class CareCaseService extends CaseService<CareCase>{
     public void createCase(CareCase careCase) {
         if(careCase.getCase_type().equals(CaseType.Mother.getType())){
             Mother motherObj = MotherMapper.map(careCase);
-            motherService.process(motherObj);
+            motherService.createUpdateCase(motherObj);
         }
     }
 }
