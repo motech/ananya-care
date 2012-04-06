@@ -1,4 +1,4 @@
-package org.motechproject.care.schedule;
+package org.motechproject.care.schedule.service.integration;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -64,51 +64,6 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         visualization.outputTo("mother-tt.html", 3);
 
     }
-/*
-    @Test
-    public void shouldProvideAlertsFordABC2After4WeeksOfTT1Taken() throws Exception {
-        schedule.enrollFor("TT Vaccination1", DateUtil.today(), new Time(14, 0));
-        schedule.assertAlerts("TT Y1", due, DateUtil.today().plusWeeks(2).toDate());
-        visualization.outputTo("mother-tt.html", 3);
-
-    }
-
-    @Test
-    public void shouldProvideAlertsForXXAfter4WeeksOfStart() throws Exception {
-        schedule.enrollFor("TT Vaccination", newDate(2012, 1, 1), new Time(14, 0));
-        schedule.assertAlerts("TT 2", earliest, date(15 , JANUARY));
-        visualization.outputTo("mother-tt.html", 3);
-
-    }
-
-    @Test
-    public void shouldProvideAlertsForANCAtTheRightTimes() throws Exception {
-        schedule.enrollFor("Ante Natal Care - Normal", newDate(2012, 1, 1), new Time(14, 0));
-
-        schedule.assertNoAlerts("ANC 1", earliest);
-        schedule.assertAlerts("ANC 1", due, date(11, MARCH), date(18, MARCH), date(25, MARCH), date(1, APRIL));
-        schedule.assertAlerts("ANC 1", late, date(8, APRIL), date(11, APRIL), date(15, APRIL), date(18, APRIL), date(22, APRIL));
-        schedule.assertAlerts("ANC 1", max, date(24, APRIL), date(25, APRIL), date(26, APRIL));
-
-        schedule.assertNoAlerts("ANC 2", earliest);
-        schedule.assertAlerts("ANC 2", due, date(3, JUNE), date(10, JUNE), date(17, JUNE), date(24, JUNE));
-        schedule.assertAlerts("ANC 2", late, date(1, JULY), date(4, JULY), date(8, JULY), date(11, JULY), date(15, JULY));
-        schedule.assertAlerts("ANC 2", max, date(17, JULY), date(18, JULY), date(19, JULY));
-
-        schedule.assertNoAlerts("ANC 3", earliest);
-        schedule.assertAlerts("ANC 3", due, date(29, JULY), date(5, AUGUST), date(12, AUGUST), date(19, AUGUST));
-        schedule.assertAlerts("ANC 3", late, date(26, AUGUST), date(29, AUGUST));
-        schedule.assertAlerts("ANC 3", max, date(30, AUGUST), date(31, AUGUST), date(1, SEPTEMBER));
-
-        schedule.assertNoAlerts("ANC 4", earliest);
-        schedule.assertAlerts("ANC 4", due, date(2, SEPTEMBER), date(9, SEPTEMBER), date(16, SEPTEMBER));
-        schedule.assertAlerts("ANC 4", late, date(23, SEPTEMBER), date(26, SEPTEMBER), date(30, SEPTEMBER), date(3, OCTOBER), date(7, OCTOBER));
-        schedule.assertAlerts("ANC 4", max, date(9, OCTOBER), date(10, OCTOBER), date(11, OCTOBER));
-
-        visualization.outputTo("mother-tt.html", 3);
-    }
-
-*/
 
     @Before
     public void setUp() throws Exception {
