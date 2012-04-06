@@ -8,6 +8,7 @@ import org.motechproject.care.request.CareCase;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 public class MotherMapperTest {
@@ -58,5 +59,32 @@ public class MotherMapperTest {
         Assert.assertNull(mother.getGroupId());
         Assert.assertNull(mother.getEdd());
         Assert.assertNull(mother.getAdd());
+    }
+
+    @Test
+    public void shouldInferMotherAliveCorrectly(){
+        Mother mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("").build());
+        assertTrue(mother.isActive());
+
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive(null).build());
+        assertTrue(mother.isActive());
+
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("yes").build());
+        assertTrue(mother.isActive());
+
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("no").build());
+        assertFalse(mother.isActive());
+    }
+
+    @Test
+    public void shouldInferLastPregnancyCorrectly(){
+        Mother mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("").build());
+        assertFalse(mother.isLastPregTt());
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT(null).build());
+        assertFalse(mother.isLastPregTt());
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("no").build());
+        assertFalse(mother.isLastPregTt());
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("yes").build());
+        assertTrue(mother.isLastPregTt());
     }
 }

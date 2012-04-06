@@ -22,6 +22,7 @@ public class MotherCareCaseBuilder {
     private String anc_3_date = "2012-01-05";
     private String anc_4_date = "2012-01-06";
     private String tt_booster_date = "2012-01-07";
+    private String mother_alive = "yes";
 
 
     public CareCase build(){
@@ -42,6 +43,7 @@ public class MotherCareCaseBuilder {
         careCase.setTt_2_date(tt_2_date);
         careCase.setTt_booster_date(tt_booster_date);
         careCase.setLast_preg_tt(last_preg_tt);
+        careCase.setMother_alive(mother_alive);
         return careCase;
     }
 
@@ -108,6 +110,10 @@ public class MotherCareCaseBuilder {
     }
     public MotherCareCaseBuilder withTTBooster(String ttBooster_date){
         this.tt_booster_date=ttBooster_date;
+        return this;
+    }
+    public MotherCareCaseBuilder withMotherAlive(String mother_alive){
+        this.mother_alive = mother_alive;
         return this;
     }
 }

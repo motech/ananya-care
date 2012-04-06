@@ -39,6 +39,8 @@ public class Mother extends MotechBaseDataObject {
     private DateTime anc4Date;
     @JsonProperty
     private DateTime ttBoosterDate;
+    @JsonProperty
+    private boolean isActive;
 
 
     public Mother() {}
@@ -47,7 +49,7 @@ public class Mother extends MotechBaseDataObject {
         this.caseId = caseId;
     }
 
-    public Mother(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate) {
+    public Mother(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate,boolean isActive) {
         this.caseId = caseId;
         this.dateModified = dateModified;
         this.flwId = flwId;
@@ -63,6 +65,7 @@ public class Mother extends MotechBaseDataObject {
         this.anc3Date = anc3Date;
         this.anc4Date = anc4Date;
         this.ttBoosterDate = ttBoosterDate;
+        this.isActive =isActive;
     }
 
     public DateTime getTt1Date() {
@@ -183,6 +186,14 @@ public class Mother extends MotechBaseDataObject {
 
     public void setAdd(DateTime add) {
         this.add = add;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        this.isActive = active;
     }
 
     public void setValuesFrom(Mother mother) {

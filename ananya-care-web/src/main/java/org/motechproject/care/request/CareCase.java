@@ -18,6 +18,18 @@ public class CareCase{
     private String anc_3_date;
     private String anc_4_date;
     private String tt_booster_date;
+    private String mother_alive;
+
+    public CareCase() {
+    }
+
+    public String getMother_alive() {
+        return mother_alive;
+    }
+
+    public void setMother_alive(String mother_alive) {
+        this.mother_alive = mother_alive;
+    }
 
     public String getTt_1_date() {
         return tt_1_date;
@@ -81,9 +93,6 @@ public class CareCase{
 
     public void setTt_booster_date(String tt_booster_date) {
         this.tt_booster_date = tt_booster_date;
-    }
-
-    public CareCase() {
     }
 
     public String getCase_id() {
