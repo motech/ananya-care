@@ -10,6 +10,7 @@
 
     <modules>
         <module>ananya-care-web</module>
+        <module>ananya-care-scheduling</module>
     </modules>
     <name>Ananya Care</name>
 
