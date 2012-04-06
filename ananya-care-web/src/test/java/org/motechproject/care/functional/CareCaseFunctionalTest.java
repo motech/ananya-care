@@ -25,8 +25,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
 
     @Test
     public void shouldCreateMother() throws IOException {
-        String path = getClass().getResource("/sampleMotherCaseXml.xml").getPath();
-        File file = new File(path);
+        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
         String body = FileUtils.readFileToString(file);
 
         new RestTemplate().postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
@@ -36,6 +35,30 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
+        Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
+        Assert.assertEquals(false,motherFromDb.isLastPregTt());
+    }
 
+    @Test
+    public void shouldUpdateMother() throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+
+        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
+        String body = FileUtils.readFileToString(file);
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+
+        file = new File(getClass().getResource("/sampleMotherCaseForUpdate.xml").getPath());
+        body = FileUtils.readFileToString(file);
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+
+        Mother motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
+        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
+        Assert.assertEquals("NEERAJ",motherFromDb.getName());
+        Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
+        Assert.assertEquals(DateTime.parse("2012-10-21"),motherFromDb.getAdd());
+        Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
+        Assert.assertEquals(false,motherFromDb.isLastPregTt());
+        Assert.assertEquals(DateTime.parse("2012-01-02"),motherFromDb.getTt2Date());
     }
 }

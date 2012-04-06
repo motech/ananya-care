@@ -7,21 +7,83 @@ public class CareCase{
     private String user_id;
     private String case_name;
     private String owner_id;
+
     private String edd;
     private String add;
+    private String tt_1_date;
+    private String tt_2_date;
+    private String last_preg_tt;
+    private String anc_1_date;
+    private String anc_2_date;
+    private String anc_3_date;
+    private String anc_4_date;
+    private String tt_booster_date;
 
-    public CareCase() {
+    public String getTt_1_date() {
+        return tt_1_date;
     }
 
-    public CareCase(String case_id, String case_type, String date_modified, String user_id, String case_name, String owner_id, String edd, String add) {
-        this.case_id = case_id;
-        this.case_type = case_type;
-        this.date_modified = date_modified;
-        this.user_id = user_id;
-        this.case_name = case_name;
-        this.owner_id = owner_id;
-        this.edd = edd;
-        this.add = add;
+    public void setTt_1_date(String tt_1_date) {
+        this.tt_1_date = tt_1_date;
+    }
+
+    public String getTt_2_date() {
+        return tt_2_date;
+    }
+
+    public void setTt_2_date(String tt_2_date) {
+        this.tt_2_date = tt_2_date;
+    }
+
+    public String getLast_preg_tt() {
+        return last_preg_tt;
+    }
+
+    public void setLast_preg_tt(String last_preg_tt) {
+        this.last_preg_tt = last_preg_tt;
+    }
+
+    public String getAnc_1_date() {
+        return anc_1_date;
+    }
+
+    public void setAnc_1_date(String anc_1_date) {
+        this.anc_1_date = anc_1_date;
+    }
+
+    public String getAnc_2_date() {
+        return anc_2_date;
+    }
+
+    public void setAnc_2_date(String anc_2_date) {
+        this.anc_2_date = anc_2_date;
+    }
+
+    public String getAnc_3_date() {
+        return anc_3_date;
+    }
+
+    public void setAnc_3_date(String anc_3_date) {
+        this.anc_3_date = anc_3_date;
+    }
+
+    public String getAnc_4_date() {
+        return anc_4_date;
+    }
+
+    public void setAnc_4_date(String anc_4_date) {
+        this.anc_4_date = anc_4_date;
+    }
+
+    public String getTt_booster_date() {
+        return tt_booster_date;
+    }
+
+    public void setTt_booster_date(String tt_booster_date) {
+        this.tt_booster_date = tt_booster_date;
+    }
+
+    public CareCase() {
     }
 
     public String getCase_id() {

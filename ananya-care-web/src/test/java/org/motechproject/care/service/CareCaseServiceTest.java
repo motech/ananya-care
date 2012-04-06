@@ -32,7 +32,7 @@ public class CareCaseServiceTest  {
 
     @Test
     public void shouldRedirectToMotherServiceWithMotherObjectMapped() throws IOException {
-        String path = getClass().getResource("/sampleMotherCaseXml.xml").getPath();
+        String path = getClass().getResource("/sampleMotherCase.xml").getPath();
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 
