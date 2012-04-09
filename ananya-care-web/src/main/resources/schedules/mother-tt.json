@@ -1,0 +1,35 @@
+{
+    "name": "TT Vaccination",
+    "absolute": true,
+    "milestones": [
+        {
+            "name": "TT 1",
+            "scheduleWindows": {
+                "earliest": ["0 Weeks"],
+                "due": ["36 Weeks"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1"
+                }
+            ]
+        },
+        {
+            "name": "TT 2",
+            "scheduleWindows": {
+                "due": ["4 Weeks"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["2 Weeks"],
+                    "interval": ["1 Week"],
+                    "count": "1"
+                }
+            ]
+        }
+    ]
+}

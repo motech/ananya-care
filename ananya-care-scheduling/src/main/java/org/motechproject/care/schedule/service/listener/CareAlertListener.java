@@ -5,6 +5,7 @@ import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.server.event.annotations.MotechListener;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,6 +14,7 @@ import org.motechproject.server.event.annotations.MotechListener;
  * Time: 11:27 AM
  * To change this template use File | Settings | File Templates.
  */
+@Component
 public class CareAlertListener {
 
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})

@@ -27,12 +27,12 @@ public class CareCaseServiceTest  {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        careCaseService = new CareCaseService(motherService);
+        careCaseService = new CareCaseService(motherService,null);
     }
 
     @Test
     public void shouldRedirectToMotherServiceWithMotherObjectMapped() throws IOException {
-        String path = getClass().getResource("/sampleMotherCase.xml").getPath();
+        String path = getClass().getResource("/sampleMotherCaseXml.xml").getPath();
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 

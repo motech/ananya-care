@@ -15,9 +15,10 @@
 
     <context:spring-configured/>
     <context:annotation-config/>
-    <context:component-scan base-package="org.motechproject.care"/>
+    <context:component-scan base-package="org.motechproject"/>
 
-
+    <import resource="classpath:applicationContext-Care.xml"/>
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>

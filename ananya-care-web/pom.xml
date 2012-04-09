@@ -27,7 +27,11 @@
             <artifactId>commcare-case-service</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>ananya-care</groupId>
+            <artifactId>ananya-care-scheduling</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
