@@ -3,10 +3,11 @@ package org.motechproject.care.request;
 public class CareCase{
     private String case_id;
     private String case_type;
-    private String date_modified;
     private String user_id;
-    private String case_name;
     private String owner_id;
+
+    private String date_modified;
+    private String case_name;
 
     private String edd;
     private String add;

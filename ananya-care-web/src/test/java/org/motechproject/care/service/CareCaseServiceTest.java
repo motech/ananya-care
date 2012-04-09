@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Mother;
+import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,17 +23,19 @@ public class CareCaseServiceTest  {
 
     @Mock
     private MotherService motherService;
+    @Mock
+    private CareScheduleTrackingService careScheduleTrackingService;
     private CareCaseService careCaseService;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        careCaseService = new CareCaseService(motherService,null);
+        careCaseService = new CareCaseService(motherService,careScheduleTrackingService);
     }
 
     @Test
     public void shouldRedirectToMotherServiceWithMotherObjectMapped() throws IOException {
-        String path = getClass().getResource("/sampleMotherCaseXml.xml").getPath();
+        String path = getClass().getResource("/sampleMotherCase.xml").getPath();
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 
