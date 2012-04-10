@@ -6,11 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
+import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
+import org.motechproject.commcare.domain.CaseTask;
 import org.motechproject.commcare.gateway.CommcareCaseGateway;
-import org.motechproject.commcare.request.CaseTask;
-import org.motechproject.commcare.request.Pregnancy;
 import org.motechproject.scheduletracking.api.domain.Milestone;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
@@ -28,63 +29,89 @@ public class CareAlertServiceListenerTest {
     private CommcareCaseGateway commcareCaseGateway;
     @Mock
     private AllMothers allMothers;
+    @Mock
+    private AllCareCaseTasks allCareCaseTasks;
 
-    Mother client;
-    String caseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
-    String taskId = "3F2504E04F8911D39A0C0305E82C3301";
-    String flwId = "FLW1234";
-    String motherName = "Sita";
-    String groupId = "GRP1234";
-    private String caseName = "TT 1";
+    private CareAlertServiceListener careAlertServiceListener;
+
 
     @Before
     public void setUp() {
-        client = new Mother(caseId, "pregnancy",null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
         initMocks(this);
-        when(allMothers.findByCaseId(caseId)).thenReturn(client);
+        this.careAlertServiceListener = new CareAlertServiceListener(commcareCaseGateway, allMothers, allCareCaseTasks);
     }
 
     @Test
     public void shouldSendRightCaseTaskObjectToGateway() {
         String scheduleName = "TT Vaccination";
+        String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String caseName = "TT 1";
+        String groupId = "groupId";
+        String caseType = "pregnancy";
+        String flwId = "FLW1234";
+        String motherName = "Sita";
+
         Milestone milestone = new Milestone(caseName, new Period(0, PeriodType.weeks()), new Period(0, PeriodType.weeks()), new Period(36, PeriodType.weeks()), null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, DateUtil.now());
-        CaseTask caseTask;
-        caseTask = createCaseTask(milestoneAlert, client);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
 
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, scheduleName, milestoneAlert, "due", DateUtil.now());
-        CareAlertServiceListener careAlertServiceListener = new CareAlertServiceListener(commcareCaseGateway, allMothers);
-
+        Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
+        when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
         careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+
+
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
-
         verify(commcareCaseGateway).submitCase(argumentCaptor.capture());
-
         CaseTask task = argumentCaptor.getValue();
 
         assertNotNull(task.getTaskId());
-        assertNotNull(task.getDateModified());
+        assertNotNull(task.getCurrentTime());
         assertEquals(caseName, task.getCaseName());
         assertEquals("task", task.getCaseType());
         assertEquals(milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), task.getDateEligible());
         assertEquals(milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), task.getDateExpires());
-        assertEquals("tt1", task.getTaskId());
-
-        Pregnancy pregnancy = task.getPregnancy();
-        assertEquals("pregnancy",pregnancy.getCase_type());
-        assertEquals(caseId,pregnancy.getPregnancy_id());
-
+        assertEquals(groupId, task.getOwnerId());
+        assertEquals("tt_1", task.getTaskId());
+        assertEquals(motherCaseId,task.getClientCaseId());
+        assertEquals(caseType,task.getClientCaseType());
+        assertEquals(flwId,task.getUserId());
     }
 
+    @Test
+    public void shouldSaveTaskToDb() {
+        String scheduleName = "TT Vaccination";
+        String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String caseName = "TT 1";
+        String groupId = "groupId";
+        String caseType = "pregnancy";
+        String flwId = "FLW1234";
+        String motherName = "Sita";
 
-    private CaseTask createCaseTask(MilestoneAlert milestoneAlert, Mother client) {
-        CaseTask caseTask = new CaseTask();
-        caseTask.setCaseId(caseId);
-        caseTask.setCaseName(milestoneAlert.getMilestoneName());
-        caseTask.setDateEligible(milestoneAlert.getDueDateTime().toString());
-        caseTask.setDateExpires(milestoneAlert.getLateDateTime().toString());
-        caseTask.setOwnerId(client.getGroupId());
-        return caseTask;
+        Milestone milestone = new Milestone(caseName, new Period(0, PeriodType.weeks()), new Period(0, PeriodType.weeks()), new Period(36, PeriodType.weeks()), null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, DateUtil.now());
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
+
+        Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
+        when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
+
+        careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+
+        ArgumentCaptor<CareCaseTask> careCaseTaskArgumentCaptor = ArgumentCaptor.forClass(CareCaseTask.class);
+        verify(allCareCaseTasks).add(careCaseTaskArgumentCaptor.capture());
+
+        CareCaseTask task = careCaseTaskArgumentCaptor.getValue();
+
+        assertNotNull(task.getTaskId());
+        assertNotNull(task.getCurrentTime());
+        assertEquals(caseName, task.getCaseName());
+        assertEquals("task", task.getCaseType());
+        assertEquals(milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), task.getDateEligible());
+        assertEquals(milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), task.getDateExpires());
+        assertEquals(groupId, task.getOwnerId());
+        assertEquals("tt_1", task.getTaskId());
+        assertEquals(motherCaseId,task.getClientCaseId());
+        assertEquals(caseType,task.getClientCaseType());
+        assertEquals(flwId,task.getUserId());
     }
 
 }

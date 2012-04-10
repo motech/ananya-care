@@ -15,6 +15,7 @@ import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import java.io.File;
 import java.io.IOException;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -61,5 +62,15 @@ public class CareCaseServiceTest  {
 
         careCaseService.ProcessCase(xml, null);
         verify(motherService).closeCase("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
+    }
+
+    @Test
+    public void shouldEnrollMotherForSchedules() throws IOException {
+        String path = getClass().getResource("/sampleMotherCase.xml").getPath();
+        File file = new File(path);
+        String xml = FileUtils.readFileToString(file);
+
+        careCaseService.ProcessCase(xml, null);
+        verify(careScheduleTrackingService).enrollMother(eq("8055b3ec-bec6-46cc-9e72-435ebc4eaec1"), eq(DateTime.parse("2012-10-20")));
     }
 }

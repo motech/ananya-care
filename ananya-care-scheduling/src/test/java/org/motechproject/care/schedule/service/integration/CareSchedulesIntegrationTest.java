@@ -27,7 +27,7 @@ import static org.motechproject.scheduletracking.api.domain.WindowName.due;
 import static org.motechproject.util.DateUtil.newDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-Care.xml")
+@ContextConfiguration("classpath*:applicationContext-Care.xml")
 public class CareSchedulesIntegrationTest extends BaseUnitTest {
     private static final int JANUARY = 1;
     private static final int FEBRUARY = 2;

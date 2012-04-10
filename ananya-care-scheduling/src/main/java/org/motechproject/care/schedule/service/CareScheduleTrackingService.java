@@ -1,18 +1,14 @@
 package org.motechproject.care.schedule.service;
 
-import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by IntelliJ IDEA.
- * User: pchandra
- * Date: 4/5/12
- * Time: 10:56 AM
- * To change this template use File | Settings | File Templates.
- */
 @Service
 public class CareScheduleTrackingService  {
 
@@ -23,11 +19,19 @@ public class CareScheduleTrackingService  {
         this.trackingService = trackingService;
     }
 
-
-    public void enroll(EnrollmentRequest enrollmentrequest) {
-        trackingService.enroll(enrollmentrequest);
-        EnrollmentRecord enrollment = trackingService.getEnrollment(enrollmentrequest.getExternalId(), enrollmentrequest.getScheduleName());
-
-
+    public void enrollMother(String motherCaseId, DateTime edd) {
+        trackingService.enroll(enrollmentRequest(motherCaseId, edd));
     }
+
+    private EnrollmentRequest enrollmentRequest(String motherCaseId, DateTime edd) {
+        String scheduleName = "TT Vaccination";
+        Time preferredAlertTime = DateUtil.time(DateUtil.now().plusMinutes(1));
+        LocalDate referenceDate = DateUtil.today();
+        Time referenceTime = DateUtil.time(DateUtil.now());
+        LocalDate enrollmentDate = DateUtil.today();
+        Time enrollmentTime = DateUtil.time(DateUtil.now());
+
+        return new EnrollmentRequest(motherCaseId, scheduleName, preferredAlertTime, referenceDate, referenceTime, enrollmentDate, enrollmentTime,null,null);
+    }
+
 }

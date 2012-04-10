@@ -22,7 +22,6 @@
         <import resource="classpath:applicationContext-commcare-gateway.xml"/>
 
     <context:component-scan base-package="org.motechproject.care"/>
-    <context:component-scan base-package="org.motechproject.care.service.schedule.listener"/>
 
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">

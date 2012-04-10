@@ -21,7 +21,6 @@
         <jetty.port>9979</jetty.port>
     </properties>
     <dependencies>
-
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>commcare-case-service</artifactId>
@@ -44,39 +43,12 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
             <version>${spring.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-scheduletracking-api</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-
-        <dependency>
-            <artifactId>motech-platform-server-api</artifactId>
-            <groupId>org.motechproject</groupId>
             <version>${motech.version}</version>
         </dependency>
     </dependencies>

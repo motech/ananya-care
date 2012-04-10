@@ -6,8 +6,6 @@ import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.service.mapper.MotherMapper;
 import org.motechproject.commcare.service.CaseService;
-import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
-import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,20 +42,10 @@ public class CareCaseService extends CaseService<CareCase>{
 
     @Override
     public void createCase(CareCase careCase) {
-        scheduleTrackingService.enroll(enrollmentRequest(careCase));
         if(careCase.getCase_type().equals(CaseType.Mother.getType())){
             Mother motherObj = MotherMapper.map(careCase);
             motherService.createUpdateCase(motherObj);
+            scheduleTrackingService.enrollMother(motherObj.getCaseId(), motherObj.getEdd());
         }
-    }
-
-    private EnrollmentRequest enrollmentRequest(CareCase careCase) {
-        String id = careCase.getCase_id();
-        String case_type = careCase.getCase_type();
-        String scheduleName ="";
-        if(case_type == "pregnancy") 
-            scheduleName = "TT" ;
-
-        return new EnrollmentRequest(id,"TT Vaccination",DateUtil.time(DateUtil.now().plusMinutes(2)), DateUtil.today(),DateUtil.time(DateUtil.now().plusMinutes(1)),DateUtil.today(),DateUtil.time(DateUtil.now().plusMinutes(1)),null,null);
     }
 }
