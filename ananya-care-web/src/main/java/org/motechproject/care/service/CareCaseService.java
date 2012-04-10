@@ -6,7 +6,6 @@ import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.service.mapper.MotherMapper;
 import org.motechproject.commcare.service.CaseService;
-import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +58,6 @@ public class CareCaseService extends CaseService<CareCase>{
         if(case_type == "pregnancy") 
             scheduleName = "TT" ;
 
-        return new EnrollmentRequest(id,"TT Vaccination",null, DateUtil.today(),new Time(16,0),DateUtil.today(),new Time(16,0),null,null);
+        return new EnrollmentRequest(id,"TT Vaccination",DateUtil.time(DateUtil.now().plusMinutes(2)), DateUtil.today(),DateUtil.time(DateUtil.now().plusMinutes(1)),DateUtil.today(),DateUtil.time(DateUtil.now().plusMinutes(1)),null,null);
     }
 }

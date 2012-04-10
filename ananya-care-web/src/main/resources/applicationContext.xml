@@ -13,12 +13,18 @@
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
     <util:properties id="ananyaCareProperties" location="classpath:/ananyaCare.properties"/>
 
+
+
     <context:spring-configured/>
     <context:annotation-config/>
-    <context:component-scan base-package="org.motechproject"/>
 
-    <import resource="classpath:applicationContext-Care.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
+    <import resource="classpath:applicationContext-Care.xml"/>
+
+    <context:component-scan base-package="org.motechproject.care"/>
+    <context:component-scan base-package="org.motechproject.care.service.schedule.listener"/>
+
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>

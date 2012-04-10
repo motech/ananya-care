@@ -8,7 +8,7 @@ import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type == 'Mother'")
-public class Mother extends MotechBaseDataObject {
+public class Mother extends MotechBaseDataObject implements Client {
     @JsonProperty
     private String caseId;
     @JsonProperty
@@ -41,6 +41,8 @@ public class Mother extends MotechBaseDataObject {
     private DateTime ttBoosterDate;
     @JsonProperty
     private boolean isActive;
+    @JsonProperty
+    private String caseType;
 
 
     public Mother() {}
@@ -49,8 +51,9 @@ public class Mother extends MotechBaseDataObject {
         this.caseId = caseId;
     }
 
-    public Mother(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate,boolean isActive) {
+    public Mother(String caseId, String caseType,DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate,boolean isActive) {
         this.caseId = caseId;
+        this.caseType = caseType;
         this.dateModified = dateModified;
         this.flwId = flwId;
         this.name = name;
@@ -136,6 +139,11 @@ public class Mother extends MotechBaseDataObject {
         return caseId;
     }
 
+    @Override
+    public String getCaseName() {
+        return name;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void setCaseId(String caseId) {
         this.caseId = caseId;
     }
@@ -166,6 +174,11 @@ public class Mother extends MotechBaseDataObject {
 
     public String getGroupId() {
         return groupId;
+    }
+
+    @Override
+    public String getCaseType() {
+        return caseType;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void setGroupId(String groupId) {

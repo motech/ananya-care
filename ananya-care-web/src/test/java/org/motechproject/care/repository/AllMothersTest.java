@@ -15,7 +15,7 @@ public class AllMothersTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveMother(){
-        Mother mother = new Mother("caseId", new DateTime(123456), "flwId", "name", "gropuId", new DateTime(123123123)
+        Mother mother = new Mother("caseId", "pregnancy",new DateTime(123456), "flwId", "name", "gropuId", new DateTime(123123123)
                 , new DateTime(3423), new DateTime(1123), new DateTime(1123), true, new DateTime(1123)
                 , new DateTime(1123), new DateTime(1123), new DateTime(1123), new DateTime(1123),true);
         assertNull(mother.getId());

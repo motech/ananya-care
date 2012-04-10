@@ -3,8 +3,6 @@ package org.motechproject.care.schedule.service.listener;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
-import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
-import org.motechproject.server.event.annotations.MotechListener;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CareAlertListener {
 
-    @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
     public void handle(MotechEvent event){
         MilestoneEvent msEvent = new MilestoneEvent(event);
         String externalId = msEvent.getExternalId();

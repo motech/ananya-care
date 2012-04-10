@@ -23,6 +23,7 @@ public class CareScheduleTrackingService  {
         this.trackingService = trackingService;
     }
 
+
     public void enroll(EnrollmentRequest enrollmentrequest) {
         trackingService.enroll(enrollmentrequest);
         EnrollmentRecord enrollment = trackingService.getEnrollment(enrollmentrequest.getExternalId(), enrollmentrequest.getScheduleName());
