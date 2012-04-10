@@ -139,11 +139,6 @@ public class Mother extends MotechBaseDataObject implements Client {
         return caseId;
     }
 
-    @Override
-    public String getCaseName() {
-        return name;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public void setCaseId(String caseId) {
         this.caseId = caseId;
     }

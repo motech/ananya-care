@@ -29,9 +29,7 @@ import java.util.UUID;
 @Component
 public class CareAlertServiceListener {
 
-    @Autowired
     private CommcareCaseGateway commcareCaseGateway;
-    @Autowired
     private AllMothers allMothers;
 
     Logger logger = Logger.getLogger(CareAlertServiceListener.class);
