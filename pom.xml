@@ -10,6 +10,7 @@
     <modules>
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
+        <module>ananya-care-e2eTests</module>
     </modules>
     <name>Ananya Care</name>
 
@@ -17,7 +18,7 @@
         <jetty.port>9979</jetty.port>
         <spring.version>3.0.5.RELEASE</spring.version>
         <release.version>0.1-SNAPSHOT</release.version>
-        <motech.version>0.9-SNAPSHOT</motech.version>
+        <motech.version>0.10-SNAPSHOT</motech.version>
     </properties>
 
     <distributionManagement>
