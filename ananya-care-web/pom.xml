@@ -23,7 +23,7 @@
     <dependencies>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>commcare-case-service</artifactId>
+            <artifactId>case-service</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -51,6 +51,12 @@
             <artifactId>motech-scheduletracking-api</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <dependency>
+            <artifactId>motech-platform-server-api</artifactId>
+            <groupId>org.motechproject</groupId>
+            <version>${motech.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

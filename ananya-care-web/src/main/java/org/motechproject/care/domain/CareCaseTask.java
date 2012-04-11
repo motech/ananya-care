@@ -2,7 +2,7 @@ package org.motechproject.care.domain;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
-import org.motechproject.commcare.domain.CaseTask;
+import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type == 'CareCaseTask'")

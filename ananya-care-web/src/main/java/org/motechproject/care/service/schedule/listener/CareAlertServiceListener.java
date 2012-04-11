@@ -6,7 +6,7 @@ import org.motechproject.care.domain.Client;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.service.util.TaskIdMapper;
-import org.motechproject.commcare.gateway.CommcareCaseGateway;
+import org.motechproject.casexml.gateway.CommcareCaseGateway;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
@@ -15,7 +15,6 @@ import org.motechproject.server.event.annotations.MotechListener;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class CareAlertServiceListener {
@@ -44,7 +43,9 @@ public class CareAlertServiceListener {
         CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), client.getGroupId(),client.getFlwId(), client.getCaseType());
         allCareCaseTasks.add(careCasetask);
         commcareCaseGateway.submitCase(careCasetask.toCaseTask());
+
     }
+
 
     private CareCaseTask createCasetask(String caseId, String caseName, String dateEligible, String dateExpires, String ownerId,String userId, String caseType) {
         String taskId = taskIdMapper.get(caseName);
