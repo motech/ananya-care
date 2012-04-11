@@ -1,6 +1,7 @@
 package org.motechproject.care.integration.service;
 
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
@@ -23,14 +24,21 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private AllMothers allMothers;
+    private final String caseId = "caseId";
 
+    @After
+    public void tearDown() {
+        Mother mother = allMothers.findByCaseId(caseId);
+        if(mother != null) {
+            markForDeletion(mother);
+        }
+    }
+    
     @Test
     public void shouldSaveMotherCaseIfItDoesNotExists(){
-        String caseId = "caseId";
         assertNull(allMothers.findByCaseId(caseId));
         Mother mother = new Mother(caseId);
         motherService.createUpdateCase(mother);
-        markForDeletion(mother);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
         assertEquals(mother.getId(),motherFromDb.getId());
     }
@@ -50,7 +58,6 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
 
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
-        markForDeletion(motherFromDb);
         assertEquals(now, motherFromDb.getEdd());
         assertEquals(mother.getId(), motherFromDb.getId());
         assertEquals(mother.getCaseId(), motherFromDb.getCaseId());
@@ -66,7 +73,6 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
 
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
-        markForDeletion(motherFromDb);
         assertEquals(false, motherFromDb.isActive());
     }
 }

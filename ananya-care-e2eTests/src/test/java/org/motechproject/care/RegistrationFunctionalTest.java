@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.request.CaseType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,14 +29,14 @@ import java.util.UUID;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext.xml")
-public class AppTest{
+public class RegistrationFunctionalTest {
 
     @Autowired
     private AllMothers allMothers;
 
     @Test
-    public void shouldRegisterAPregnantMother() throws IOException {
-        String caseId = UUID.randomUUID().toString();
+    public void shouldPreRegisterAPregnantMother() throws IOException {
+        final String caseId = UUID.randomUUID().toString();
         String instanceId = UUID.randomUUID().toString();
         String name = "test_gen" + Math.random();
 
@@ -51,8 +52,19 @@ public class AppTest{
         Assert.assertEquals(201,statusLine.getStatusCode());
         Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
 
-        Mother mother = allMothers.findByCaseId(caseId);
+        RetryTask<Mother> task = new RetryTask<Mother>() {
+            @Override
+            protected Mother perform() {
+                Mother mother = allMothers.findByCaseId(caseId);
+               return mother!=null?mother:null;
+            }
+        };
+
+        Mother mother = task.execute(10, 10000);
         Assert.assertEquals(name, mother.getName());
+        Assert.assertEquals("fdfd", mother.getFlwId());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
+        Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
     }
 
     private HttpResponse postToCommCare(String final_xml) throws IOException {

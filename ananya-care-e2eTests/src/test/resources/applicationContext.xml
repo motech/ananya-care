@@ -16,6 +16,7 @@
     <context:component-scan base-package="org.motechproject.care"/>
 
     <import resource="classpath:applicationContext-Care.xml"/>
+    <import resource="classpath:applicationContext-commcare-gateway.xml"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
