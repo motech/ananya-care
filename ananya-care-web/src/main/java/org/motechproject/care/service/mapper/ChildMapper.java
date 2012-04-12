@@ -12,7 +12,7 @@ public class ChildMapper {
         return new Child(
                 careCase.getCase_id(), get_date_obj(careCase.getDate_modified()), careCase.getUser_id(), careCase.getCase_name(),
                 careCase.getOwner_id(), null
-                , get_date_obj(careCase.getBaby_measles()), get_date_obj(careCase.getBcg_date()), get_date_obj(careCase.getVit_a_1_date()));
+                , get_date_obj(careCase.getBaby_measles()), get_date_obj(careCase.getBcg_date()), get_date_obj(careCase.getVit_a_1_date()),careCase.getMother_id());
     }
 
     private static DateTime get_date_obj(String date_string) {

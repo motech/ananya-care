@@ -20,6 +20,7 @@ public class ChildMapperTest {
         assertEquals("b823ea3d392a06f8b991e9e4933348bd", child.getFlwId());
         assertEquals("Pinky", child.getName());
         assertEquals("112", child.getGroupId());
+        assertEquals("motherCaseId", child.getMotherCaseId());
         assertEquals(new DateTime(2012, 1, 1, 0, 0), child.getBcgDate());
         assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getVitamin1Date());
         assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getMeaslesDate());
@@ -28,7 +29,7 @@ public class ChildMapperTest {
 
     @Test
     public void shouldMapToAChildObjectWithEmptyFields(){
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId("").withCaseName("").withCaseType("").withDateModified("").withUserId("").withGroupId("").withBcgDate("").withBabyMeasles("").withVita1Date("").build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId("").withCaseName("").withCaseType("").withDateModified("").withUserId("").withGroupId("").withBcgDate("").withBabyMeaslesDate("").withVitamin1Date("").build();
         Child child = ChildMapper.map(careCase);
         assertEquals("", child.getCaseId());
         assertEquals(null, child.getDateModified());
@@ -42,7 +43,7 @@ public class ChildMapperTest {
 
     @Test
     public void shouldMapToAMotherObjectWithNullFields(){
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(null).withCaseName(null).withCaseType(null).withBcgDate(null).withBabyMeasles(null).withDateModified(null).withUserId(null).withGroupId(null).withVita1Date(null).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(null).withCaseName(null).withCaseType(null).withBcgDate(null).withBabyMeaslesDate(null).withDateModified(null).withUserId(null).withGroupId(null).withVitamin1Date(null).build();
         Child child = ChildMapper.map(careCase);
         assertNull(child.getCaseId());
         assertNull(child.getDateModified());

@@ -15,6 +15,7 @@ public class Child extends Client {
     private DateTime vitamin1Date;
 
     private String caseType= CaseType.Child.getType();
+    private String motherCaseId;
 
     public Child() {}
 
@@ -22,7 +23,8 @@ public class Child extends Client {
         this.caseId = caseId;
     }
 
-    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date) {
+    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date,String motherCaseId) {
+        this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
         this.dateModified = dateModified;
@@ -67,12 +69,12 @@ public class Child extends Client {
         this.vitamin1Date = vitamin1Date;
     }
 
-    public void setValuesFrom(Child mother) {
+    public void setValuesFrom(Child child) {
         try{
             NullAwareBeanUtilsBean nullAwareBeanUtilsBean = new NullAwareBeanUtilsBean();
-            nullAwareBeanUtilsBean.copyProperties(this, mother);
+            nullAwareBeanUtilsBean.copyProperties(this, child);
         }
-        catch (Exception e){
+        catch (Exception e) {
             // do something
         }
     }
@@ -87,4 +89,11 @@ public class Child extends Client {
         this.caseType = caseType;
     }
 
+    public String getMotherCaseId() {
+        return motherCaseId;
+    }
+
+    public void setMotherCaseId(String motherCaseId) {
+        this.motherCaseId = motherCaseId;
+    }
 }

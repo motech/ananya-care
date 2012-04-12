@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CareCaseService extends CaseService<CareCase>{
 
     private MotherService motherService;
+    private ChildService childService;
 
     @Autowired
-    public CareCaseService(MotherService motherService) {
+    public CareCaseService(MotherService motherService,ChildService childService) {
         super(CareCase.class);
         this.motherService = motherService;
+        this.childService = childService;
     }
 
     @Override
@@ -36,8 +38,7 @@ public class CareCaseService extends CaseService<CareCase>{
     public void createCase(CareCase careCase) {
         if(careCase.getCase_type().equals(CaseType.Mother.getType()))
             motherService.process(careCase);
-//        else {
-//            Child child =
-//        }
+        else
+            childService.process(careCase);
     }
 }

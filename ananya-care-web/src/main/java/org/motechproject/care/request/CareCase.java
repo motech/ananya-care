@@ -27,16 +27,16 @@ public class CareCase{
     private String baby_measles;
     private String bcg_date;
     private String vit_a_1_date;
-
+    private String mother_id;
 
     public CareCase() {
     }
 
-
-
     public String getMother_alive() {
         return mother_alive;
     }
+
+
 
     public void setMother_alive(String mother_alive) {
         this.mother_alive = mother_alive;
@@ -170,10 +170,10 @@ public class CareCase{
         this.case_type = case_type;
     }
 
-
     public String getBaby_measles() {
         return baby_measles;
     }
+
 
     public String getBcg_date() {
         return bcg_date;
@@ -193,5 +193,13 @@ public class CareCase{
 
     public void setVit_a_1_date(String vit_a_1_date) {
         this.vit_a_1_date = vit_a_1_date;
+    }
+
+    public String getMother_id() {
+        return mother_id;
+    }
+
+    public void setMother_id(String mother_id) {
+        this.mother_id = mother_id;
     }
 }

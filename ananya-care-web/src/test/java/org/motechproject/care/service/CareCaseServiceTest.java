@@ -22,17 +22,19 @@ public class CareCaseServiceTest  {
     @Mock
     private MotherService motherService;
     @Mock
+    private ChildService childService;
+    @Mock
     private CareScheduleTrackingService careScheduleTrackingService;
     private CareCaseService careCaseService;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        careCaseService = new CareCaseService(motherService);
+        careCaseService = new CareCaseService(motherService,childService);
     }
 
     @Test
-    public void shouldRedirectToMotherService() throws IOException {
+    public void shouldRedirectToMotherServiceIfCaseTypeBelongsToMother() throws IOException {
         String path = getClass().getResource("/sampleMotherCase.xml").getPath();
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
@@ -51,4 +53,16 @@ public class CareCaseServiceTest  {
         careCaseService.ProcessCase(xml, null);
         verify(motherService).closeCase("caseId");
     }
+
+    @Test
+    public void shouldRedirectToChildServiceIfCaseTypeBelongsToChild() throws IOException {
+        String path = getClass().getResource("/sampleChildCase.xml").getPath();
+        File file = new File(path);
+        String xml = FileUtils.readFileToString(file);
+
+        careCaseService.ProcessCase(xml, null);
+        verify(childService).process((CareCase) Matchers.any());
+
+    }
+
 }

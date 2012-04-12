@@ -15,6 +15,7 @@ public class ChildCareCaseBuilder {
     private String bcg_date = "2012-01-01";
     private String baby_measles = "2012-01-02";
     private String vit_a_1_date = "2012-01-02";
+    private String motherCaseId="motherCaseId";
 
     public CareCase build(){
         CareCase careCase = new CareCase();
@@ -27,6 +28,7 @@ public class ChildCareCaseBuilder {
         careCase.setBcg_date(bcg_date);
         careCase.setVit_a_1_date(vit_a_1_date);
         careCase.setBaby_measles(baby_measles);
+        careCase.setMother_id(motherCaseId);
         return careCase;
     }
 
@@ -60,12 +62,17 @@ public class ChildCareCaseBuilder {
         this.bcg_date =bcg_date;
         return this;
     }
-    public ChildCareCaseBuilder withVita1Date(String vita1Date){
+    public ChildCareCaseBuilder withVitamin1Date(String vita1Date){
         this.vit_a_1_date =vita1Date;
         return this;
     }
-    public ChildCareCaseBuilder withBabyMeasles(String measlesDate){
+    public ChildCareCaseBuilder withBabyMeaslesDate(String measlesDate){
         this.baby_measles =measlesDate;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withMotherCaseId(String motherCaseId){
+        this.motherCaseId = motherCaseId;
         return this;
     }
 }
