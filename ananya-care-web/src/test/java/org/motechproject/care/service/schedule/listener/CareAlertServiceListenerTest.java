@@ -17,8 +17,11 @@ import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.motechproject.util.DateUtil;
 
+import java.util.Properties;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -31,6 +34,8 @@ public class CareAlertServiceListenerTest {
     private AllMothers allMothers;
     @Mock
     private AllCareCaseTasks allCareCaseTasks;
+    @Mock
+    private Properties ananyaCareProperties;
 
     private CareAlertServiceListener careAlertServiceListener;
 
@@ -38,7 +43,7 @@ public class CareAlertServiceListenerTest {
     @Before
     public void setUp() {
         initMocks(this);
-        this.careAlertServiceListener = new CareAlertServiceListener(commcareCaseGateway, allMothers, allCareCaseTasks);
+        this.careAlertServiceListener = new CareAlertServiceListener(commcareCaseGateway, allMothers, allCareCaseTasks, ananyaCareProperties);
     }
 
     @Test
@@ -57,11 +62,15 @@ public class CareAlertServiceListenerTest {
 
         Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
+        String commCareUrl = "commCareUrl";
+        String motechUserId = "motechUserId";
+        when(ananyaCareProperties.getProperty("commcare.hq.url")).thenReturn(commCareUrl);
+        when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
         careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
 
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
-        verify(commcareCaseGateway).submitCase(argumentCaptor.capture());
+        verify(commcareCaseGateway).submitCase(eq(commCareUrl),argumentCaptor.capture());
         CaseTask task = argumentCaptor.getValue();
 
         assertNotNull(task.getTaskId());
@@ -74,7 +83,7 @@ public class CareAlertServiceListenerTest {
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
         assertEquals(caseType,task.getClientCaseType());
-        assertEquals(flwId,task.getUserId());
+        assertEquals(motechUserId,task.getMotechUserId());
     }
 
     @Test
@@ -94,6 +103,8 @@ public class CareAlertServiceListenerTest {
         Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
 
+        String motechUserId = "motechUserId";
+        when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
         careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
 
         ArgumentCaptor<CareCaseTask> careCaseTaskArgumentCaptor = ArgumentCaptor.forClass(CareCaseTask.class);
@@ -111,7 +122,7 @@ public class CareAlertServiceListenerTest {
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
         assertEquals(caseType,task.getClientCaseType());
-        assertEquals(flwId,task.getUserId());
+        assertEquals(motechUserId,task.getMotechUserId());
     }
 
 }

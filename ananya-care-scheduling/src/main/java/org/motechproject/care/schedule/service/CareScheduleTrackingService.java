@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CareScheduleTrackingService  {
 
+    public static final String ttVaccinationScheduleName = "TT Vaccination";
     private ScheduleTrackingService trackingService;
 
     @Autowired
@@ -20,18 +21,21 @@ public class CareScheduleTrackingService  {
     }
 
     public void enrollMother(String motherCaseId, DateTime edd) {
-        trackingService.enroll(enrollmentRequest(motherCaseId, edd));
+        if(edd == null) return;
+        if(isNotEnrolled(motherCaseId))
+            trackingService.enroll(enrollmentRequestForTT(motherCaseId, edd));
     }
 
-    private EnrollmentRequest enrollmentRequest(String motherCaseId, DateTime edd) {
-        String scheduleName = "TT Vaccination";
-        Time preferredAlertTime = DateUtil.time(DateUtil.now().plusMinutes(1));
-        LocalDate referenceDate = DateUtil.today();
-        Time referenceTime = DateUtil.time(DateUtil.now());
+    private EnrollmentRequest enrollmentRequestForTT(String motherCaseId, DateTime edd) {
+        LocalDate referenceDate = new LocalDate(edd.minusWeeks(36));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());
 
-        return new EnrollmentRequest(motherCaseId, scheduleName, preferredAlertTime, referenceDate, referenceTime, enrollmentDate, enrollmentTime,null,null);
+        return new EnrollmentRequest(motherCaseId, ttVaccinationScheduleName, null, referenceDate, null, enrollmentDate, enrollmentTime,null,null);
+    }
+
+    private boolean isNotEnrolled(String motherCaseId) {
+        return trackingService.getEnrollment(motherCaseId, ttVaccinationScheduleName) == null;
     }
 
 }

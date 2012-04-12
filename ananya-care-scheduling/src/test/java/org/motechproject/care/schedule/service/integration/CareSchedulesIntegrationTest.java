@@ -12,7 +12,6 @@ import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
 import org.motechproject.delivery.schedule.util.SetDateAction;
-import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.testing.utils.BaseUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.File;
 import java.util.Date;
 
-import static org.motechproject.scheduletracking.api.domain.WindowName.due;
+import static org.motechproject.scheduletracking.api.domain.WindowName.*;
 import static org.motechproject.util.DateUtil.newDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,20 +48,10 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
     private ScheduleWithCapture schedule;
     private ScheduleVisualization visualization;
 
-    @Test
-    public void shouldProvideAlertsForTT1() throws Exception {
-        schedule.enrollFor("TT Vaccination", newDate(2012, 1, 1), new Time(14, 0));
-        schedule.assertAlerts("TT 1", due, date(1, JANUARY));
-        visualization.outputTo("mother-tt.html", 3);
-
-    }
-
-    @Test
-    public void shouldProvideAlertsForTT2After4WeeksOfTT1Taken() throws Exception {
-        schedule.enrollFor("TT Vaccination", newDate(2012, 1, 1), new Time(14, 0));
-        schedule.assertAlerts("TT 2", due, date(15 , JANUARY));
-        visualization.outputTo("mother-tt.html", 3);
-
+    @BeforeClass
+    public static void turnOffSpringLogging() {
+        Logger logger = Logger.getLogger("org.springframework");
+        logger.setLevel(Level.FATAL);
     }
 
     @Before
@@ -86,10 +75,21 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         schedule = new ScheduleWithCapture(fakeSchedule, visualization);
     }
 
-    @BeforeClass
-    public static void turnOffSpringLogging() {
-        Logger logger = Logger.getLogger("org.springframework");
-        logger.setLevel(Level.FATAL);
+    @Test
+    public void shouldProvideAlertsForTetanusToxoidVaccinationAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(25, JANUARY)).enrollFor("TT Vaccination", newDate(2012, 1, 1), null);
+
+        schedule.assertNoAlerts("TT 1", earliest);
+        schedule.assertAlertsStartWith("TT 1", due, date(1, JANUARY));
+        schedule.assertNoAlerts("TT 1", late);
+        schedule.assertNoAlerts("TT 1", max);
+
+        schedule.assertNoAlerts("TT 2", earliest);
+        schedule.assertAlerts("TT 2", due, date(8, FEBRUARY));
+        schedule.assertNoAlerts("TT 2", late);
+        schedule.assertNoAlerts("TT 2", max);
+
+        visualization.outputTo("mother-tetanus-.html", 2);
     }
 
     private Date date(int day, int month) {
@@ -97,6 +97,6 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
     }
 
     private Date dateWithYear(int day, int month, int year) {
-        return new DateTime(year, month, day, 14, 0).toDate();
+        return new DateTime(year, month, day, 00, 0).toDate();
     }
 }

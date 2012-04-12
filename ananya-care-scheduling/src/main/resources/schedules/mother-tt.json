@@ -1,6 +1,5 @@
 {
     "name": "TT Vaccination",
-    "absolute": true,
     "milestones": [
         {
             "name": "TT 1",
@@ -20,12 +19,13 @@
         {
             "name": "TT 2",
             "scheduleWindows": {
-                "due": ["4 Weeks"]
+                "earliest": ["4 Weeks"],
+                "due": ["36 Weeks"]
             },
             "alerts": [
                 {
                     "window": "due",
-                    "offset": ["2 Weeks"],
+                    "offset": ["-2 Weeks"],
                     "interval": ["1 Week"],
                     "count": "1"
                 }

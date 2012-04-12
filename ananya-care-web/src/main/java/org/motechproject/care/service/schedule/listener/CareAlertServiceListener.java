@@ -14,23 +14,28 @@ import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.server.event.annotations.MotechListener;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.Properties;
 
 @Component
 public class CareAlertServiceListener {
 
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
+    private Properties commcareProperties;
     private AllMothers allMothers;
 
     Logger logger = Logger.getLogger(CareAlertServiceListener.class);
     private static TaskIdMapper taskIdMapper = new TaskIdMapper();
 
     @Autowired
-    public CareAlertServiceListener(CommcareCaseGateway commcareCaseGateway, AllMothers motherRepository, AllCareCaseTasks allCareCaseTasks) {
+    public CareAlertServiceListener(CommcareCaseGateway commcareCaseGateway, AllMothers motherRepository, AllCareCaseTasks allCareCaseTasks, @Qualifier("commcareProperties") Properties commcareProperties) {
         this.commcareCaseGateway = commcareCaseGateway;
         this.allMothers = motherRepository;
         this.allCareCaseTasks = allCareCaseTasks;
+        this.commcareProperties = commcareProperties;
     }
 
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
@@ -40,9 +45,11 @@ public class CareAlertServiceListener {
         MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
         Client client = allMothers.findByCaseId(externalId);
 
-        CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), client.getGroupId(),client.getFlwId(), client.getCaseType());
+        String userId = commcareProperties.getProperty("motech.user.id");
+        String commcareUrl = commcareProperties.getProperty("commcare.hq.url");
+        CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), client.getGroupId(),userId, client.getCaseType());
         allCareCaseTasks.add(careCasetask);
-        commcareCaseGateway.submitCase(careCasetask.toCaseTask());
+        commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
 
     }
 

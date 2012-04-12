@@ -17,7 +17,7 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private String caseId;
     @JsonProperty
-    private String userId;
+    private String motechUserId;
     @JsonProperty
     private String currentTime;
     @JsonProperty
@@ -31,11 +31,11 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private String clientCaseId;
 
-    public CareCaseTask(String caseName, String ownerId, String caseId, String userId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId) {
+    public CareCaseTask(String caseName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId) {
         this.caseName = caseName;
         this.ownerId = ownerId;
         this.caseId = caseId;
-        this.userId = userId;
+        this.motechUserId = motechUserId;
         this.currentTime = currentTime;
         this.taskId = taskId;
         this.dateEligible = dateEligible;
@@ -50,7 +50,7 @@ public class CareCaseTask extends MotechBaseDataObject{
         caseTask.setCaseName(caseName);
         caseTask.setOwnerId(ownerId);
         caseTask.setCaseId(caseId);
-        caseTask.setUserId(userId);
+        caseTask.setMotechUserId(motechUserId);
         caseTask.setCurrentTime(currentTime);
         caseTask.setTaskId(taskId);
         caseTask.setDateEligible(dateEligible);
@@ -76,8 +76,8 @@ public class CareCaseTask extends MotechBaseDataObject{
         return caseId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getMotechUserId() {
+        return motechUserId;
     }
 
     public String getCurrentTime() {
