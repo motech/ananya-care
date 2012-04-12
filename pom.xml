@@ -11,6 +11,7 @@
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
         <module>ananya-care-e2eTests</module>
+        <module>ananya-care-dummy-commcare-hq</module>
     </modules>
     <name>Ananya Care</name>
 
