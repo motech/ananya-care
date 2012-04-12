@@ -26,3 +26,4 @@ servers.bat
 src/main/webapp/emulator/*
 .DS_Store
 ananya-care-web/doc/
+ananya-care-scheduling/doc/schedules/*.html

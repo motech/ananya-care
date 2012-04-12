@@ -24,18 +24,18 @@ public class CareAlertServiceListener {
 
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
-    private Properties commcareProperties;
+    private Properties ananyaCareProperties;
     private AllMothers allMothers;
 
     Logger logger = Logger.getLogger(CareAlertServiceListener.class);
     private static TaskIdMapper taskIdMapper = new TaskIdMapper();
 
     @Autowired
-    public CareAlertServiceListener(CommcareCaseGateway commcareCaseGateway, AllMothers motherRepository, AllCareCaseTasks allCareCaseTasks, @Qualifier("commcareProperties") Properties commcareProperties) {
+    public CareAlertServiceListener(CommcareCaseGateway commcareCaseGateway, AllMothers motherRepository, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
         this.commcareCaseGateway = commcareCaseGateway;
         this.allMothers = motherRepository;
         this.allCareCaseTasks = allCareCaseTasks;
-        this.commcareProperties = commcareProperties;
+        this.ananyaCareProperties = ananyaCareProperties;
     }
 
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
@@ -45,8 +45,8 @@ public class CareAlertServiceListener {
         MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
         Client client = allMothers.findByCaseId(externalId);
 
-        String userId = commcareProperties.getProperty("motech.user.id");
-        String commcareUrl = commcareProperties.getProperty("commcare.hq.url");
+        String userId = ananyaCareProperties.getProperty("motech.user.id");
+        String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
         CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), client.getGroupId(),userId, client.getCaseType());
         allCareCaseTasks.add(careCasetask);
         commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
