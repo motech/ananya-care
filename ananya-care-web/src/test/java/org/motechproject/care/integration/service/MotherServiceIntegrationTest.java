@@ -6,14 +6,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.repository.SpringIntegrationTest;
+import org.motechproject.care.utils.CaseUtils;
+import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.care.request.CareCase;
+import org.motechproject.care.request.CaseType;
 import org.motechproject.care.service.MotherService;
+import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,7 +29,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private AllMothers allMothers;
-    private final String caseId = "caseId";
+    private final String caseId = CaseUtils.getUniqueCaseId();
 
     @After
     public void tearDown() {
@@ -36,37 +41,35 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
     
     @Test
     public void shouldSaveMotherCaseIfItDoesNotExists(){
+        CareCase careCase = new MotherCareCaseBuilder().withCaseId(caseId).build();
         assertNull(allMothers.findByCaseId(caseId));
-        Mother mother = new Mother(caseId);
-        motherService.createUpdateCase(mother);
+        motherService.process(careCase);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
-        assertEquals(mother.getId(),motherFromDb.getId());
+        assertNotNull(motherFromDb.getId());
     }
 
     @Test
     public void shouldUpdateMotherCaseIfItExists(){
-        String caseId = "caseId";
-        DateTime now = new DateTime(2012, 3, 4, 0, 0);
         Mother mother = new Mother(caseId);
-        mother.setEdd(now);
+        mother.setEdd(new DateTime(2012, 3, 4, 0, 0));
+        mother.setFlwId("flwid");
+        mother.setName("Rajeshwari");
         allMothers.add(mother);
 
-        Mother motherToBeUpdated = new Mother(caseId);
-        motherToBeUpdated.setFlwId("flwid");
-
-        motherService.createUpdateCase(motherToBeUpdated);
+        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withUserId("newFlwid").withCaseName("Heena").withEdd("2012-01-01").build();
+        motherService.process(careCase);
 
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
-        assertEquals(now, motherFromDb.getEdd());
-        assertEquals(mother.getId(), motherFromDb.getId());
+        assertEquals(DateTime.parse(careCase.getEdd()), motherFromDb.getEdd());
         assertEquals(mother.getCaseId(), motherFromDb.getCaseId());
-        assertEquals("flwid", motherFromDb.getFlwId());
+        assertEquals(careCase.getUser_id(), motherFromDb.getFlwId());
+        assertEquals(careCase.getCase_name(), motherFromDb.getName());
+        assertEquals(CaseType.Mother.getType(),motherFromDb.getCaseType());
     }
 
     @Test
     public void shouldCloseMotherCase(){
-        String caseId = "caseId";
         Mother mother = new Mother(caseId);
         allMothers.add(mother);
         motherService.closeCase(caseId);

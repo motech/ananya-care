@@ -1,49 +1,24 @@
 package org.motechproject.care.domain;
 
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
-import org.motechproject.care.service.NullAwareBeanUtilsBean;
-import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.care.request.CaseType;
+import org.motechproject.care.service.util.NullAwareBeanUtilsBean;
 import org.motechproject.util.DateUtil;
 
 @TypeDiscriminator("doc.type == 'Mother'")
-public class Mother extends MotechBaseDataObject implements Client {
-    @JsonProperty
-    private String caseId;
-    @JsonProperty
-    private DateTime dateModified;
-    @JsonProperty
-    private String flwId;
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private String groupId;
-    @JsonProperty
+public class Mother extends Client {
     private DateTime edd;
-    @JsonProperty
     private DateTime add;
-    @JsonProperty
     private DateTime tt1Date;
-    @JsonProperty
     private DateTime tt2Date;
-    @JsonProperty
     private boolean lastPregTt;
-    @JsonProperty
     private DateTime anc1Date;
-    @JsonProperty
     private DateTime anc2Date;
-    @JsonProperty
     private DateTime anc3Date;
-    @JsonProperty
     private DateTime anc4Date;
-    @JsonProperty
     private DateTime ttBoosterDate;
-    @JsonProperty
-    private boolean isActive;
-    @JsonProperty
-    private String caseType;
-
+    private String caseType=CaseType.Mother.getType();
 
     public Mother() {}
 
@@ -51,9 +26,8 @@ public class Mother extends MotechBaseDataObject implements Client {
         this.caseId = caseId;
     }
 
-    public Mother(String caseId, String caseType,DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate,boolean isActive) {
+    public Mother(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate, boolean isActive) {
         this.caseId = caseId;
-        this.caseType = caseType;
         this.dateModified = dateModified;
         this.flwId = flwId;
         this.name = name;
@@ -135,51 +109,6 @@ public class Mother extends MotechBaseDataObject implements Client {
         this.ttBoosterDate = ttBoosterDate;
     }
 
-    public String getCaseId() {
-        return caseId;
-    }
-
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
-    }
-
-    public DateTime getDateModified() {
-        return DateUtil.setTimeZone(dateModified);
-    }
-
-    public void setDateModified(DateTime dateModified) {
-        this.dateModified = dateModified;
-    }
-
-    public String getFlwId() {
-        return flwId;
-    }
-
-    public void setFlwId(String flwId) {
-        this.flwId = flwId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    @Override
-    public String getCaseType() {
-        return caseType;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
     public DateTime getEdd() {
         return DateUtil.setTimeZone(edd);
     }
@@ -196,14 +125,6 @@ public class Mother extends MotechBaseDataObject implements Client {
         this.add = add;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        this.isActive = active;
-    }
-
     public void setValuesFrom(Mother mother) {
         try{
             NullAwareBeanUtilsBean nullAwareBeanUtilsBean = new NullAwareBeanUtilsBean();
@@ -212,5 +133,16 @@ public class Mother extends MotechBaseDataObject implements Client {
         catch (Exception e){
             // do something
         }
+    }
+
+
+    @Override
+    public String getCaseType() {
+        return caseType;
+    }
+
+    @Override
+    public void setCaseType(String caseType) {
+        this.caseType=caseType;
     }
 }

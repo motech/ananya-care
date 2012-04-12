@@ -10,6 +10,7 @@ import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.request.CaseType;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
 import org.motechproject.scheduletracking.api.domain.Milestone;
@@ -52,7 +53,6 @@ public class CareAlertServiceListenerTest {
         String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
         String caseName = "TT 1";
         String groupId = "groupId";
-        String caseType = "pregnancy";
         String flwId = "FLW1234";
         String motherName = "Sita";
 
@@ -60,7 +60,7 @@ public class CareAlertServiceListenerTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, DateUtil.now());
         MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
 
-        Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
+        Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
         String commCareUrl = "commCareUrl";
         String motechUserId = "motechUserId";
@@ -82,7 +82,7 @@ public class CareAlertServiceListenerTest {
         assertEquals(groupId, task.getOwnerId());
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
-        assertEquals(caseType,task.getClientCaseType());
+        assertEquals(CaseType.Mother.getType(),task.getClientCaseType());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 
@@ -92,7 +92,6 @@ public class CareAlertServiceListenerTest {
         String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
         String caseName = "TT 1";
         String groupId = "groupId";
-        String caseType = "pregnancy";
         String flwId = "FLW1234";
         String motherName = "Sita";
 
@@ -100,7 +99,7 @@ public class CareAlertServiceListenerTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, DateUtil.now());
         MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
 
-        Mother client = new Mother(motherCaseId, caseType,null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
+        Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, null, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
 
         String motechUserId = "motechUserId";
@@ -121,7 +120,7 @@ public class CareAlertServiceListenerTest {
         assertEquals(groupId, task.getOwnerId());
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
-        assertEquals(caseType,task.getClientCaseType());
+        assertEquals(CaseType.Mother.getType(),task.getClientCaseType());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 

@@ -8,8 +8,8 @@ public class MotherTest {
 
     @Test
     public void shouldNotCopyNullPropertiesFromAnotherMotherObject()  {
-        Mother mother = new Mother("caseId","pregnancy",null,"flwid","name",null,null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,true);
-        Mother motherFromDb = new Mother("caseId","pregnancy", DateTime.parse("2010-01-01"), null, "name2", "groupid2", null, null,null,null,false,null,null,null,null,null,false);
+        Mother mother = new Mother("caseId", null,"flwid","name",null,null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,true);
+        Mother motherFromDb = new Mother("caseId", DateTime.parse("2010-01-01"), null, "name2", "groupid2", null, null,null,null,false,null,null,null,null,null,false);
         motherFromDb.setValuesFrom(mother);
         Assert.assertEquals(DateTime.parse("2010-01-01"), motherFromDb.getDateModified());
         Assert.assertEquals("flwid", motherFromDb.getFlwId());
@@ -21,8 +21,8 @@ public class MotherTest {
 
     @Test
     public void shouldNotCopyEmptyPropertiesFromAnotherMotherObject()  {
-        Mother mother = new Mother("caseId","pregnancy",null,"","arpan","groupid",null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,false);
-        Mother motherFromDb = new Mother("caseId","pregnancy", DateTime.parse("2010-01-01"), "flwid", "arpana", "", null, null,null,null,false,null,null,null,null,null,true);
+        Mother mother = new Mother("caseId", null,"","arpan","groupid",null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,false);
+        Mother motherFromDb = new Mother("caseId", DateTime.parse("2010-01-01"), "flwid", "arpana", "", null, null,null,null,false,null,null,null,null,null,true);
         motherFromDb.setValuesFrom(mother);
         Assert.assertEquals(DateTime.parse("2010-01-01"), motherFromDb.getDateModified());
         Assert.assertEquals("flwid", motherFromDb.getFlwId());

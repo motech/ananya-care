@@ -1,4 +1,4 @@
-package org.motechproject.care.service;
+package org.motechproject.care.service.util;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 

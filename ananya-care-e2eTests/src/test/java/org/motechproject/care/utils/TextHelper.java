@@ -1,4 +1,4 @@
-package org.motechproject.care;
+package org.motechproject.care.utils;
 
 import org.apache.http.HttpResponse;
 

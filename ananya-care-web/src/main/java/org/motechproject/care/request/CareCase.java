@@ -9,6 +9,7 @@ public class CareCase{
     private String date_modified;
     private String case_name;
 
+    /* Mother */
     private String edd;
     private String add;
     private String tt_1_date;
@@ -19,10 +20,19 @@ public class CareCase{
     private String anc_3_date;
     private String anc_4_date;
     private String tt_booster_date;
+
     private String mother_alive;
+    /* Child */
+
+    private String baby_measles;
+    private String bcg_date;
+    private String vit_a_1_date;
+
 
     public CareCase() {
     }
+
+
 
     public String getMother_alive() {
         return mother_alive;
@@ -161,4 +171,27 @@ public class CareCase{
     }
 
 
+    public String getBaby_measles() {
+        return baby_measles;
+    }
+
+    public String getBcg_date() {
+        return bcg_date;
+    }
+
+    public String getVit_a_1_date() {
+        return vit_a_1_date;
+    }
+
+    public void setBaby_measles(String baby_measles) {
+        this.baby_measles = baby_measles;
+    }
+
+    public void setBcg_date(String bcg_date) {
+        this.bcg_date = bcg_date;
+    }
+
+    public void setVit_a_1_date(String vit_a_1_date) {
+        this.vit_a_1_date = vit_a_1_date;
+    }
 }

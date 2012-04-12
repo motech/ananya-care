@@ -7,7 +7,8 @@ import org.junit.After;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.repository.SpringIntegrationTest;
+import org.motechproject.care.utils.CaseUtils;
+import org.motechproject.care.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +18,7 @@ import java.io.IOException;
 
 import static junit.framework.Assert.fail;
 
-public class CareCaseFunctionalTest extends SpringIntegrationTest{
+public class CareCaseFunctionalTest extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;
 
@@ -28,12 +29,11 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
 
     @Test
     public void shouldCreateMother() throws IOException {
-        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
-        String body = FileUtils.readFileToString(file);
+        String uniqueCaseId=CaseUtils.getUniqueCaseId();
 
-        new RestTemplate().postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+        postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
+        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        Mother motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
@@ -45,17 +45,13 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
 
     @Test
     public void shouldUpdateMother() throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
+        String uniqueCaseId = CaseUtils.getUniqueCaseId();
 
-        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
-        String body = FileUtils.readFileToString(file);
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+        postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
 
-        file = new File(getClass().getResource("/sampleMotherCaseForUpdate.xml").getPath());
-        body = FileUtils.readFileToString(file);
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+        postXmlToUrl(uniqueCaseId, "sampleMotherCaseForUpdate.xml");
+        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        Mother motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
@@ -67,28 +63,34 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest{
         Assert.assertFalse(motherFromDb.isActive());
     }
 
+    private void postXmlToUrl(String uniqueCaseId, String xmlFileName) throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        File file = new File(getClass().getResource("/"+xmlFileName).getPath());
+        String body = FileUtils.readFileToString(file);
+        String modifiedXml = body.replace("caseId", uniqueCaseId);
+
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", modifiedXml);
+    }
+
     @Test
     public void shouldCloseMother() throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
+        String uniqueCaseId = CaseUtils.getUniqueCaseId();
 
-        File file = new File(getClass().getResource("/sampleMotherCase.xml").getPath());
-        String body = FileUtils.readFileToString(file);
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
-        Mother motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
+        postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
+
+        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
+
         Assert.assertTrue(motherFromDb.isActive());
 
-        file = new File(getClass().getResource("/sampleMotherCaseForClose.xml").getPath());
-        body = FileUtils.readFileToString(file);
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
+        postXmlToUrl(uniqueCaseId, "sampleMotherCaseForClose.xml");
+        motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        motherFromDb = allMothers.findByCaseId("8055b3ec-bec6-46cc-9e72-435ebc4eaec1");
         Assert.assertFalse(motherFromDb.isActive());
     }
 
     @Test
     public void shouldThrowParserExceptionWhenAnyMandatoryFieldMissing() throws IOException {
         RestTemplate restTemplate = new RestTemplate();
-
         File file = new File(getClass().getResource("/sampleMotherCaseWithInvalidMandatoryField.xml").getPath());
         String body = FileUtils.readFileToString(file);
         try{

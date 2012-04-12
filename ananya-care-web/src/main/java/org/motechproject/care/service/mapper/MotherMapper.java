@@ -12,7 +12,7 @@ public class MotherMapper {
         boolean last_preg_tt = careCase.getLast_preg_tt()!=null && careCase.getLast_preg_tt().equalsIgnoreCase("yes");
         boolean isMotherActive = careCase.getMother_alive() == null || !careCase.getMother_alive().equalsIgnoreCase("no");
         return new Mother(
-                careCase.getCase_id(),  careCase.getCase_type(),get_date_obj(careCase.getDate_modified()), careCase.getUser_id(), careCase.getCase_name(),
+                careCase.getCase_id(), get_date_obj(careCase.getDate_modified()), careCase.getUser_id(), careCase.getCase_name(),
                 careCase.getOwner_id(), get_date_obj(careCase.getEdd()), get_date_obj(careCase.getAdd())
                 , get_date_obj(careCase.getTt_1_date()), get_date_obj(careCase.getTt_2_date()), last_preg_tt, get_date_obj(careCase.getAnc_1_date())
                 , get_date_obj(careCase.getAnc_2_date()), get_date_obj(careCase.getAnc_3_date()), get_date_obj(careCase.getAnc_4_date()), get_date_obj(careCase.getTt_booster_date()),isMotherActive);

@@ -1,13 +1,8 @@
 package org.motechproject.care.service;
 
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.service.CareScheduleTrackingService;
-import org.motechproject.care.service.mapper.MotherMapper;
 import org.motechproject.casexml.service.CaseService;
-import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
-import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,13 +14,9 @@ public class CareCaseService extends CaseService<CareCase>{
     private MotherService motherService;
 
     @Autowired
-    private CareScheduleTrackingService scheduleTrackingService;
-
-    @Autowired
-    public CareCaseService(MotherService motherService,CareScheduleTrackingService scheduleTrackingService) {
+    public CareCaseService(MotherService motherService) {
         super(CareCase.class);
         this.motherService = motherService;
-        this.scheduleTrackingService = scheduleTrackingService;
     }
 
     @Override
@@ -39,15 +30,14 @@ public class CareCaseService extends CaseService<CareCase>{
 
     @Override
     public void updateCase(CareCase careCase) {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
     public void createCase(CareCase careCase) {
-        if(careCase.getCase_type().equals(CaseType.Mother.getType())){
-            Mother motherObj = MotherMapper.map(careCase);
-            motherService.createUpdateCase(motherObj);
-            scheduleTrackingService.enrollMother(motherObj.getCaseId(), motherObj.getEdd());
-        }
+        if(careCase.getCase_type().equals(CaseType.Mother.getType()))
+            motherService.process(careCase);
+//        else {
+//            Child child =
+//        }
     }
 }

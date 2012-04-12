@@ -1,4 +1,4 @@
-package org.motechproject.care.repository;
+package org.motechproject.care.utils;
 
 import org.ektorp.BulkDeleteDocument;
 import org.ektorp.CouchDbConnector;
