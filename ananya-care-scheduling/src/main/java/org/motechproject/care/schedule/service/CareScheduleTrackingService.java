@@ -23,15 +23,16 @@ public class CareScheduleTrackingService  {
     public void enrollMother(String motherCaseId, DateTime edd) {
         if(edd == null) return;
         if(isNotEnrolled(motherCaseId))
-            trackingService.enroll(enrollmentRequestForTT(motherCaseId, edd));
+            trackingService.enroll(enrollmentRequestForTT(motherCaseId));
     }
 
-    private EnrollmentRequest enrollmentRequestForTT(String motherCaseId, DateTime edd) {
-        LocalDate referenceDate = new LocalDate(edd.minusWeeks(36));
+    private EnrollmentRequest enrollmentRequestForTT(String motherCaseId) {
+        LocalDate referenceDate = DateUtil.today();
+        Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(5));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());
 
-        return new EnrollmentRequest(motherCaseId, ttVaccinationScheduleName, null, referenceDate, null, enrollmentDate, enrollmentTime,null,null);
+        return new EnrollmentRequest(motherCaseId, ttVaccinationScheduleName, preferredAlertTime, referenceDate, null, enrollmentDate, enrollmentTime,null,null);
     }
 
     private boolean isNotEnrolled(String motherCaseId) {

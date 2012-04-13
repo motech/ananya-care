@@ -1,8 +1,9 @@
 package org.motechproject.care.service.schedule.listener;
 
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.motechproject.care.domain.CareCaseTask;
-import org.motechproject.care.domain.Client;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.service.util.TaskIdMapper;
@@ -43,14 +44,28 @@ public class CareAlertServiceListener {
         MilestoneEvent msEvent = new MilestoneEvent(event);
         String externalId = msEvent.getExternalId();
         MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
-        Client client = allMothers.findByCaseId(externalId);
+        Mother mother = allMothers.findByCaseId(externalId);
+
+        DateTime dateEligible = milestoneAlert.getDueDateTime();
+        if(dateEligible.isAfter(mother.getEdd())) {
+            return;
+        }
 
         String userId = ananyaCareProperties.getProperty("motech.user.id");
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
-        CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), milestoneAlert.getDueDateTime().toString("yyyy-MM-dd"), milestoneAlert.getLateDateTime().toString("yyyy-MM-dd"), client.getGroupId(),userId, client.getCaseType());
+
+
+        DateTime dateExpires = validExpiresDateTime(milestoneAlert, mother);
+        CareCaseTask careCasetask = createCasetask(externalId, milestoneAlert.getMilestoneName(), dateEligible.toString("yyyy-MM-dd"), dateExpires.toString("yyyy-MM-dd"), mother.getGroupId(),userId, mother.getCaseType());
         allCareCaseTasks.add(careCasetask);
         commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
 
+    }
+
+    private DateTime validExpiresDateTime(MilestoneAlert milestoneAlert, Mother mother) {
+        DateTime expiresDateTime = milestoneAlert.getLateDateTime();
+        DateTime edd = mother.getEdd();
+        return expiresDateTime.isAfter(edd) ? edd : expiresDateTime;
     }
 
 
