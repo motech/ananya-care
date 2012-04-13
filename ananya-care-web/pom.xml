@@ -69,9 +69,6 @@
                 <version>2.7.2</version>
                 <configuration>
                     <printSummary>true</printSummary>
-                    <excludes>
-                        <exclude>**/*.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>

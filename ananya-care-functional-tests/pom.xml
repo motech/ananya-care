@@ -34,6 +34,11 @@
           <version>0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
+          <groupId>org.motechproject.ananya-care</groupId>
+          <artifactId>ananya-care-scheduling</artifactId>
+          <version>0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-test</artifactId>
           <version>3.0.5.RELEASE</version>
@@ -50,7 +55,7 @@
                 <configuration>
                     <printSummary>true</printSummary>
                     <excludes>
-                        <exclude>**Test.java</exclude>
+                        <exclude>**/*FunctionalTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -59,6 +64,9 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.0.1.v20110908</version>
                 <configuration>
+                    <!--<webApp>${project.parent.basedir}/ananya-care-web/target/ananya-care-web-${release.version}.war</webApp>-->
+                    <webAppSourceDirectory>${project.parent.basedir}/ananya-care-web/src/main/webapp</webAppSourceDirectory>
+                    <classesDirectory>${project.parent.basedir}/ananya-care-scheduling/target/classes</classesDirectory>
                     <systemProperties>
                         <systemProperty>
                             <name>jetty.port</name>
@@ -105,7 +113,7 @@
                         <configuration>
                             <argLine>-XX:MaxPermSize=1024M</argLine>
                             <includes>
-                                <include>**Test.java</include>
+                                <include>**/*FunctionalTest.java</include>
                             </includes>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                         </configuration>
