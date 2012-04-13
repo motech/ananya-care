@@ -14,12 +14,6 @@
     <packaging>war</packaging>
     <name>Ananya Care Web</name>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.0.5.RELEASE</spring.version>
-        <motech.version>0.10-SNAPSHOT</motech.version>
-        <jetty.port>9979</jetty.port>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -76,7 +70,7 @@
                 <configuration>
                     <printSummary>true</printSummary>
                     <excludes>
-                        <exclude>**/functional/**/*.java</exclude>
+                        <exclude>**/*.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -97,47 +91,7 @@
                     <stopKey>secret</stopKey>
                     <stopPort>6669</stopPort>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>start-jetty</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <scanIntervalSeconds>0</scanIntervalSeconds>
-                            <daemon>true</daemon>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>stop-jetty</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.9</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                        <configuration>
-                            <argLine>-XX:MaxPermSize=1024M</argLine>
-                            <includes>
-                                <include>**/functional/**/*Test.java</include>
-                            </includes>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        </configuration>
-                    </execution>
-                </executions>
-             </plugin>
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>

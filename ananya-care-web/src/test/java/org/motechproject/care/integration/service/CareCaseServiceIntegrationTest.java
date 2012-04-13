@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-Web.xml")
 public class CareCaseServiceIntegrationTest extends SpringIntegrationTest {
 
     @Autowired

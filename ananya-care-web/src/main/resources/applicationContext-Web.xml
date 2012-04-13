@@ -8,15 +8,21 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
-
+ 
 
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
+    <util:properties id="ananyaCareProperties" location="classpath:/ananyaCare.properties"/>
+
+
+
     <context:spring-configured/>
     <context:annotation-config/>
+
+    <import resource="classpath:applicationContext-Scheduling.xml"/>
+    <import resource="classpath:applicationContext-commcare-gateway.xml"/>
+
     <context:component-scan base-package="org.motechproject.care"/>
 
-    <import resource="classpath:applicationContext-Care.xml"/>
-    <import resource="classpath:applicationContext-commcare-gateway.xml"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
@@ -28,5 +34,5 @@
         <constructor-arg value="ananya-care"/>
         <constructor-arg ref="ananyaCareDbInstance"/>
     </bean>
-
+ 
 </beans>

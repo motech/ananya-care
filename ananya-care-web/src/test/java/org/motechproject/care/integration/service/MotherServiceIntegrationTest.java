@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-Web.xml")
 public class MotherServiceIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private MotherService motherService;

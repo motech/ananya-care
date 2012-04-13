@@ -10,7 +10,7 @@
     <modules>
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
-        <module>ananya-care-e2eTests</module>
+        <module>ananya-care-functional-tests</module>
         <module>ananya-care-dummy-commcare-hq</module>
     </modules>
     <name>Ananya Care</name>
@@ -20,6 +20,7 @@
         <spring.version>3.0.5.RELEASE</spring.version>
         <release.version>0.1-SNAPSHOT</release.version>
         <motech.version>0.10-SNAPSHOT</motech.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <distributionManagement>

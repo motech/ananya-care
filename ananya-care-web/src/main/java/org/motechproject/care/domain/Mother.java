@@ -42,7 +42,7 @@ public class Mother extends Client {
         this.anc3Date = anc3Date;
         this.anc4Date = anc4Date;
         this.ttBoosterDate = ttBoosterDate;
-        this.isActive =isActive;
+        this.isActive = isActive;
     }
 
     public DateTime getTt1Date() {
