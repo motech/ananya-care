@@ -10,13 +10,10 @@ import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-
-import static junit.framework.Assert.fail;
 
 public class CareCaseFunctionalTest extends SpringIntegrationTest {
     @Autowired
@@ -86,19 +83,5 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
         Assert.assertFalse(motherFromDb.isActive());
-    }
-
-    @Test
-    public void shouldThrowParserExceptionWhenAnyMandatoryFieldMissing() throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
-        File file = new File(getClass().getResource("/sampleMotherCaseWithInvalidMandatoryField.xml").getPath());
-        String body = FileUtils.readFileToString(file);
-        try{
-            restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);
-            fail("Expected exception while parsing");
-        }
-        catch (HttpServerErrorException ex){
-            Assert.assertEquals("500 Mandatory field case_id is missing", ex.getMessage());
-        }
     }
 }
