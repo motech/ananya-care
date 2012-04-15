@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class CareScheduleTrackingService  {
 
     public static final String ttVaccinationScheduleName = "TT Vaccination";
+    public static final String measlesVaccinationScheduleName = "Measles Vaccination";
     private ScheduleTrackingService trackingService;
 
     @Autowired
@@ -39,4 +40,7 @@ public class CareScheduleTrackingService  {
         return trackingService.getEnrollment(motherCaseId, ttVaccinationScheduleName) == null;
     }
 
+    public void enrollChild(String motherCaseId, DateTime edd) {
+//        trackingService.enroll(enrollmentRequestForTT(motherCaseId));
+    }
 }

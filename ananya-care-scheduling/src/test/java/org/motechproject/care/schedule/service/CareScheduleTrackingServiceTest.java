@@ -2,6 +2,7 @@ package org.motechproject.care.schedule.service;
 
 import junit.framework.Assert;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,5 +90,24 @@ public class CareScheduleTrackingServiceTest{
 
         verify(scheduleTrackingService).getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName);
         verify(scheduleTrackingService, never()).enroll(any(EnrollmentRequest.class));
+    }
+
+    @Test
+    public void shouldEnrollChildForMeaslesVaccination(){
+        LocalDate dob = new LocalDate(2012, 10, 10);
+
+        String childCaseId = "childCaseId";
+        when(scheduleTrackingService.getEnrollment(childCaseId, CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
+        careScheduleTrackingService.enrollChild(childCaseId, DateUtil.newDateTime(dob));
+
+        ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
+        verify(scheduleTrackingService).enroll(captor.capture());
+        verify(scheduleTrackingService).getEnrollment(childCaseId, CareScheduleTrackingService.measlesVaccinationScheduleName);
+
+        EnrollmentRequest enrollmentRequest = captor.getValue();
+        Assert.assertEquals(dob, enrollmentRequest.getReferenceDate());
+        Assert.assertNotNull(enrollmentRequest.getPreferredAlertTime());
+        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
+        Assert.assertEquals(CareScheduleTrackingService.measlesVaccinationScheduleName, enrollmentRequest.getScheduleName());
     }
 }

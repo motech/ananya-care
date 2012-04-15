@@ -1,0 +1,20 @@
+{
+    "name": "Measles Vaccination",
+    "milestones": [
+        {
+            "name": "Measles 1",
+            "scheduleWindows": {
+                "earliest": ["0 Weeks"],
+                "due": ["60 Weeks"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1"
+                }
+            ]
+        }
+    ]
+}
