@@ -5,7 +5,7 @@ import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.CareScheduleTrackingService;
+import org.motechproject.care.schedule.service.ChildVaccinationProcessor;
 import org.motechproject.care.service.mapper.ChildMapper;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +15,21 @@ import org.springframework.stereotype.Service;
 public class ChildService {
 
     private AllChildren allChildren;
-    private CareScheduleTrackingService scheduleTrackingService;
+    private ChildVaccinationProcessor childVaccinationProcessor;
     private AllMothers allMothers;
 
 
     @Autowired
-    public ChildService(AllChildren allChildren, CareScheduleTrackingService scheduleTrackingService, AllMothers allMothers) {
+    public ChildService(AllChildren allChildren, ChildVaccinationProcessor childVaccinationProcessor, AllMothers allMothers) {
         this.allChildren = allChildren;
-        this.scheduleTrackingService = scheduleTrackingService;
+        this.childVaccinationProcessor = childVaccinationProcessor;
         this.allMothers = allMothers;
     }
 
     public void process(CareCase careCase) {
         Child child = ChildMapper.map(careCase);
         createUpdate(child);
+        childVaccinationProcessor.enrollUpdateVaccines(child.getCaseId(), child.getDOB());
     }
 
     private void createUpdate(Child child) {

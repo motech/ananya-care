@@ -2,7 +2,6 @@ package org.motechproject.care.schedule.service;
 
 import junit.framework.Assert;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +50,7 @@ public class CareScheduleTrackingServiceTest{
         verify(scheduleTrackingService).getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName);
 
         EnrollmentRequest enrollmentRequest = captor.getValue();
-        Assert.assertEquals(DateUtil.today(), enrollmentRequest.getReferenceDate());
+        Assert.assertEquals(edd.minusMonths(9).toLocalDate(), enrollmentRequest.getReferenceDate());
         Assert.assertNotNull(enrollmentRequest.getPreferredAlertTime());
         Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
         Assert.assertEquals(motherCaseId, enrollmentRequest.getExternalId());
@@ -90,45 +89,5 @@ public class CareScheduleTrackingServiceTest{
 
         verify(scheduleTrackingService).getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName);
         verify(scheduleTrackingService, never()).enroll(any(EnrollmentRequest.class));
-    }
-
-    @Test
-    public void shouldEnrollChildForMeaslesVaccinationWhenAgeLessThan9Months(){
-        DateTime dob = new DateTime(2012, 3, 10, 0, 0);
-        String childCaseId = "childCaseId";
-
-        when(scheduleTrackingService.getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
-        careScheduleTrackingService.enrollChild(childCaseId, dob);
-
-        ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
-        verify(scheduleTrackingService).enroll(captor.capture());
-        verify(scheduleTrackingService).getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName);
-
-        EnrollmentRequest enrollmentRequest = captor.getValue();
-        Assert.assertEquals(new LocalDate(2012, 3, 10).plusMonths(9), enrollmentRequest.getReferenceDate());
-        Assert.assertEquals(childCaseId, enrollmentRequest.getExternalId());
-        Assert.assertEquals(CareScheduleTrackingService.measlesVaccinationScheduleName, enrollmentRequest.getScheduleName());
-        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
-
-    }
-
-    @Test
-    public void shouldEnrollChildForMeaslesVaccinationWhenAgeGreaterThan9Months(){
-        DateTime dob = new DateTime(2011, 3, 10, 0, 0);
-        String childCaseId = "childCaseId";
-
-        when(scheduleTrackingService.getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
-        careScheduleTrackingService.enrollChild(childCaseId, dob);
-
-        ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
-        verify(scheduleTrackingService).enroll(captor.capture());
-        verify(scheduleTrackingService).getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName);
-
-        EnrollmentRequest enrollmentRequest = captor.getValue();
-        Assert.assertEquals(DateUtil.today(), enrollmentRequest.getReferenceDate());
-        Assert.assertEquals(childCaseId, enrollmentRequest.getExternalId());
-        Assert.assertEquals(CareScheduleTrackingService.measlesVaccinationScheduleName, enrollmentRequest.getScheduleName());
-        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
-
     }
 }

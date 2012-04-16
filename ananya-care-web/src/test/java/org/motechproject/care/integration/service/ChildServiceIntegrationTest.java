@@ -11,17 +11,20 @@ import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
+import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
 import org.motechproject.care.service.ChildService;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
+@ContextConfiguration("classpath:applicationContext-Web.xml")
 public class ChildServiceIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private ChildService childService;
@@ -30,6 +33,9 @@ public class ChildServiceIntegrationTest extends SpringIntegrationTest {
     private AllChildren allChildren;
     @Autowired
     private AllMothers allMothers;
+    @Autowired
+    private ScheduleTrackingService trackingService;
+
     private final String caseId = CaseUtils.getUniqueCaseId();
     private final String motherCaseId = CaseUtils.getUniqueCaseId();
 
@@ -61,6 +67,8 @@ public class ChildServiceIntegrationTest extends SpringIntegrationTest {
         Assert.assertEquals(DateTime.parse("2012-02-01"),child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
         Assert.assertEquals(dobOfChild,child.getDOB());
+        EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, VaccinationSchedule.Measles.getName());
+        Assert.assertEquals(dobOfChild.toLocalDate(),enrollment.getReferenceDateTime().toLocalDate());
     }
     
    

@@ -5,7 +5,7 @@
             "name": "TT 1",
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
-                "due": ["36 Weeks"]
+                "due": ["9 Months"]
             },
             "alerts": [
                 {

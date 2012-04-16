@@ -94,13 +94,13 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForMeaslesVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor("Measles Vaccination", newDate(2011, 12, 1).plusMonths(9), null);
+        schedule.enrollFor("Measles Vaccination", newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Measles", earliest);
         schedule.assertAlertsStartWith("Measles", due, date(1, SEPTEMBER));
         schedule.assertNoAlerts("Measles", late);
         schedule.assertNoAlerts("Measles", max);
-        visualization.outputTo("mother-tetanus-.html", 2);
+        visualization.outputTo("child-measles-.html", 2);
     }
 
     private Date date(int day, int month) {

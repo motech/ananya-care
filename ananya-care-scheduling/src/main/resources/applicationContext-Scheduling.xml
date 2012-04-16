@@ -24,6 +24,11 @@
     <context:component-scan base-package="org.motechproject.care.schedule.listener"/>
     <context:component-scan base-package="org.motechproject.care"/>
 
+    <bean id="childVaccinationProcessor" class="org.motechproject.care.schedule.service.ChildVaccinationProcessor">
+        <constructor-arg>
+            <ref bean="measles"/>
+        </constructor-arg>
+    </bean>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>

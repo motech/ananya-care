@@ -15,7 +15,7 @@ import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.service.CareScheduleTrackingService;
+import org.motechproject.care.schedule.service.ChildVaccinationProcessor;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 
 import static org.mockito.Mockito.*;
@@ -29,15 +29,13 @@ public class ChildServiceTest {
     private AllMothers allMothers;
 
     @Mock
-    private CareScheduleTrackingService scheduleTrackingService;
+    private ChildVaccinationProcessor childVaccinationProcessor;
     private ChildService childService;
 
     @Before
     public void setUp(){
-        childService = new ChildService(allChildren, scheduleTrackingService, allMothers);
-
+        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
     }
-
 
     @Test
     public void shouldSaveChildIfDoesNotExist_WhenMotherExistsAndAgeLessThanAYear() {
@@ -45,28 +43,31 @@ public class ChildServiceTest {
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         Mother mother = new Mother();
-        mother.setAdd(DateTime.now().minusMonths(1));
+        DateTime dobOfChild = DateTime.now().minusMonths(1);
+        mother.setAdd(dobOfChild);
         when(allMothers.findByCaseId(careCase.getMother_id())).thenReturn(mother);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
         childService.process(careCase);
         verify(allChildren).add(captor.capture());
         Child child = captor.getValue();
         Assert.assertEquals(caseId,child.getCaseId());
-        Assert.assertEquals(CaseType.Child.getType(),child.getCaseType());
-        Assert.assertEquals(DateTime.parse("2012-02-01"),child.getMeaslesDate());
+        Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
+        Assert.assertEquals(DateTime.parse("2012-02-01"), child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
+        verify(childVaccinationProcessor).enrollUpdateVaccines(caseId, dobOfChild);
     }
 
     @Test
     public void shouldNotSaveChildIfMotherDoesNotExist() {
         String caseId = "caseId";
         String motherId = "motherId";
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB("2010-09-12").withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         when(allMothers.findByCaseId(motherId)).thenReturn(null);
         when(allChildren.findByCaseId(motherId)).thenReturn(null);
         childService.process(careCase);
         verify(allChildren,never()).add((Child) Matchers.any());
+        verify(childVaccinationProcessor).enrollUpdateVaccines(caseId,DateTime.parse("2010-09-12"));
     }
 
     @Test

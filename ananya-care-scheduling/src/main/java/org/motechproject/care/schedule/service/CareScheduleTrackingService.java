@@ -2,8 +2,6 @@ package org.motechproject.care.schedule.service;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
@@ -29,32 +27,15 @@ public class CareScheduleTrackingService {
             trackingService.enroll(enrollmentRequestFor(CaseId, ttVaccinationScheduleName, edd));
     }
 
-    private EnrollmentRequest enrollmentRequestFor(String CaseId, String vaccinationScheduleName, DateTime dob) {
-        LocalDate referenceDate = calculateReferenceDate(vaccinationScheduleName, dob);
+    private EnrollmentRequest enrollmentRequestFor(String CaseId, String vaccinationScheduleName, DateTime edd) {
+        LocalDate referenceDate = edd.minusMonths(9).toLocalDate() ;
         Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(5));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());
-
         return new EnrollmentRequest(CaseId, vaccinationScheduleName, preferredAlertTime, referenceDate, null, enrollmentDate, enrollmentTime, null, null);
-    }
-
-    private LocalDate calculateReferenceDate(String vaccinationScheduleName, DateTime dob) {
-        if(vaccinationScheduleName.equals(measlesVaccinationScheduleName))
-            return getAgeInMoths(dob) >= 0.75 ? DateUtil.today() : dob.plusMonths(9).toLocalDate();
-        return DateUtil.today();
     }
 
     private boolean isNotEnrolled(String CaseId, String vaccinationName) {
         return trackingService.getEnrollment(CaseId, vaccinationName) == null;
-    }
-
-    private float getAgeInMoths(DateTime dob) {
-        Period period = new Period(dob.toLocalDate(), DateUtil.today(), PeriodType.months());
-        return period.getMonths()/12;
-    }
-
-    public void enrollChild(String caseId, DateTime dob) {
-        if (isNotEnrolled(caseId, measlesVaccinationScheduleName))
-        trackingService.enroll(enrollmentRequestFor(caseId,measlesVaccinationScheduleName, dob));
     }
 }

@@ -16,6 +16,7 @@ public class ChildCareCaseBuilder {
     private String baby_measles = "2012-01-02";
     private String vit_a_1_date = "2012-01-02";
     private String motherCaseId="motherCaseId";
+    private String DOB="2009-01-02";
 
     public CareCase build(){
         CareCase careCase = new CareCase();
@@ -29,6 +30,7 @@ public class ChildCareCaseBuilder {
         careCase.setVit_a_1_date(vit_a_1_date);
         careCase.setBaby_measles(baby_measles);
         careCase.setMother_id(motherCaseId);
+        careCase.setAdd(DOB);
         return careCase;
     }
 
@@ -75,4 +77,10 @@ public class ChildCareCaseBuilder {
         this.motherCaseId = motherCaseId;
         return this;
     }
+
+    public ChildCareCaseBuilder withDOB(String dob){
+        this.DOB =dob;
+        return this;
+    }
+
 }
