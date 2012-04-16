@@ -52,7 +52,7 @@ public class MotherServiceTest {
         DateTime expectedEdd = new DateTime(2012, 1, 2, 0, 0);
         Assert.assertEquals(expectedEdd,motherInDb.getEdd());
         Assert.assertTrue(motherInDb.isActive());
-        verify(scheduleTrackingService).enrollMother(eq(caseId), eq(expectedEdd));
+        verify(scheduleTrackingService).enroll(eq(caseId), eq(expectedEdd));
     }
 
     @Test

@@ -24,7 +24,7 @@ public class MotherService{
     public void process(CareCase careCase) {
         Mother mother = MotherMapper.map(careCase);
         createUpdate(mother);
-        scheduleTrackingService.enrollMother(mother.getCaseId(), mother.getEdd());
+        scheduleTrackingService.enroll(mother.getCaseId(), mother.getEdd());
 
     }
 

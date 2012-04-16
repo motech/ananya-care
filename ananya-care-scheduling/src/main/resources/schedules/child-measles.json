@@ -2,7 +2,8 @@
     "name": "Measles Vaccination",
     "milestones": [
         {
-            "name": "Measles 1",
+            "name": "Measles",
+            "absolute": true,
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
                 "due": ["60 Weeks"]

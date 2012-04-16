@@ -34,7 +34,7 @@ public class CareScheduleTrackingServiceTest{
 
     @Test
     public void shouldNotEnrollMotherWhenEddNull(){
-        careScheduleTrackingService.enrollMother("motherCaseId", null);
+        careScheduleTrackingService.enroll("motherCaseId", null);
         verify(scheduleTrackingService, never()).enroll(any(EnrollmentRequest.class));
     }
 
@@ -44,7 +44,7 @@ public class CareScheduleTrackingServiceTest{
         String motherCaseId = "motherCaseId";
 
         when(scheduleTrackingService.getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName)).thenReturn(null);
-        careScheduleTrackingService.enrollMother(motherCaseId, edd);
+        careScheduleTrackingService.enroll(motherCaseId, edd);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(scheduleTrackingService).enroll(captor.capture());
@@ -65,7 +65,7 @@ public class CareScheduleTrackingServiceTest{
         String motherCaseId = "motherCaseId";
 
         when(scheduleTrackingService.getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName)).thenReturn(null);
-        careScheduleTrackingService.enrollMother(motherCaseId, edd);
+        careScheduleTrackingService.enroll(motherCaseId, edd);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(scheduleTrackingService).enroll(captor.capture());
@@ -86,28 +86,49 @@ public class CareScheduleTrackingServiceTest{
 
         EnrollmentRecord enrollmentRecord = new EnrollmentRecord(null, null, null, null, null, null, null, null, null, null);
         when(scheduleTrackingService.getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName)).thenReturn(enrollmentRecord);
-        careScheduleTrackingService.enrollMother(motherCaseId, edd);
+        careScheduleTrackingService.enroll(motherCaseId, edd);
 
         verify(scheduleTrackingService).getEnrollment("motherCaseId", CareScheduleTrackingService.ttVaccinationScheduleName);
         verify(scheduleTrackingService, never()).enroll(any(EnrollmentRequest.class));
     }
 
     @Test
-    public void shouldEnrollChildForMeaslesVaccination(){
-        LocalDate dob = new LocalDate(2012, 10, 10);
-
+    public void shouldEnrollChildForMeaslesVaccinationWhenAgeLessThan9Months(){
+        DateTime dob = new DateTime(2012, 3, 10, 0, 0);
         String childCaseId = "childCaseId";
-        when(scheduleTrackingService.getEnrollment(childCaseId, CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
-        careScheduleTrackingService.enrollChild(childCaseId, DateUtil.newDateTime(dob));
+
+        when(scheduleTrackingService.getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
+        careScheduleTrackingService.enrollChild(childCaseId, dob);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(scheduleTrackingService).enroll(captor.capture());
-        verify(scheduleTrackingService).getEnrollment(childCaseId, CareScheduleTrackingService.measlesVaccinationScheduleName);
+        verify(scheduleTrackingService).getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName);
 
         EnrollmentRequest enrollmentRequest = captor.getValue();
-        Assert.assertEquals(dob, enrollmentRequest.getReferenceDate());
-        Assert.assertNotNull(enrollmentRequest.getPreferredAlertTime());
-        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
+        Assert.assertEquals(new LocalDate(2012, 3, 10).plusMonths(9), enrollmentRequest.getReferenceDate());
+        Assert.assertEquals(childCaseId, enrollmentRequest.getExternalId());
         Assert.assertEquals(CareScheduleTrackingService.measlesVaccinationScheduleName, enrollmentRequest.getScheduleName());
+        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
+
+    }
+
+    @Test
+    public void shouldEnrollChildForMeaslesVaccinationWhenAgeGreaterThan9Months(){
+        DateTime dob = new DateTime(2011, 3, 10, 0, 0);
+        String childCaseId = "childCaseId";
+
+        when(scheduleTrackingService.getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName)).thenReturn(null);
+        careScheduleTrackingService.enrollChild(childCaseId, dob);
+
+        ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
+        verify(scheduleTrackingService).enroll(captor.capture());
+        verify(scheduleTrackingService).getEnrollment("childCaseId", CareScheduleTrackingService.measlesVaccinationScheduleName);
+
+        EnrollmentRequest enrollmentRequest = captor.getValue();
+        Assert.assertEquals(DateUtil.today(), enrollmentRequest.getReferenceDate());
+        Assert.assertEquals(childCaseId, enrollmentRequest.getExternalId());
+        Assert.assertEquals(CareScheduleTrackingService.measlesVaccinationScheduleName, enrollmentRequest.getScheduleName());
+        Assert.assertNotNull(enrollmentRequest.getEnrollmentDateTime());
+
     }
 }
