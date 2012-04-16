@@ -27,7 +27,7 @@
     </dependencies>
 
     <build>
-        <finalName>ananya-care-dummy-commcare-hq-0.1-SNAPSHOT</finalName>
+        <finalName>ananya-care-dummy-commcare-hq-${release.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

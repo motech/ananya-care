@@ -12,6 +12,8 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
+    <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
+
     <context:component-scan base-package="org.motechproject.commcarehq"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">

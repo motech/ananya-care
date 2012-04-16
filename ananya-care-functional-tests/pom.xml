@@ -46,7 +46,7 @@
   </dependencies>
 
     <build>
-        <finalName>ananya-care-functional-tests-0.1-SNAPSHOT</finalName>
+        <finalName>ananya-care-functional-tests-${release.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
