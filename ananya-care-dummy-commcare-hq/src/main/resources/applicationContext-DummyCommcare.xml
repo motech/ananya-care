@@ -9,14 +9,10 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
                            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
  
-
-    <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
-
     <context:spring-configured/>
     <context:annotation-config/>
 
     <context:component-scan base-package="org.motechproject.commcarehq"/>
-
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>

@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
@@ -31,8 +30,7 @@ import java.util.UUID;
  * Unit test for simple App.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-FunctionalTests.xml")
-@Ignore
+@ContextConfiguration("classpath:applicationContext-FunctionalTestsQA.xml")
 public class RegistrationFunctionalTest {
 
     @Autowired
@@ -64,9 +62,9 @@ public class RegistrationFunctionalTest {
             }
         };
 
-        Mother mother = task.execute(10, 10000);
+        Mother mother = task.execute(100, 1000);
         Assert.assertEquals(name, mother.getName());
-        Assert.assertEquals("fdfd", mother.getFlwId());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
     }

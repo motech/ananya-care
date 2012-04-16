@@ -40,21 +40,10 @@
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-scheduletracking-api</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>motech-platform-server-api</artifactId>
-            <groupId>org.motechproject</groupId>
-            <version>${motech.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
-        <finalName>ananya-care-web-0.1-SNAPSHOT</finalName>
+        <finalName>ananya-care-web-${release.version}</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
