@@ -5,6 +5,8 @@ import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.quartz.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,20 +28,38 @@ public abstract class SpringIntegrationTest {
     @Autowired
     protected Properties ananyaCareProperties;
 
+    @Autowired
+    protected ScheduleTrackingService trackingService;
+
     protected ArrayList<BulkDeleteDocument> toDelete;
+    protected ArrayList<Pair> schedulesToDelete;
 
     @Before
     public void before() {
         toDelete = new ArrayList<BulkDeleteDocument>();
+        schedulesToDelete = new ArrayList<Pair>();
     }
 
     @After
     public void after() {
         ananyaCareDbConnector.executeBulk(toDelete);
+        for(int i=0 ;i< schedulesToDelete.size(); i++){
+            Pair s = schedulesToDelete.get(i);
+            String externalId = s.getFirst().toString();
+            String scheduleName = s.getSecond().toString();
+            ArrayList<String> scheduleNames = new ArrayList<String>();
+            scheduleNames.add(scheduleName);
+            trackingService.unenroll(externalId, scheduleNames);
+        }
     }
+
 
     protected void markForDeletion(Object document) {
         toDelete.add(BulkDeleteDocument.of(document));
+    }
+
+    protected void markScheduleForUnEnrollment(String externalId, String scheduleName) {
+        schedulesToDelete.add(new Pair(externalId, scheduleName));
     }
 
     protected String getAppServerPort() {

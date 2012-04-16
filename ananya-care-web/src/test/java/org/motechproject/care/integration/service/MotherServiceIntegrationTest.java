@@ -6,19 +6,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.utils.CaseUtils;
-import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
+import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.service.MotherService;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
+import org.motechproject.care.utils.CaseUtils;
+import org.motechproject.care.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,6 +45,8 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         CareCase careCase = new MotherCareCaseBuilder().withCaseId(caseId).build();
         assertNull(allMothers.findByCaseId(caseId));
         motherService.process(careCase);
+
+        markScheduleForUnEnrollment(caseId, CareScheduleTrackingService.ttVaccinationScheduleName);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
         assertNotNull(motherFromDb.getId());
     }
@@ -59,6 +62,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withUserId("newFlwid").withCaseName("Heena").withEdd("2012-01-01").build();
         motherService.process(careCase);
 
+        markScheduleForUnEnrollment(caseId, CareScheduleTrackingService.ttVaccinationScheduleName);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
         assertEquals(DateTime.parse(careCase.getEdd()), motherFromDb.getEdd());

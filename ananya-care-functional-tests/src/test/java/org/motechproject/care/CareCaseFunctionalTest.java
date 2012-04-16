@@ -7,8 +7,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +22,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
     private AllMothers allMothers;
 
     @After
-    public void after(){
+    public void tearDown(){
         allMothers.removeAll();
     }
 
@@ -35,9 +37,12 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
-        Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
         Assert.assertTrue(motherFromDb.isActive());
+
+        markScheduleForUnEnrollment(uniqueCaseId, CareScheduleTrackingService.ttVaccinationScheduleName);
+        EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, CareScheduleTrackingService.ttVaccinationScheduleName);
+        Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
     }
 
     @Test
@@ -49,14 +54,14 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         postXmlToUrl(uniqueCaseId, "sampleMotherCaseForUpdate.xml");
         Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
+        markScheduleForUnEnrollment(uniqueCaseId, CareScheduleTrackingService.ttVaccinationScheduleName);
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
         Assert.assertEquals(DateTime.parse("2012-10-21"),motherFromDb.getAdd());
-        Assert.assertEquals(DateTime.parse("2012-01-01"),motherFromDb.getTt1Date());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
-        Assert.assertEquals(DateTime.parse("2012-01-02"),motherFromDb.getTt2Date());
+        Assert.assertEquals(DateTime.parse("2012-01-02"),motherFromDb.getTt1Date());
         Assert.assertFalse(motherFromDb.isActive());
     }
 
@@ -82,6 +87,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         postXmlToUrl(uniqueCaseId, "sampleMotherCaseForClose.xml");
         motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
+        markScheduleForUnEnrollment(uniqueCaseId, CareScheduleTrackingService.ttVaccinationScheduleName);
         Assert.assertFalse(motherFromDb.isActive());
     }
 }

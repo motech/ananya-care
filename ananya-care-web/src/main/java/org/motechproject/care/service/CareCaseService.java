@@ -15,7 +15,7 @@ public class CareCaseService extends CaseService<CareCase>{
     private ChildService childService;
 
     @Autowired
-    public CareCaseService(MotherService motherService,ChildService childService) {
+    public CareCaseService(MotherService motherService, ChildService childService) {
         super(CareCase.class);
         this.motherService = motherService;
         this.childService = childService;
@@ -36,6 +36,7 @@ public class CareCaseService extends CaseService<CareCase>{
 
     @Override
     public void createCase(CareCase careCase) {
+        System.out.println("Coming to the CReate");
         if(careCase.getCase_type().equals(CaseType.Mother.getType()))
             motherService.process(careCase);
         else

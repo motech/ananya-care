@@ -14,7 +14,9 @@ import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
+import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.utils.RetryTask;
+import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.care.utils.TextHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,7 +33,7 @@ import java.util.UUID;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-FunctionalTestsQA.xml")
-public class RegistrationFunctionalTest {
+public class RegistrationFunctionalTest extends SpringIntegrationTest{
 
     @Autowired
     private AllMothers allMothers;
@@ -63,6 +65,8 @@ public class RegistrationFunctionalTest {
         };
 
         Mother mother = task.execute(100, 1000);
+        markForDeletion(mother);
+        markScheduleForUnEnrollment(caseId, CareScheduleTrackingService.ttVaccinationScheduleName);
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
