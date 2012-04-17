@@ -53,7 +53,7 @@ public class ChildServiceIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveChildIfDoesNotExist_WhenMotherExistsAndAgeLessThanAYear() {
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).withMotherCaseId(motherCaseId).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate(null).withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).withMotherCaseId(motherCaseId).build();
         Mother mother = new Mother(motherCaseId);
         DateTime dobOfChild = DateTime.now().minusMonths(1);
         mother.setAdd(dobOfChild);
@@ -64,7 +64,6 @@ public class ChildServiceIntegrationTest extends SpringIntegrationTest {
 
         Assert.assertEquals(caseId, child.getCaseId());
         Assert.assertEquals(CaseType.Child.getType(),child.getCaseType());
-        Assert.assertEquals(DateTime.parse("2012-02-01"),child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
         Assert.assertEquals(dobOfChild,child.getDOB());
         EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, VaccinationSchedule.Measles.getName());

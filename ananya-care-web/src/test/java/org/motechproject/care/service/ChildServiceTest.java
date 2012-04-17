@@ -15,7 +15,6 @@ import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.service.ChildVaccinationProcessor;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 
 import static org.mockito.Mockito.*;
@@ -54,7 +53,8 @@ public class ChildServiceTest {
         Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
         Assert.assertEquals(DateTime.parse("2012-02-01"), child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
-        verify(childVaccinationProcessor).enrollUpdateVaccines(caseId, dobOfChild);
+        verify(childVaccinationProcessor).enrollUpdateVaccines(child);
+        //Todo: fix it
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ChildServiceTest {
         when(allChildren.findByCaseId(motherId)).thenReturn(null);
         childService.process(careCase);
         verify(allChildren,never()).add((Child) Matchers.any());
-        verify(childVaccinationProcessor).enrollUpdateVaccines(caseId,DateTime.parse("2010-09-12"));
+        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
     }
 
     @Test
@@ -82,6 +82,7 @@ public class ChildServiceTest {
         when(allMothers.findByCaseId(motherId)).thenReturn(mother);
         childService.process(careCase);
         verify(allChildren,never()).add((Child) Matchers.any());
+        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
     }
 
     @Test
@@ -108,5 +109,6 @@ public class ChildServiceTest {
         Child child = captor.getValue();
         Assert.assertEquals(newName,child.getName());
         Assert.assertEquals(DateTime.parse(newBcgDate),child.getBcgDate());
+        verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
     }
 }

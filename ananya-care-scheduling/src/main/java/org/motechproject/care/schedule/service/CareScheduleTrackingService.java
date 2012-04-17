@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class CareScheduleTrackingService {
 
     public static final String ttVaccinationScheduleName = "TT Vaccination";
-    public static final String measlesVaccinationScheduleName = "Measles Vaccination";
     private ScheduleTrackingService trackingService;
 
     @Autowired

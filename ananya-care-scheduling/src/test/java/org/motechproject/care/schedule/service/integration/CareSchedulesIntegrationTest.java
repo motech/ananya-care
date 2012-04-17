@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
@@ -39,6 +40,7 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
     private static final int SEPTEMBER = 9;
     private static final int OCTOBER = 10;
     private static final int NOVEMBER = 11;
+    private static final int DECEMBER = 12;
 
     @Autowired
     private ScheduleTrackingService trackingService;
@@ -89,7 +91,7 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         schedule.assertNoAlerts("TT 2", late);
         schedule.assertNoAlerts("TT 2", max);
 
-        visualization.outputTo("mother-tetanus-.html", 2);
+        visualization.outputTo("mother-tetanus.html", 2);
     }
 
     @Test
@@ -100,7 +102,19 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         schedule.assertAlertsStartWith("Measles", due, date(1, SEPTEMBER));
         schedule.assertNoAlerts("Measles", late);
         schedule.assertNoAlerts("Measles", max);
-        visualization.outputTo("child-measles-.html", 2);
+        visualization.outputTo("child-measles.html", 2);
+    }
+
+    @Test
+    @Ignore
+    public void shouldProvideAlertsForBcgVaccinationAtTheRightTimes() throws Exception {
+        schedule.enrollFor("Bcg Vaccination", newDate(2011, 12, 1), null);
+
+        schedule.assertNoAlerts("Bcg", earliest);
+        schedule.assertAlertsStartWith("Bcg", due, dateWithYear(1, DECEMBER, 2011));
+        schedule.assertNoAlerts("Bcg", late);
+        schedule.assertNoAlerts("Bcg", max);
+        visualization.outputTo("child-bcg.html", 2);
     }
 
     private Date date(int day, int month) {
