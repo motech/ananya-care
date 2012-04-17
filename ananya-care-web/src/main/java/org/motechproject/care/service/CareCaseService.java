@@ -36,7 +36,6 @@ public class CareCaseService extends CaseService<CareCase>{
 
     @Override
     public void createCase(CareCase careCase) {
-        System.out.println("Coming to the CReate");
         if(careCase.getCase_type().equals(CaseType.Mother.getType()))
             motherService.process(careCase);
         else

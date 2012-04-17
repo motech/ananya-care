@@ -20,6 +20,5 @@ public class ChildVaccinationProcessor {
     public void enrollUpdateVaccines(String caseId, DateTime dob){
         for(Vaccine vaccine : childVaccines)
             vaccine.process(caseId,dob);
-
     }
 }
