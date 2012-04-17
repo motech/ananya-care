@@ -57,12 +57,7 @@
 <script type="text/javascript">
     var djConfig = {parseOnLoad:false, isDebug:false, locale:'en_in'};
 </script>
-<%
-    ApplicationContext appCtx = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
-    Properties tamaProperties = (Properties) appCtx.getBean("tamaProperties", Properties.class);
-    String applicationVersion = (String) tamaProperties.getProperty("application.version");
-%>
-<script src='<%= application.getContextPath()%>/resources-<%= applicationVersion%>/dojo/dojo.js' type="text/javascript"
+<script src='<%= application.getContextPath()%>/resources/dojo/dojo.js' type="text/javascript"
         djConfig="parseOnLoad: true"></script>
 <script type="text/javascript">
 
@@ -85,7 +80,7 @@
                 "time");
     });
 </script>
-<link rel="stylesheet" type="text/css" href="<%= application.getContextPath() %>/resources-<%= applicationVersion%>/dijit/themes/tundra/tundra.css"/>
+<link rel="stylesheet" type="text/css" href="<%= application.getContextPath()%>/resources/dijit/themes/tundra/tundra.css"/>
 <style>
     .dijitPopup {
         background-color: lightgray;
@@ -117,36 +112,12 @@
                     alert(err);
                 }
             });
-        } else {
-            var urlString = "<%=application.getContextPath() %>" + "/motech-delivery-tools/datetime/update?date=" + dojo.byId('date').value + "&hour=" + dijit.byId('time').value.getHours() + "&minute=" + dijit.byId('time').value.getMinutes();
-            dojo.xhrGet({
-                url:urlString,
-                load:function (data) {
-                    displayMsg(data);
-                }
-            });
         }
     }
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script src="js/Recording.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#missedCallButton').click(function () {
-            dojo.xhrPost({
-                url:'<%=application.getContextPath() %>/ivr/reply/callback?external_id=' + $('#missedCall').val() + "&call_type=Outbox",
-                content:{ 'phone_no':$('#phone').val(), 'status':'ring', 'sid':callId},
-                load:function () {
-                    alert('Posted missed call');
-                }
-            })
-        });
-
-        window.cacheControl = new CacheControl();
-        window.recording = new Recording(window.cacheControl);
-    });
-</script>
 <script type="text/javascript">
     /**
      * jQuery Cookie plugin
@@ -192,43 +163,6 @@
         return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
     };
 </script>
-
-<script>
-    var contextRoot = "<%=application.getContextPath() %>/";
-    var collectdtmf = 1;
-    var dtmf = "";
-    var callId;
-
-    function deleteCookie() {
-        var d = new Date();
-        document.cookie = "v0=1;expires=" + d.toGMTString() + ";" + "path=<%=application.getContextPath() %>/ivr/;";
-
-        alert(document.cookie);
-    }
-    function pollCall() {
-        if ($('#poll_call').is(':checked'))
-            $.getJSON("<%=application.getContextPath() %>/emulator/calls.jsp?phone=" + $('#phone').val(), function (data) {
-                if (data.phone_no) {
-                    if (confirm("Incoming call.. Receive?")) {
-                        $('#phone').val(data.phone_no);
-                        $('#dosage_id').val(data.dosage_id);
-                        $('#regimen_id').val(data.regimen_id);
-                        $('#times_sent').val(data.times_sent);
-                        $('#total').val(data.total_times_to_send);
-                        $('#call_id').val(data.call_id);
-                        $('#retry_interval').val(data.retry_interval);
-                        $('#is_outbound_call').attr('checked', (data.is_outbound_call === "true"));
-                        $('#outbox_call').attr('checked', (data.outbox_call === "true"));
-                    }
-                }
-                setTimeout(pollCall, 1000);
-            });
-    }
-
-    $(function () {
-        setTimeout(pollCall, 500);
-    });
-</script>
 <style>
     .optional {
         display: none;
@@ -238,6 +172,7 @@
 <body>
 <div>
     <div id="result">
+
     </div>
     <br/>
     <table>
@@ -250,7 +185,6 @@
                             <td><input id="fakeTimeOption" type="radio" name="type"
                                        value="Use Faketime" <%=(fakeTimeAvailable?"checked=\'true\'":"disabled") %>> Use Faketime
                             </td>
-                            <td><input type="radio" name="type" value=""/ <%=(fakeTimeAvailable ? "" : "checked=\'true\'") %>>Use DateUtil hack</td>
                         </tr>
                         <tr>
                             <td align="center" colspan="2" id="timeMessage" style="background-color:lightBlue;display:none;"></td>
@@ -275,8 +209,6 @@
             </td>
         </tr>
     </table>
-    <br><br>
-</span></div>
 </div>
 </body>
 </html>
