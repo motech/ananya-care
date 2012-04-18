@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class CareAlertServiceListenerTest {
+public class AlertMotherVaccinationTest {
 
     @Mock
     private CommcareCaseGateway commcareCaseGateway;
@@ -39,26 +39,26 @@ public class CareAlertServiceListenerTest {
     @Mock
     private Properties ananyaCareProperties;
 
-    private CareAlertServiceListener careAlertServiceListener;
+    private AlertMotherVaccination alertMotherVaccination;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        this.careAlertServiceListener = new CareAlertServiceListener(commcareCaseGateway, allMothers, allCareCaseTasks, ananyaCareProperties);
+        this.alertMotherVaccination = new AlertMotherVaccination(allMothers, commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
     }
 
     @Test
     public void shouldSendRightCaseTaskObjectToGateway() {
         String scheduleName = "TT Vaccination";
         String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
-        String caseName = "TT 1";
+        String milestoneName = "TT 1";
         String groupId = "groupId";
         String flwId = "FLW1234";
         String motherName = "Sita";
         DateTime startOfSchedule = DateUtil.now();
 
-        Milestone milestone = new Milestone(caseName, weeks(0), weeks(36), null, null);
+        Milestone milestone = new Milestone(milestoneName, weeks(0), weeks(36), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
         MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
 
@@ -68,7 +68,7 @@ public class CareAlertServiceListenerTest {
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("commcare.hq.url")).thenReturn(commCareUrl);
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
-        careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
@@ -77,7 +77,7 @@ public class CareAlertServiceListenerTest {
 
         assertNotNull(task.getTaskId());
         assertNotNull(task.getCurrentTime());
-        assertEquals(caseName, task.getCaseName());
+        assertEquals(milestoneName, task.getCaseName());
         assertEquals(startOfSchedule.toString("yyyy-MM-dd"), task.getDateEligible());
         assertEquals(startOfSchedule.plusWeeks(36).toString("yyyy-MM-dd"), task.getDateExpires());
         assertEquals(groupId, task.getOwnerId());
@@ -90,7 +90,6 @@ public class CareAlertServiceListenerTest {
     public static Period weeks(int numberOfWeeks) {
         return new Period(0, 0, numberOfWeeks, 0, 0, 0, 0, 0);
     }
-
 
     @Test
     public void shouldHandleWhenExpiryDateIsBeyondEDDBeforeSendingToGateway() {
@@ -113,7 +112,7 @@ public class CareAlertServiceListenerTest {
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("commcare.hq.url")).thenReturn(commCareUrl);
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
-        careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
@@ -149,7 +148,7 @@ public class CareAlertServiceListenerTest {
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
-        careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
@@ -173,7 +172,7 @@ public class CareAlertServiceListenerTest {
 
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
-        careAlertServiceListener.handleEvent(milestoneEvent.toMotechEvent());
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 
         ArgumentCaptor<CareCaseTask> careCaseTaskArgumentCaptor = ArgumentCaptor.forClass(CareCaseTask.class);
         verify(allCareCaseTasks).add(careCaseTaskArgumentCaptor.capture());

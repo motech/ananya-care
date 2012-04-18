@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
@@ -40,8 +40,8 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
         Assert.assertTrue(motherFromDb.isActive());
 
-        markScheduleForUnEnrollment(uniqueCaseId, VaccinationSchedule.TT.getName());
-        EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, VaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
     }
 
@@ -54,7 +54,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         postXmlToUrl(uniqueCaseId, "sampleMotherCaseForUpdate.xml");
         Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        markScheduleForUnEnrollment(uniqueCaseId, VaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
@@ -87,7 +87,7 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         postXmlToUrl(uniqueCaseId, "sampleMotherCaseForClose.xml");
         motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        markScheduleForUnEnrollment(uniqueCaseId, VaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertFalse(motherFromDb.isActive());
     }
 }

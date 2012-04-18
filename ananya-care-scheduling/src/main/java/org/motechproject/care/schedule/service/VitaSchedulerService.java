@@ -1,6 +1,6 @@
 package org.motechproject.care.schedule.service;
 
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +11,6 @@ public class VitaSchedulerService extends SchedulerService {
 
     @Autowired
     public VitaSchedulerService(ScheduleTrackingService trackingService) {
-        super(trackingService, VaccinationSchedule.Vita.getName());
+        super(trackingService, ChildVaccinationSchedule.Vita.getName());
     }
 }

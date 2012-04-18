@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
@@ -96,7 +96,7 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForMeaslesVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(VaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
+        schedule.enrollFor(ChildVaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Measles", earliest);
         schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date
@@ -107,7 +107,7 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForBcgVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(VaccinationSchedule.Bcg.getName(), newDate(2011, 12, 1), null);
+        schedule.enrollFor(ChildVaccinationSchedule.Bcg.getName(), newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Bcg", earliest);
         schedule.assertAlertsStartWith("Bcg", due, dateWithYear(1, DECEMBER, 2011));
@@ -118,7 +118,7 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForVitaVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(VaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
+        schedule.enrollFor(ChildVaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Measles", earliest);
         schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date

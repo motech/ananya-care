@@ -9,7 +9,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
@@ -77,12 +77,12 @@ public class SchedulerServiceTest {
         DateTime dob = new DateTime(2012, 10, 10, 0, 0);
         String caseId = "caseId";
 
-        when(trackingService.getEnrollment("caseId", VaccinationSchedule.Measles.getName())).thenReturn(null);
+        when(trackingService.getEnrollment("caseId", ChildVaccinationSchedule.Measles.getName())).thenReturn(null);
         measlesSchedulerService.enroll(caseId, dob);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(trackingService).enroll(captor.capture());
-        verify(trackingService).getEnrollment("caseId", VaccinationSchedule.Measles.getName());
+        verify(trackingService).getEnrollment("caseId", ChildVaccinationSchedule.Measles.getName());
 
         EnrollmentRequest enrollmentRequest = captor.getValue();
 

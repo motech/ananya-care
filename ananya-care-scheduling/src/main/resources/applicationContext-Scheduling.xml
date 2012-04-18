@@ -21,7 +21,6 @@
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
     <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
 
-    <context:component-scan base-package="org.motechproject.care.schedule.listener"/>
     <context:component-scan base-package="org.motechproject.care"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">

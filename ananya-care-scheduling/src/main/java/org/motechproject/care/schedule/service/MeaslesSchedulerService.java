@@ -1,6 +1,6 @@
 package org.motechproject.care.schedule.service;
 
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class MeaslesSchedulerService extends SchedulerService {
 
     @Autowired
     public MeaslesSchedulerService(ScheduleTrackingService trackingService) {
-        super(trackingService, VaccinationSchedule.Measles.getName());
+        super(trackingService, ChildVaccinationSchedule.Measles.getName());
     }
 
 }

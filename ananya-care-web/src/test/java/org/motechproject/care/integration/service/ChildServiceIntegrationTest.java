@@ -11,7 +11,7 @@ import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 import org.motechproject.care.utils.CaseUtils;
@@ -66,7 +66,7 @@ public class ChildServiceIntegrationTest extends SpringIntegrationTest {
         Assert.assertEquals(CaseType.Child.getType(),child.getCaseType());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
         Assert.assertEquals(dobOfChild,child.getDOB());
-        EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, VaccinationSchedule.Measles.getName());
+        EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, ChildVaccinationSchedule.Measles.getName());
         Assert.assertEquals(dobOfChild.toLocalDate(),enrollment.getReferenceDateTime().toLocalDate());
     }
     

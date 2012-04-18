@@ -8,7 +8,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.service.MotherService;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 import org.motechproject.care.utils.CaseUtils;
@@ -46,7 +46,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         assertNull(allMothers.findByCaseId(caseId));
         motherService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, VaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(caseId, MotherVaccinationSchedule.TT.getName());
         Mother motherFromDb = allMothers.findByCaseId(caseId);
         assertNotNull(motherFromDb.getId());
     }
@@ -62,7 +62,7 @@ public class MotherServiceIntegrationTest extends SpringIntegrationTest {
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withUserId("newFlwid").withCaseName("Heena").withEdd("2012-01-01").build();
         motherService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, VaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(caseId, MotherVaccinationSchedule.TT.getName());
         Mother motherFromDb = allMothers.findByCaseId(caseId);
 
         assertEquals(DateTime.parse(careCase.getEdd()), motherFromDb.getEdd());
