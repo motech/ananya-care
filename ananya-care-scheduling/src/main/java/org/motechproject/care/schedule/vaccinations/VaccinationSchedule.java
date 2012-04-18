@@ -2,10 +2,14 @@ package org.motechproject.care.schedule.vaccinations;
 
 public enum VaccinationSchedule {
 
+    TT("TT Vaccination"),
 
-    Measles("Measles Vaccination");
+
+    Measles("Measles Vaccination"),
+    Vita("Vita Vaccination"),
+    Bcg("Bcg Vaccination");
+
     private String vaccinationScheduleName;
-
 
     VaccinationSchedule(String vaccinationScheduleName) {
         this.vaccinationScheduleName = vaccinationScheduleName;

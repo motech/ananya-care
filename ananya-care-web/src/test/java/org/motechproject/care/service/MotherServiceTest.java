@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.CareScheduleTrackingService;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class MotherServiceTest {
     @Mock
     private AllMothers allMothers;
     @Mock
-    private CareScheduleTrackingService scheduleTrackingService;
+    private MotherVaccinationProcessor motherVaccinationProcessor;
 
     private MotherService motherService;
     private CareCase careCase;
@@ -32,7 +31,7 @@ public class MotherServiceTest {
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        motherService = new MotherService(allMothers, scheduleTrackingService);
+        motherService = new MotherService(allMothers, motherVaccinationProcessor);
         careCase = new MotherCareCaseBuilder().withCaseName("Aparna").withCaseId(caseId).withEdd("2012-01-02").withMotherAlive("true").build();
     }
 
@@ -52,7 +51,7 @@ public class MotherServiceTest {
         DateTime expectedEdd = new DateTime(2012, 1, 2, 0, 0);
         Assert.assertEquals(expectedEdd,motherInDb.getEdd());
         Assert.assertTrue(motherInDb.isActive());
-        verify(scheduleTrackingService).enroll(eq(caseId), eq(expectedEdd));
+        verify(motherVaccinationProcessor).enrollUpdateVaccines(motherInDb);
     }
 
     @Test
@@ -75,6 +74,7 @@ public class MotherServiceTest {
         assertEquals(motherToBeUpdated.getCaseId(), motherInDb.getCaseId());
         assertEquals(motherToBeUpdated.getId(), motherInDb.getId());
         assertEquals(careCase.getCase_name(), motherToBeUpdated.getName());
+        verify(motherVaccinationProcessor).enrollUpdateVaccines(motherToBeUpdated);
     }
     
     @Test
@@ -86,7 +86,8 @@ public class MotherServiceTest {
 
         ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
         verify(allMothers).update(captor.capture());
-        assertFalse(captor.getValue().isActive());
+        Mother mother = captor.getValue();
+        assertFalse(mother.isActive());
     }
 
     @Test

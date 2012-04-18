@@ -2,13 +2,13 @@ package org.motechproject.care.service.schedule;
 
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Client;
-import org.motechproject.care.schedule.service.MeaslesSchedulerService;
+import org.motechproject.care.schedule.service.VitaSchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class MeaslesService extends VaccinationService{
+public class VitaService extends VaccinationService{
 
     @Autowired
-    protected MeaslesService(MeaslesSchedulerService schedulerService) {
+    protected VitaService(VitaSchedulerService schedulerService) {
         super(schedulerService);
     }
 
@@ -18,10 +18,8 @@ public class MeaslesService extends VaccinationService{
         if(child.getDOB() != null){
             schedulerService.enroll(child.getCaseId(), child.getDOB());
         }
-        if(child.getMeaslesDate() != null){
-            schedulerService.fulfillMileStone(child.getCaseId(), MeaslesSchedulerService.milestone,  child.getMeaslesDate());
+        if(child.getVitamin1Date() != null){
+            schedulerService.fulfillMileStone(child.getCaseId(), VitaSchedulerService.milestone,  child.getVitamin1Date());
         }
     }
 }
-
-

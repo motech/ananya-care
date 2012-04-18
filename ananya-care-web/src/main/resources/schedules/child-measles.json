@@ -10,7 +10,7 @@
             "alerts": [
                 {
                     "window": "due",
-                    "offset": ["0 Weeks"],
+                    "offset": ["-2 Weeks"],
                     "interval": ["1 Day"],
                     "count": "1"
                 }

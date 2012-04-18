@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.schedule.service.MeaslesSchedulerService;
+import org.motechproject.care.schedule.service.VitaSchedulerService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
@@ -56,7 +57,7 @@ public class MeaslesServiceTest {
         child.setCaseId(caseId);
 
         measlesService.process(child);
-        Mockito.verify(measlesSchedulerService).fulfilMeaslesTaken(caseId, measlesDate);
+        Mockito.verify(measlesSchedulerService).fulfillMileStone(caseId,MeaslesSchedulerService.milestone,  measlesDate);
     }
 
     @Test
@@ -65,7 +66,7 @@ public class MeaslesServiceTest {
         child.setCaseId("caseId");
 
         measlesService.process(child);
-        verify(measlesSchedulerService, never()).fulfilMeaslesTaken(any(String.class), any(DateTime.class));
+        verify(measlesSchedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class));
     }
-
 }
+

@@ -19,30 +19,40 @@ public abstract class SchedulerService {
         this.scheduleName = scheduleName;
     }
 
-    protected boolean isNotEnrolled(String caseId) {
+    public void enroll(String caseId, DateTime referenceDate) {
+        if (isNotEnrolled(caseId))
+            trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate()));
+    }
+
+    public void fulfillMileStone(String caseId, String milestoneName,  DateTime measlesDate) {
+        if(isCurrentMilestone(caseId, milestoneName))
+            fulfillCurrentMilestone(caseId,measlesDate);
+    }
+
+    public String getScheduleName() {
+        return scheduleName;
+    }
+
+    private boolean isNotEnrolled(String caseId) {
         return trackingService.getEnrollment(caseId,scheduleName) == null;
     }
 
-    protected boolean isCurrentMilestone(String caseId, String milestoneName) {
+    private boolean isCurrentMilestone(String caseId, String milestoneName) {
         EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, scheduleName);
         if(enrollment == null) return false;
         return enrollment.getCurrentMilestoneName().equals(milestoneName);
     }
 
-    protected void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDateTime) {
+    private void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDateTime) {
         LocalDate fulfillmentDate = fulfillmentDateTime.toLocalDate();
         Time fulfillmentTime = DateUtil.time(fulfillmentDateTime);
         trackingService.fulfillCurrentMilestone(caseId, scheduleName,fulfillmentDate, fulfillmentTime );
     }
 
-    protected EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate) {
+    private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate) {
         Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(5));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());
         return new EnrollmentRequest(caseId, scheduleName, preferredAlertTime, referenceDate, null, enrollmentDate, enrollmentTime, null, null);
-    }
-
-    public String getScheduleName() {
-        return scheduleName;
     }
 }

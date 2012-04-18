@@ -6,9 +6,9 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.care.schedule.vaccinations.VaccinationSchedule;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
@@ -96,25 +96,35 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForMeaslesVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor("Measles Vaccination", newDate(2011, 12, 1), null);
+        schedule.enrollFor(VaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Measles", earliest);
-        schedule.assertAlertsStartWith("Measles", due, date(1, SEPTEMBER));
+        schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date
         schedule.assertNoAlerts("Measles", late);
         schedule.assertNoAlerts("Measles", max);
         visualization.outputTo("child-measles.html", 2);
     }
 
     @Test
-    @Ignore
     public void shouldProvideAlertsForBcgVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor("Bcg Vaccination", newDate(2011, 12, 1), null);
+        schedule.enrollFor(VaccinationSchedule.Bcg.getName(), newDate(2011, 12, 1), null);
 
         schedule.assertNoAlerts("Bcg", earliest);
         schedule.assertAlertsStartWith("Bcg", due, dateWithYear(1, DECEMBER, 2011));
         schedule.assertNoAlerts("Bcg", late);
         schedule.assertNoAlerts("Bcg", max);
         visualization.outputTo("child-bcg.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAlertsForVitaVaccinationAtTheRightTimes() throws Exception {
+        schedule.enrollFor(VaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
+
+        schedule.assertNoAlerts("Measles", earliest);
+        schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date
+        schedule.assertNoAlerts("Measles", late);
+        schedule.assertNoAlerts("Measles", max);
+        visualization.outputTo("child-measles.html", 2);
     }
 
     private Date date(int day, int month) {

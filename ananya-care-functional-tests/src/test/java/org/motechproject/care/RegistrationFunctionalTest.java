@@ -64,7 +64,7 @@ public class RegistrationFunctionalTest{
 
         Mother mother = task.execute(100, 1000);
 //        markForDeletion(mother);
-//        markScheduleForUnEnrollment(caseId, CareScheduleTrackingService.ttVaccinationScheduleName);
+//        markScheduleForUnEnrollment(caseId, TTSchedulerService.ttVaccinationScheduleName);
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());

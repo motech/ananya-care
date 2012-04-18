@@ -1,8 +1,8 @@
 {
-    "name": "Measles Vaccination",
+    "name": "Vita Vaccination",
     "milestones": [
         {
-            "name": "Measles",
+            "name": "Vita",
             "scheduleWindows": {
                 "earliest": ["9 Months"],
                 "due": ["15 Months"]

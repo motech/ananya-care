@@ -17,12 +17,27 @@
     <import resource="classpath:applicationContext-Scheduling.xml"/>
     <import resource="classpath:applicationContext-commcare-gateway.xml"/>
 
-    <bean id="childVaccinationProcessor" class="org.motechproject.care.service.ChildVaccinationProcessor">
+    <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.MotherVaccinationProcessor">
         <constructor-arg>
-            <ref bean="measlesService"/>
+            <list>
+                <ref bean="ttService"/>
+            </list>
         </constructor-arg>
     </bean>
+    <bean id="ttService" class="org.motechproject.care.service.schedule.TTService"/>
 
+
+    <bean id="childVaccinationProcessor" class="org.motechproject.care.service.ChildVaccinationProcessor">
+        <constructor-arg>
+            <list>
+                <ref bean="measlesService"/>
+                <ref bean="bcgService"/>
+                <ref bean="vitaService"/>
+            </list>
+        </constructor-arg>
+    </bean>
     <bean id="measlesService" class="org.motechproject.care.service.schedule.MeaslesService"/>
+    <bean id="bcgService" class="org.motechproject.care.service.schedule.BcgService"/>
+    <bean id="vitaService" class="org.motechproject.care.service.schedule.VitaService"/>
 
 </beans>

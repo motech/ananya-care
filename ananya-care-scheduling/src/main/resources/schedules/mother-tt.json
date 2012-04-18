@@ -20,7 +20,7 @@
             "name": "TT 2",
             "scheduleWindows": {
                 "earliest": ["4 Weeks"],
-                "due": ["36 Weeks"]
+                "due": ["9 Months"]
             },
             "alerts": [
                 {

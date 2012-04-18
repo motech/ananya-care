@@ -8,7 +8,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.CareScheduleTrackingService;
+import org.motechproject.care.schedule.service.TTSchedulerService;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class CareCaseServiceTest  {
     @Mock
     private ChildService childService;
     @Mock
-    private CareScheduleTrackingService careScheduleTrackingService;
+    private TTSchedulerService TTSchedulerService;
     private CareCaseService careCaseService;
 
     @Before
