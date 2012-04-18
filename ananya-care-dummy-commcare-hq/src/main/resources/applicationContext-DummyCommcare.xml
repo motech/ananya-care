@@ -22,7 +22,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="ananyaCareDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+    <bean id="ananyaCareDummyAppDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="dummy-commcare-hq"/>
         <constructor-arg ref="ananyaCareDbInstance"/>
     </bean>

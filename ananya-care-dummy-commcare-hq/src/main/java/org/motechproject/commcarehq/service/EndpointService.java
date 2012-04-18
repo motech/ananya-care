@@ -2,8 +2,8 @@ package org.motechproject.commcarehq.service;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.joda.time.DateTime;
-import org.motechproject.commcarehq.domain.CareCase;
-import org.motechproject.commcarehq.repository.AllCareCases;
+import org.motechproject.commcarehq.domain.AlertDocCase;
+import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,10 +22,10 @@ import java.io.StringReader;
 @RequestMapping("/**")
 public class EndpointService {
 
-    private AllCareCases allCareCases;
+    private AllAlertDocCases allCareCases;
 
     @Autowired
-    public EndpointService(AllCareCases allCareCases) {
+    public EndpointService(AllAlertDocCases allCareCases) {
         this.allCareCases = allCareCases;
     }
 
@@ -45,7 +45,7 @@ public class EndpointService {
     
     
 
-    private CareCase careCase(String xmlDocument) {
+    private AlertDocCase careCase(String xmlDocument) {
         if(StringUtil.isNullOrEmpty(xmlDocument)) {
             throw new IllegalArgumentException();
         }
@@ -58,7 +58,7 @@ public class EndpointService {
         try {
             parser.parse(inputSource);
             Document document = parser.getDocument();
-            return new CareCase(document.getDocumentElement().getAttribute("case_id"), xmlDocument, DateTime.now());
+            return new AlertDocCase(document.getDocumentElement().getAttribute("case_id"), xmlDocument, DateTime.now());
 
         } catch (IOException ex) {
             throw new MalformedXmlException();
@@ -71,7 +71,7 @@ public class EndpointService {
 
     private ValidationResponse processDocument(String xmlDocument) {
         try {
-            CareCase careCase = careCase(xmlDocument);
+            AlertDocCase careCase = careCase(xmlDocument);
             allCareCases.add(careCase);
         } catch (IllegalArgumentException ex) {
             return ValidationResponse.MISSING;

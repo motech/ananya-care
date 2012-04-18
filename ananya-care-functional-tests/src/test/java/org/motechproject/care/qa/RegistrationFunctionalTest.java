@@ -1,4 +1,4 @@
-package org.motechproject.care;
+package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
@@ -11,33 +11,30 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
+import org.motechproject.care.schedule.service.TTSchedulerService;
 import org.motechproject.care.utils.RetryTask;
 import org.motechproject.care.utils.TextHelper;
+import org.motechproject.commcarehq.domain.AlertDocCase;
+import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-
-/**
- * Unit test for simple App.
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext-FunctionalTestsQA.xml")
 @Ignore
-public class RegistrationFunctionalTest{
+public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
     @Autowired
     private AllMothers allMothers;
+
+    @Autowired
+    private AllAlertDocCases allAlertDocCases;
 
     @Autowired
     private ScheduleTrackingService trackingService;
@@ -64,20 +61,28 @@ public class RegistrationFunctionalTest{
         RetryTask<Mother> task = new RetryTask<Mother>() {
             @Override
             protected Mother perform() {
-                Mother mother = allMothers.findByCaseId(caseId);
-               return mother!=null?mother:null;
+               return allMothers.findByCaseId(caseId);
             }
         };
 
         Mother mother = task.execute(100, 1000);
-//        markForDeletion(mother);
-//        markScheduleForUnEnrollment(caseId, TTSchedulerService.ttVaccinationScheduleName);
+        markForDeletion(mother);
+        markScheduleForUnEnrollment(caseId, TTSchedulerService.tt1Milestone);
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
 
 
+        RetryTask<AlertDocCase> taskForGettingAlertDocCase = new RetryTask<AlertDocCase>() {
+            @Override
+            protected AlertDocCase perform() {
+                return allAlertDocCases.findByCaseId(caseId);
+            }
+        };
+
+        AlertDocCase alertDocCase = taskForGettingAlertDocCase.execute(300, 1000);
+        Assert.assertTrue(alertDocCase.getXmlDocument().contains("xcxfdxcxcx"));
     }
 
     private HttpResponse postToCommCare(String final_xml) throws IOException {
