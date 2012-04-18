@@ -14,4 +14,11 @@
 
     <import resource="classpath:applicationContext-Web.xml"/>
     <util:properties id="couchdbProperties" location="classpath:/couchdbQA.properties"/>
+
+
+    <bean id="ananyaCareDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
+        <constructor-arg value="dummy-commcare-hq"/>
+        <constructor-arg ref="ananyaCareDbInstance"/>
+    </bean>
+
 </beans>

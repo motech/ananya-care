@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -38,22 +39,15 @@ public class EndpointService {
 
     @RequestMapping(value="/endpoint",method= RequestMethod.POST)
     public void endpoint(@RequestBody String xmlDocument, HttpServletResponse response) {
-        ValidationResponse validationResponse = validateDocument(xmlDocument);
-
-        if(validationResponse == ValidationResponse.SUCCESS) {
-            try {
-                allCareCases.add(new CareCase(xmlDocument, DateTime.now()));
-            } catch(RuntimeException ex) {
-                ex.printStackTrace();
-                validationResponse = ValidationResponse.INTERNAL;
-            }
-        }
+        ValidationResponse validationResponse = processDocument(xmlDocument);
         validationResponse.sendResponse(response);
     }
+    
+    
 
-    private ValidationResponse validateDocument(String xmlDocument) {
+    private CareCase careCase(String xmlDocument) {
         if(StringUtil.isNullOrEmpty(xmlDocument)) {
-            return ValidationResponse.MISSING;
+            throw new IllegalArgumentException();
         }
 
         DOMParser parser = new DOMParser();
@@ -63,11 +57,29 @@ public class EndpointService {
 
         try {
             parser.parse(inputSource);
+            Document document = parser.getDocument();
+            return new CareCase(document.getDocumentElement().getAttribute("case_id"), xmlDocument, DateTime.now());
+
         } catch (IOException ex) {
-            return ValidationResponse.MALFORMED;
+            throw new MalformedXmlException();
         }
         catch (SAXException ex){
+            throw new MalformedXmlException();
+        }
+
+    }
+
+    private ValidationResponse processDocument(String xmlDocument) {
+        try {
+            CareCase careCase = careCase(xmlDocument);
+            allCareCases.add(careCase);
+        } catch (IllegalArgumentException ex) {
+            return ValidationResponse.MISSING;
+        }
+        catch (MalformedXmlException ex){
             return ValidationResponse.MALFORMED;
+        } catch (Exception ex) {
+            return ValidationResponse.INTERNAL;
         }
 
         return ValidationResponse.SUCCESS;

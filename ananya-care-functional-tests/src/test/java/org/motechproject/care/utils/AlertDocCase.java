@@ -1,4 +1,4 @@
-package org.motechproject.commcarehq.domain;
+package org.motechproject.care.utils;
 
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -7,10 +7,7 @@ import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type == 'CareCase'")
-public class CareCase extends MotechBaseDataObject {
-
-    @JsonProperty
-    private String caseId;
+public class AlertDocCase extends MotechBaseDataObject {
 
     @JsonProperty
     private String xmlDocument;
@@ -18,8 +15,7 @@ public class CareCase extends MotechBaseDataObject {
     @JsonProperty
     private DateTime submittedAt;
 
-    public CareCase(String caseId, String xmlDocument, DateTime submittedAt) {
-        this.caseId = caseId;
+    public AlertDocCase(String xmlDocument, DateTime submittedAt) {
         this.xmlDocument = xmlDocument;
         this.submittedAt = submittedAt;
     }

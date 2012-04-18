@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.domain.Mother;
@@ -16,6 +17,7 @@ import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.utils.RetryTask;
 import org.motechproject.care.utils.TextHelper;
+import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -31,10 +33,15 @@ import java.util.UUID;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:applicationContext-FunctionalTestsQA.xml")
+@Ignore
 public class RegistrationFunctionalTest{
 
     @Autowired
     private AllMothers allMothers;
+
+    @Autowired
+    private ScheduleTrackingService trackingService;
+
 
     @Test
     public void shouldPreRegisterAPregnantMother() throws IOException {
@@ -69,6 +76,8 @@ public class RegistrationFunctionalTest{
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
+
+
     }
 
     private HttpResponse postToCommCare(String final_xml) throws IOException {
