@@ -128,6 +128,7 @@ public class AlertMotherVaccinationTest {
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
         assertEquals(CaseType.Mother.getType(),task.getClientCaseType());
+        assertEquals(AlertMotherVaccination.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 
@@ -179,9 +180,8 @@ public class AlertMotherVaccinationTest {
 
         CareCaseTask task = careCaseTaskArgumentCaptor.getValue();
 
-        assertNotNull(task.getTaskId());
         assertNotNull(task.getCurrentTime());
-        assertEquals(caseName, task.getCaseName());
+        assertEquals(caseName, task.getMilestoneName());
         assertEquals("task", task.getCaseType());
         assertEquals(startScheduleDate.toString("yyyy-MM-dd"), task.getDateEligible());
         assertEquals(startScheduleDate.plusWeeks(36).toString("yyyy-MM-dd"), task.getDateExpires());
@@ -189,7 +189,41 @@ public class AlertMotherVaccinationTest {
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
         assertEquals(CaseType.Mother.getType(),task.getClientCaseType());
+        assertEquals(AlertMotherVaccination.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
     }
+
+    @Test
+    public void shouldSendChildVaccinationAlertToGatewayWhenEligibleDateIsBeforeToday() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String motherName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime edd = now.plusMonths(8);
+
+        Milestone milestone = new Milestone(milestoneName, months(0), months(9), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, edd.minusMonths(9));
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", edd.minusMonths(9));
+
+        Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
+        when(allMothers.findByCaseId(childCaseId)).thenReturn(client);
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
+        CaseTask task = argumentCaptor.getValue();
+
+        assertEquals(now.toString("yyyy-MM-dd"), task.getDateEligible());
+        assertEquals(now.plusMonths(8).toString("yyyy-MM-dd"), task.getDateExpires());
+    }
+
+    public static Period months(int numberOfMonths) {
+        return new Period(0, numberOfMonths, 0, 0, 0, 0, 0, 0);
+    }
+
 
 }

@@ -16,7 +16,7 @@ import java.util.Properties;
 public class AlertMotherVaccination extends AlertVaccination{
     private AllMothers allMothers;
     Logger logger = Logger.getLogger(AlertMotherVaccination.class);
-
+    public static String clientElementTag = "mother_id";
     @Autowired
     public AlertMotherVaccination(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
         super(commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
@@ -26,20 +26,14 @@ public class AlertMotherVaccination extends AlertVaccination{
     @Override
     public void process(DateTime dueDateTime, DateTime lateDateTime) {
         Mother mother = allMothers.findByCaseId(externalId);
+        DateTime now = DateTime.now();
 
-        DateTime dateEligible = dueDateTime;
-        if(dateEligible.isAfter(mother.getEdd())) {
+        if(dueDateTime.isAfter(mother.getEdd()))
             return;
-        }
-        DateTime dateExpires = validExpiresDateTime(lateDateTime, mother);
-        postToCommCare(dateEligible, dateExpires, mother.getGroupId(), mother.getCaseType());
-    }
+        DateTime dateEligible = dueDateTime.isBefore(now) ? now : dueDateTime;
+        DateTime dateExpires = lateDateTime.isAfter(mother.getEdd()) ? mother.getEdd() : lateDateTime;
 
-    private DateTime validExpiresDateTime(DateTime lateDateTime, Mother mother) {
-        DateTime expiresDateTime = lateDateTime;
-        DateTime edd = mother.getEdd();
-        return expiresDateTime.isAfter(edd) ? edd : expiresDateTime;
+        postToCommCare(dateEligible, dateExpires, mother.getGroupId(), mother.getCaseType(),clientElementTag);
     }
-
 }
 

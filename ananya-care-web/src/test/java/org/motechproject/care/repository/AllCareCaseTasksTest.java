@@ -17,7 +17,7 @@ public class AllCareCaseTasksTest extends SpringIntegrationTest {
     public void shouldSaveTheTask(){
         String caseID = CaseUtils.getUniqueCaseId();
 ;
-        CareCaseTask careCaseTask = new CareCaseTask( "TT 1", "ownerID", caseID,"motechUserID", DateUtil.now().toString(),"taskID", DateUtil.today().toString(), DateUtil.today().plusDays(4).toString(), "mother_case_type", "id");
+        CareCaseTask careCaseTask = new CareCaseTask( "TT 1", "ownerID", caseID,"motechUserID", DateUtil.now().toString(),"taskID", DateUtil.today().toString(), DateUtil.today().plusDays(4).toString(), "mother_case_type", "id", "mother_id");
         allCareCaseTasks.add(careCaseTask);
         Assert.assertNotNull(careCaseTask.getId());
     }

@@ -11,7 +11,7 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private String caseType = "task";
     @JsonProperty
-    private String caseName;
+    private String milestoneName;
     @JsonProperty
     private String ownerId;
     @JsonProperty
@@ -31,8 +31,12 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private String clientCaseId;
 
-    public CareCaseTask(String caseName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId) {
-        this.caseName = caseName;
+    @JsonProperty
+    private String clientElementTag;
+
+    public CareCaseTask(String milestoneName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId, String clientElementTag) {
+        this.caseType = caseType;
+        this.milestoneName = milestoneName;
         this.ownerId = ownerId;
         this.caseId = caseId;
         this.motechUserId = motechUserId;
@@ -42,12 +46,13 @@ public class CareCaseTask extends MotechBaseDataObject{
         this.dateExpires = dateExpires;
         this.clientCaseType = clientCaseType;
         this.clientCaseId = clientCaseId;
+        this.clientElementTag = clientElementTag;
     }
 
     public CaseTask toCaseTask() {
         CaseTask caseTask = new CaseTask();
         caseTask.setCaseType(caseType);
-        caseTask.setCaseName(caseName);
+        caseTask.setCaseName(milestoneName);
         caseTask.setOwnerId(ownerId);
         caseTask.setCaseId(caseId);
         caseTask.setMotechUserId(motechUserId);
@@ -57,6 +62,7 @@ public class CareCaseTask extends MotechBaseDataObject{
         caseTask.setDateExpires(dateExpires);
         caseTask.setClientCaseType(clientCaseType);
         caseTask.setClientCaseId(clientCaseId);
+        caseTask.setClientElementTag(clientElementTag);
         return caseTask;
     }
 
@@ -64,8 +70,8 @@ public class CareCaseTask extends MotechBaseDataObject{
         return caseType;
     }
 
-    public String getCaseName() {
-        return caseName;
+    public String getMilestoneName() {
+        return milestoneName;
     }
 
     public String getOwnerId() {
@@ -102,6 +108,10 @@ public class CareCaseTask extends MotechBaseDataObject{
 
     public String getClientCaseId() {
         return clientCaseId;
+    }
+
+    public String getClientElementTag() {
+        return clientElementTag;
     }
 
 }
