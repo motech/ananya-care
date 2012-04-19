@@ -8,10 +8,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.schedule.service.MeaslesSchedulerService;
-import org.motechproject.care.schedule.service.VitaSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
+import org.motechproject.care.schedule.service.ScheduleService;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -19,12 +21,14 @@ import static org.mockito.Mockito.verify;
 public class MeaslesServiceTest {
 
     @Mock
-    private MeaslesSchedulerService measlesSchedulerService;
+    private ScheduleService schedulerService;
     MeaslesService measlesService;
+    private String scheduleName = ChildVaccinationSchedule.Measles.getName();
+
 
     @Before
     public void setUp(){
-        measlesService = new MeaslesService(measlesSchedulerService);
+        measlesService = new MeaslesService(schedulerService);
     }
 
     @Test
@@ -36,7 +40,7 @@ public class MeaslesServiceTest {
         child.setCaseId(caseId);
 
         measlesService.process(child);
-        Mockito.verify(measlesSchedulerService).enroll(caseId, dob);
+        Mockito.verify(schedulerService).enroll(caseId, dob, scheduleName);
     }
 
     @Test
@@ -45,7 +49,7 @@ public class MeaslesServiceTest {
         child.setCaseId("caseId");
 
         measlesService.process(child);
-        verify(measlesSchedulerService, never()).enroll(any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
     @Test
@@ -57,7 +61,7 @@ public class MeaslesServiceTest {
         child.setCaseId(caseId);
 
         measlesService.process(child);
-        Mockito.verify(measlesSchedulerService).fulfillMileStone(caseId,MeaslesSchedulerService.milestone,  measlesDate);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Measles.toString(),  measlesDate, scheduleName);
     }
 
     @Test
@@ -66,7 +70,7 @@ public class MeaslesServiceTest {
         child.setCaseId("caseId");
 
         measlesService.process(child);
-        verify(measlesSchedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
     }
 }
 

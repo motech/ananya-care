@@ -8,9 +8,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.schedule.service.BcgSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
+import org.motechproject.care.schedule.service.ScheduleService;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -18,12 +21,14 @@ import static org.mockito.Mockito.verify;
 public class BcgServiceTest {
 
     @Mock
-    private BcgSchedulerService bcgSchedulerService;
+    private ScheduleService schedulerService;
     BcgService bcgService;
+    private String scheduleName = ChildVaccinationSchedule.Bcg.getName();
+
 
     @Before
     public void setUp(){
-        bcgService = new BcgService(bcgSchedulerService);
+        bcgService = new BcgService(schedulerService);
     }
 
     @Test
@@ -35,7 +40,7 @@ public class BcgServiceTest {
         child.setCaseId(caseId);
 
         bcgService.process(child);
-        Mockito.verify(bcgSchedulerService).enroll(caseId, dob);
+        Mockito.verify(schedulerService).enroll(caseId, dob, scheduleName);
     }
 
     @Test
@@ -44,7 +49,7 @@ public class BcgServiceTest {
         child.setCaseId("caseId");
 
         bcgService.process(child);
-        verify(bcgSchedulerService, never()).enroll(any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
     @Test
@@ -56,7 +61,7 @@ public class BcgServiceTest {
         child.setCaseId(caseId);
 
         bcgService.process(child);
-        Mockito.verify(bcgSchedulerService).fulfillMileStone(caseId, BcgSchedulerService.milestone,  bcgDate);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Bcg.toString(),  bcgDate, scheduleName);
     }
 
     @Test
@@ -65,7 +70,7 @@ public class BcgServiceTest {
         child.setCaseId("caseId");
 
         bcgService.process(child);
-        verify(bcgSchedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
     }
 
 }

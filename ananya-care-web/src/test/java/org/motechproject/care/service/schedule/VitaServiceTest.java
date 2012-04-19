@@ -8,9 +8,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.schedule.service.VitaSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
+import org.motechproject.care.schedule.service.ScheduleService;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -18,12 +21,13 @@ import static org.mockito.Mockito.verify;
 public class VitaServiceTest {
 
     @Mock
-    private VitaSchedulerService vitaSchedulerService;
+    private ScheduleService schedulerService;
     VitaService vitaService;
+    private final String scheduleName = ChildVaccinationSchedule.Vita.getName();
 
     @Before
     public void setUp(){
-        vitaService = new VitaService(vitaSchedulerService);
+        vitaService = new VitaService(schedulerService);
     }
 
     @Test
@@ -35,7 +39,7 @@ public class VitaServiceTest {
         child.setCaseId(caseId);
 
         vitaService.process(child);
-        Mockito.verify(vitaSchedulerService).enroll(caseId, dob);
+        Mockito.verify(schedulerService).enroll(caseId, dob, scheduleName);
     }
 
     @Test
@@ -44,7 +48,7 @@ public class VitaServiceTest {
         child.setCaseId("caseId");
 
         vitaService.process(child);
-        verify(vitaSchedulerService, never()).enroll(any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
     @Test
@@ -56,7 +60,7 @@ public class VitaServiceTest {
         child.setCaseId(caseId);
 
         vitaService.process(child);
-        Mockito.verify(vitaSchedulerService).fulfillMileStone(caseId,VitaSchedulerService.milestone,  vitaDate);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.VitaminA.toString(),  vitaDate, scheduleName);
     }
 
     @Test
@@ -65,6 +69,6 @@ public class VitaServiceTest {
         child.setCaseId("caseId");
 
         vitaService.process(child);
-        verify(vitaSchedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
     }
 }

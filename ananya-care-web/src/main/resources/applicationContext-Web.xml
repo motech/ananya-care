@@ -20,12 +20,10 @@
     <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.MotherVaccinationProcessor">
         <constructor-arg>
             <list>
-                <ref bean="ttService"/>
+                <ref bean="TTService"/>
             </list>
         </constructor-arg>
     </bean>
-    <bean id="ttService" class="org.motechproject.care.service.schedule.TTService"/>
-
 
     <bean id="childVaccinationProcessor" class="org.motechproject.care.service.ChildVaccinationProcessor">
         <constructor-arg>
@@ -36,8 +34,4 @@
             </list>
         </constructor-arg>
     </bean>
-    <bean id="measlesService" class="org.motechproject.care.service.schedule.MeaslesService"/>
-    <bean id="bcgService" class="org.motechproject.care.service.schedule.BcgService"/>
-    <bean id="vitaService" class="org.motechproject.care.service.schedule.VitaService"/>
-
 </beans>

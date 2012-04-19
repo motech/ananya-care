@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.TTSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.service.MotherService;
 import org.motechproject.care.service.MotherVaccinationProcessor;
@@ -65,7 +65,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, ttScheduleName);
         EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
 
-        assertEquals(TTSchedulerService.tt1Milestone, enrollment.getCurrentMilestoneName());
+        assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getReferenceDateTime());
     }
 
@@ -83,6 +83,6 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, ttScheduleName);
         EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
 
-        assertEquals(TTSchedulerService.tt2Milestone, enrollment.getCurrentMilestoneName());
+        assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
     }
 }

@@ -8,48 +8,44 @@ import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public abstract class SchedulerService {
+@Component
+public class ScheduleService {
     protected ScheduleTrackingService trackingService;
-    private String scheduleName;
 
     @Autowired
-    public SchedulerService(ScheduleTrackingService trackingService, String scheduleName) {
+    public ScheduleService(ScheduleTrackingService trackingService) {
         this.trackingService = trackingService;
-        this.scheduleName = scheduleName;
     }
 
-    public void enroll(String caseId, DateTime referenceDate) {
-        if (isNotEnrolled(caseId))
-            trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate()));
+    public void enroll(String caseId, DateTime referenceDate, String scheduleName) {
+        if (isNotEnrolled(caseId,scheduleName))
+            trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate(),scheduleName));
     }
 
-    public void fulfillMileStone(String caseId, String milestoneName,  DateTime measlesDate) {
-        if(isCurrentMilestone(caseId, milestoneName))
-            fulfillCurrentMilestone(caseId,measlesDate);
+    public void fulfillMileStone(String caseId, String milestoneName, DateTime measlesDate, String scheduleName) {
+        if(isCurrentMilestone(caseId, milestoneName,scheduleName))
+            fulfillCurrentMilestone(caseId,measlesDate,scheduleName);
     }
 
-    public String getScheduleName() {
-        return scheduleName;
+    private boolean isNotEnrolled(String caseId, String scheduleName) {
+        return trackingService.getEnrollment(caseId, scheduleName) == null;
     }
 
-    private boolean isNotEnrolled(String caseId) {
-        return trackingService.getEnrollment(caseId,scheduleName) == null;
-    }
-
-    private boolean isCurrentMilestone(String caseId, String milestoneName) {
+    private boolean isCurrentMilestone(String caseId, String milestoneName, String scheduleName) {
         EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, scheduleName);
         if(enrollment == null) return false;
         return enrollment.getCurrentMilestoneName().equals(milestoneName);
     }
 
-    private void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDateTime) {
+    private void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDateTime, String scheduleName) {
         LocalDate fulfillmentDate = fulfillmentDateTime.toLocalDate();
         Time fulfillmentTime = DateUtil.time(fulfillmentDateTime);
         trackingService.fulfillCurrentMilestone(caseId, scheduleName,fulfillmentDate, fulfillmentTime );
     }
 
-    private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate) {
+    private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate, String scheduleName) {
         Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(2));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());

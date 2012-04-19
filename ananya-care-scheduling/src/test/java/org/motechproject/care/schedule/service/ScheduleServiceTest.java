@@ -21,15 +21,16 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SchedulerServiceTest {
+public class ScheduleServiceTest {
 
     @Mock
     private ScheduleTrackingService trackingService;
-    private MeaslesSchedulerService measlesSchedulerService;
+    private ScheduleService schedulerService;
+    private final String scheduleName = ChildVaccinationSchedule.Measles.getName();
 
     @Before
     public void setUp(){
-        measlesSchedulerService = new MeaslesSchedulerService(trackingService);
+        schedulerService = new ScheduleService(trackingService);
     }
 
     @Test
@@ -37,9 +38,9 @@ public class SchedulerServiceTest {
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
         DateTime now = DateTime.now();
-        when(trackingService.getEnrollment(caseId, measlesSchedulerService.getScheduleName())).thenReturn(null);
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
 
-        measlesSchedulerService.enroll(caseId, dob);
+        schedulerService.enroll(caseId, dob, scheduleName);
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(trackingService).enroll(captor.capture());
@@ -47,32 +48,32 @@ public class SchedulerServiceTest {
         assertEquals(dob.toLocalDate(), enrollmentRequest.getReferenceDate());
         assertEquals(DateUtil.today(), enrollmentRequest.getEnrollmentDateTime().toLocalDate());
         assertEquals(DateUtil.time(now.plusMinutes(2)).getMinute(), enrollmentRequest.getPreferredAlertTime().getMinute());
-        assertEquals(measlesSchedulerService.getScheduleName(), enrollmentRequest.getScheduleName());
+        assertEquals(scheduleName, enrollmentRequest.getScheduleName());
     }
 
     @Test
-    public void shouldNotEnrollChildIfEnrolledFOrMeaslesAlready(){
+    public void shouldNotEnrollChildIfEnrolledFOrMeaslesAlready() {
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, measlesSchedulerService.getScheduleName())).thenReturn(dummyEnrollmentRecord(null));
-        measlesSchedulerService.enroll(caseId, dob);
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(null));
+        schedulerService.enroll(caseId, dob, ChildVaccinationSchedule.Measles.getName());
         verify(trackingService, never()).enroll(Matchers.<EnrollmentRequest>any());
     }
 
     @Test
-    public void shouldFulfilMeaslesTakenIfScheduleIsCurrentlyNotFulfilledAndCurrentMilestone(){
+    public void shouldFulfilMeaslesTakenIfScheduleIsCurrentlyNotFulfilledAndCurrentMilestone() {
         DateTime measlesTakenDateTime = new DateTime(2011, 6, 10, 10, 11);
         String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, measlesSchedulerService.getScheduleName())).thenReturn(dummyEnrollmentRecord(MeaslesSchedulerService.milestone));
-        measlesSchedulerService.fulfillMileStone(caseId, MeaslesSchedulerService.milestone, measlesTakenDateTime);
-        verify(trackingService).fulfillCurrentMilestone(eq(caseId), eq(measlesSchedulerService.getScheduleName()), eq(measlesTakenDateTime.toLocalDate()), eq(DateUtil.time(measlesTakenDateTime)));
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(MilestoneType.Measles.toString()));
+        schedulerService.fulfillMileStone(caseId, MilestoneType.Measles.toString(), measlesTakenDateTime, scheduleName);
+        verify(trackingService).fulfillCurrentMilestone(eq(caseId), eq(scheduleName), eq(measlesTakenDateTime.toLocalDate()), eq(DateUtil.time(measlesTakenDateTime)));
     }
 
     @Test
     public void shouldNotTryToFulfillIfScheduleNotEnrolledOrEnrollmentComplete(){
         String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, measlesSchedulerService.getScheduleName())).thenReturn(null);
-        measlesSchedulerService.fulfillMileStone(caseId, MeaslesSchedulerService.milestone, new DateTime(2011, 6, 10, 10, 11));
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
+        schedulerService.fulfillMileStone(caseId, MilestoneType.Measles.toString(), new DateTime(2011, 6, 10, 10, 11), scheduleName);
         verify(trackingService, never()).fulfillCurrentMilestone(any(String.class), any(String.class), any(LocalDate.class), any(Time.class));
     }
 
@@ -82,7 +83,7 @@ public class SchedulerServiceTest {
         String caseId = "caseId";
 
         when(trackingService.getEnrollment("caseId", ChildVaccinationSchedule.Measles.getName())).thenReturn(null);
-        measlesSchedulerService.enroll(caseId, dob);
+        schedulerService.enroll(caseId, dob, ChildVaccinationSchedule.Measles.getName());
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(trackingService).enroll(captor.capture());

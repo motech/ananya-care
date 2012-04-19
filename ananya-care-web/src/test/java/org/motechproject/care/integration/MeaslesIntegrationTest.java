@@ -9,7 +9,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.MeaslesSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
 import org.motechproject.care.service.ChildVaccinationProcessor;
@@ -72,7 +72,7 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId,  measlesScheduleName);
 
         EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId,  measlesScheduleName);
-        assertEquals(MeaslesSchedulerService.milestone, enrollment.getCurrentMilestoneName());
+        assertEquals(MilestoneType.Measles.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(add, enrollment.getReferenceDateTime());
 
         Child child = allChildren.findByCaseId(caseId);

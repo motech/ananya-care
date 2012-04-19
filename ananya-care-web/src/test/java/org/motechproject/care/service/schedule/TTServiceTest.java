@@ -8,21 +8,26 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.schedule.service.TTSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
+import org.motechproject.care.schedule.service.ScheduleService;
+import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TTServiceTest {
     @Mock
-    private TTSchedulerService ttSchedulerService;
+    private ScheduleService schedulerService;
     TTService ttService;
+    private String scheduleName = MotherVaccinationSchedule.TT.getName();
+
 
     @Before
     public void setUp(){
-        ttService = new TTService(ttSchedulerService);
+        ttService = new TTService(schedulerService);
     }
 
     @Test
@@ -34,7 +39,7 @@ public class TTServiceTest {
         mother.setCaseId(caseId);
 
         ttService.process(mother);
-        Mockito.verify(ttSchedulerService).enroll(caseId, edd.minusMonths(9));
+        Mockito.verify(schedulerService).enroll(caseId, edd.minusMonths(9), scheduleName);
     }
 
     @Test
@@ -43,7 +48,7 @@ public class TTServiceTest {
         mother.setCaseId("caseId");
 
         ttService.process(mother);
-        verify(ttSchedulerService, never()).enroll(any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
     @Test
@@ -55,7 +60,7 @@ public class TTServiceTest {
         mother.setCaseId(caseId);
 
         ttService.process(mother);
-        Mockito.verify(ttSchedulerService).fulfillMileStone(caseId,TTSchedulerService.tt1Milestone,  tt1Date);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TT1.toString(),  tt1Date, scheduleName);
     }
 
     @Test
@@ -64,6 +69,6 @@ public class TTServiceTest {
         mother.setCaseId("caseId");
 
         ttService.process(mother);
-        verify(ttSchedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class));
+        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
     }
 }

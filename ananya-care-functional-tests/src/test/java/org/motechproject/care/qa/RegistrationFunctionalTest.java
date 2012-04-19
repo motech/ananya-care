@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.schedule.service.TTSchedulerService;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.utils.RetryTask;
 import org.motechproject.care.utils.TextHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
@@ -67,7 +67,7 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
         Mother mother = task.execute(100, 1000);
         markForDeletion(mother);
-        markScheduleForUnEnrollment(caseId, TTSchedulerService.tt1Milestone);
+        markScheduleForUnEnrollment(caseId, MilestoneType.TT1.toString());
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
@@ -103,7 +103,7 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
         Mother mother = task.execute(100, 1000);
         markForDeletion(mother);
-        markScheduleForUnEnrollment(caseId, TTSchedulerService.tt1Milestone);
+        markScheduleForUnEnrollment(caseId, MilestoneType.TT1.toString());
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());

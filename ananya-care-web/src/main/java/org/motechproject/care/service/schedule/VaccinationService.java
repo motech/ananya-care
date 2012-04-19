@@ -1,13 +1,16 @@
 package org.motechproject.care.service.schedule;
 
 import org.motechproject.care.domain.Client;
-import org.motechproject.care.schedule.service.SchedulerService;
+import org.motechproject.care.schedule.service.ScheduleService;
 
 public abstract class VaccinationService {
 
-    protected SchedulerService schedulerService;
+    protected ScheduleService schedulerService;
 
-    protected VaccinationService(SchedulerService schedulerService) {
+    protected VaccinationService() {
+    }
+
+    public VaccinationService(ScheduleService schedulerService) {
         this.schedulerService = schedulerService;
     }
 
