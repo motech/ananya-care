@@ -1,4 +1,4 @@
-package org.motechproject.care.integration.service;
+package org.motechproject.care.integration;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -9,13 +9,13 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.care.schedule.service.VitaSchedulerService;
+import org.motechproject.care.schedule.service.MeaslesSchedulerService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
 import org.motechproject.care.service.ChildVaccinationProcessor;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.schedule.MeaslesService;
 import org.motechproject.care.service.schedule.VaccinationService;
-import org.motechproject.care.service.schedule.VitaService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
@@ -29,10 +29,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class VitaminAIntegrationTest extends SpringIntegrationTest {
+public class MeaslesIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
-    private VitaService vitaService;
+    private MeaslesService measlesService;
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
@@ -43,22 +43,22 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
     private final String caseId = CaseUtils.getUniqueCaseId();
     private ChildService childService;
 
+    @Before
+    public void setUp(){
+        List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) measlesService);
+        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
+    }
+
     @After
     public void tearDown() {
         allChildren.removeAll();
         allMothers.removeAll();
     }
 
-    @Before
-    public void setUp(){
-        List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) vitaService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
-        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
-    }
-    
     @Test
-    public void shouldVerifyVitaScheduleCreationWhenChildIsRegistered() {
-        String vitaScheduleName = ChildVaccinationSchedule.Vita.getName();
+    public void shouldVerifyMeaslesScheduleCreationWhenChildIsRegistered() {
+        String measlesScheduleName = ChildVaccinationSchedule.Measles.getName();
         DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
         String motherCaseId = "motherCaseId";
@@ -66,42 +66,42 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         mother.setAdd(add);
         allMothers.add(mother);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId,vitaScheduleName);
+        markScheduleForUnEnrollment(caseId,  measlesScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId,vitaScheduleName);
-        assertEquals(VitaSchedulerService.milestone, enrollment.getCurrentMilestoneName());
+        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId,  measlesScheduleName);
+        assertEquals(MeaslesSchedulerService.milestone, enrollment.getCurrentMilestoneName());
         assertEquals(add, enrollment.getReferenceDateTime());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());
-        assertNull(child.getVitamin1Date());
+        assertNull(child.getMeaslesDate());
     }
 
     @Test
-    public void shouldVerifyVitaScheduleFulfillmentWhenChildHasTakenVita() {
-        String vitaScheduleName = ChildVaccinationSchedule.Vita.getName();
+    public void shouldVerifyMeaslesScheduleFulfillmentWhenChildHasTakenMeasles() {
+        String measlesScheduleName = ChildVaccinationSchedule.Measles.getName();
         DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
-        DateTime vitaTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
+        DateTime measlesTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
         String motherCaseId = "motherCaseId";
 
         Mother mother = new Mother(motherCaseId);
         mother.setAdd(add);
         allMothers.add(mother);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withVitamin1Date(vitaTaken.toString()).withMotherCaseId(motherCaseId).build();
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate( measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, vitaScheduleName);
+        markScheduleForUnEnrollment(caseId, measlesScheduleName);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, vitaScheduleName));
+        assertNull(scheduleTrackingService.getEnrollment(caseId, measlesScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());
-        assertEquals(vitaTaken, child.getVitamin1Date());
+        assertEquals(measlesTaken, child.getMeaslesDate());
     }
 }

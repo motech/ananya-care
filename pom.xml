@@ -21,6 +21,12 @@
         <release.version>0.1-SNAPSHOT</release.version>
         <motech.version>0.10-SNAPSHOT</motech.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <db.server>localhost</db.server>
+        <db.port>5984</db.port>
+        <db.name.ananya.care>ananya-care</db.name.ananya.care>
+        <db.name.motech-scheduletracking>motech-scheduletracking</db.name.motech-scheduletracking>
+        <main.basedir>${project.basedir}</main.basedir>
     </properties>
 
     <distributionManagement>
@@ -118,6 +124,81 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.5</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>1.0-alpha-2</version>
+                    <executions>
+                        <execution>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>read-project-properties</goal>
+                            </goals>
+                            <configuration>
+                                <files>
+                                    <file>${main.basedir}/build/maven.properties</file>
+                                </files>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <id>Drop DB Before Unit and Repository Tests</id>
+                            <phase>process-test-classes</phase>
+                            <configuration>
+                                <target>
+                                    <echo message="Dropping DBs: START"/>
+                                    <exec executable="curl">
+                                        <arg value="-s"/>
+                                        <arg value="-S"/>
+                                        <arg value="-X"/>
+                                        <arg value="DELETE"/>
+                                        <arg value="http://${db.server}:${db.port}/${db.name.ananya.care}"/>
+                                        <arg value="http://${db.server}:${db.port}/${db.name.motech-scheduletracking}"/>
+                                    </exec>
+                                    <echo message="Dropping DB: END"/>
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>setup-quartz-schema-before-test</id>
+                            <phase>process-test-classes</phase>
+                            <configuration>
+                                <target>
+                                    <echo message="Quartz schema loading: START"/>
+                                    <path id="dependencies">
+                                        <fileset file="${main.basedir}/build/lib/mysql-connector-java-5.1.13.jar"/>
+                                    </path>
+                                    <sql driver="${mysql.driver}"
+                                         url="jdbc:mysql://${mysql.server}:${mysql.port}?autoReconnect=true"
+                                         userid="${mysql.user}"
+                                         classpathref="dependencies"
+                                         password="${mysql.password}">
+                                        drop database if exists ${mysql.db};
+                                        create database ${mysql.db};
+                                    </sql>
+                                    <sql driver="${mysql.driver}"
+                                         url="jdbc:mysql://${mysql.server}:${mysql.port}/${mysql.db}?autoReconnect=true"
+                                         userid="${mysql.user}"
+                                         classpathref="dependencies"
+                                         password="${mysql.password}"
+                                         src="${main.basedir}/build/sql/tables_mysql_innodb.sql"/>
+                                    <echo message="Quartz schema loading: END"/>
+                                </target>
+                            </configuration>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
     </build>
     <dependencies>
@@ -183,21 +264,10 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>motech-testing-utils</artifactId>
             <version>${motech.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-server-api</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -213,12 +283,6 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.4.9</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

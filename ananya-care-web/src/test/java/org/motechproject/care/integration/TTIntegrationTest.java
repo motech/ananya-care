@@ -1,4 +1,4 @@
-package org.motechproject.care.integration.service;
+package org.motechproject.care.integration;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
