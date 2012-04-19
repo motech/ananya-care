@@ -118,13 +118,13 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
 
     @Test
     public void shouldProvideAlertsForVitaVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(ChildVaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
+        schedule.enrollFor(ChildVaccinationSchedule.Vita.getName(), newDate(2011, 12, 1), null);
 
-        schedule.assertNoAlerts("Measles", earliest);
-        schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date
-        schedule.assertNoAlerts("Measles", late);
-        schedule.assertNoAlerts("Measles", max);
-        visualization.outputTo("child-measles.html", 2);
+        schedule.assertNoAlerts("Vita", earliest);
+        schedule.assertAlertsStartWith("Vita", due, date(18, AUGUST)); // (9-0.5) months after ref date
+        schedule.assertNoAlerts("Vita", late);
+        schedule.assertNoAlerts("Vita", max);
+        visualization.outputTo("child-vita.html", 2);
     }
 
     private Date date(int day, int month) {
@@ -132,6 +132,6 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
     }
 
     private Date dateWithYear(int day, int month, int year) {
-        return new DateTime(year, month, day, 00, 0).toDate();
+        return new DateTime(year, month, day, 0, 0).toDate();
     }
 }

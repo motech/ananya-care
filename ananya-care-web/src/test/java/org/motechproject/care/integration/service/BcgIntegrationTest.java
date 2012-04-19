@@ -1,0 +1,106 @@
+package org.motechproject.care.integration.service;
+
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
+import org.motechproject.care.repository.AllChildren;
+import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.request.CareCase;
+import org.motechproject.care.schedule.service.BcgSchedulerService;
+import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.service.ChildService;
+import org.motechproject.care.service.ChildVaccinationProcessor;
+import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.schedule.BcgService;
+import org.motechproject.care.service.schedule.VaccinationService;
+import org.motechproject.care.utils.CaseUtils;
+import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.motechproject.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class BcgIntegrationTest extends SpringIntegrationTest {
+
+    @Autowired
+    private BcgService bcgService;
+    @Autowired
+    private ScheduleTrackingService scheduleTrackingService;
+    @Autowired
+    private AllChildren allChildren;
+    @Autowired
+    private AllMothers allMothers;
+
+    private final String caseId = CaseUtils.getUniqueCaseId();
+    private ChildService childService;
+
+    @After
+    public void tearDown() {
+        allChildren.removeAll();
+        allMothers.removeAll();
+    }
+
+    @Before
+    public void setUp(){
+        List<VaccinationService> bcgServices = Arrays.asList((VaccinationService) bcgService);
+        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(bcgServices );
+        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
+    }
+    
+    @Test
+    public void shouldVerifyBcgScheduleCreationWhenChildIsRegistered() {
+        String bcgScheduleName = ChildVaccinationSchedule.Bcg.getName();
+        DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
+
+        String motherCaseId = "motherCaseId";
+        Mother mother = new Mother(motherCaseId);
+        mother.setAdd(add);
+        allMothers.add(mother);
+
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBcgDate(null).withMotherCaseId(motherCaseId).build();
+        childService.process(careCase);
+
+        markScheduleForUnEnrollment(caseId, bcgScheduleName);
+
+        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, bcgScheduleName);
+        assertEquals(BcgSchedulerService.milestone, enrollment.getCurrentMilestoneName());
+        assertEquals(add, enrollment.getReferenceDateTime());
+
+        Child child = allChildren.findByCaseId(caseId);
+        assertEquals(add , child.getDOB());
+        assertNull(child.getBcgDate());
+    }
+
+    @Test
+    public void shouldVerifyBcgScheduleFulfillmentWhenChildHasTakenBcg() {
+        String bcgScheduleName = ChildVaccinationSchedule.Bcg.getName();
+        DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
+        DateTime bcgTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
+        String motherCaseId = "motherCaseId";
+
+        Mother mother = new Mother(motherCaseId);
+        mother.setAdd(add);
+        allMothers.add(mother);
+
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBcgDate(null).withMotherCaseId(motherCaseId).build();
+        childService.process(careCase);
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBcgDate( bcgTaken.toString()).withMotherCaseId(motherCaseId).build();
+        childService.process(careCase);
+
+        markScheduleForUnEnrollment(caseId, bcgScheduleName);
+        assertNull(scheduleTrackingService.getEnrollment(caseId, bcgScheduleName));
+
+        Child child = allChildren.findByCaseId(caseId);
+        assertEquals(add , child.getDOB());
+        assertEquals(bcgTaken, child.getBcgDate());
+    }
+}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class TTSchedulerService extends SchedulerService{
 
     public static String tt1Milestone = "TT 1";
+    public static String tt2Milestone = "TT 2";
 
     @Autowired
     public TTSchedulerService(ScheduleTrackingService trackingService) {
