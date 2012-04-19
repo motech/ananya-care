@@ -50,7 +50,7 @@ public abstract class SchedulerService {
     }
 
     private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate) {
-        Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(5));
+        Time preferredAlertTime = DateUtil.time(DateTime.now().plusMinutes(2));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = DateUtil.time(DateUtil.now());
         return new EnrollmentRequest(caseId, scheduleName, preferredAlertTime, referenceDate, null, enrollmentDate, enrollmentTime, null, null);

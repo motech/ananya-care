@@ -36,13 +36,17 @@ public class SchedulerServiceTest {
     public void shouldEnrollChildIfNotEnrolledFOrMeaslesAlready(){
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
+        DateTime now = DateTime.now();
         when(trackingService.getEnrollment(caseId, measlesSchedulerService.getScheduleName())).thenReturn(null);
+
         measlesSchedulerService.enroll(caseId, dob);
+
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(trackingService).enroll(captor.capture());
         EnrollmentRequest enrollmentRequest = captor.getValue();
         assertEquals(dob.toLocalDate(), enrollmentRequest.getReferenceDate());
         assertEquals(DateUtil.today(), enrollmentRequest.getEnrollmentDateTime().toLocalDate());
+        assertEquals(DateUtil.time(now.plusMinutes(2)).getMinute(), enrollmentRequest.getPreferredAlertTime().getMinute());
         assertEquals(measlesSchedulerService.getScheduleName(), enrollmentRequest.getScheduleName());
     }
 

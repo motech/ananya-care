@@ -12,7 +12,8 @@
                     "window": "due",
                     "offset": ["0 Weeks"],
                     "interval": ["1 Day"],
-                    "count": "1"
+                    "count": "1",
+                    "floating":"true"
                 }
             ]
         }
