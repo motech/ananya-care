@@ -20,13 +20,13 @@ import org.motechproject.care.utils.TextHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-
 @Ignore
 public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
@@ -46,7 +46,7 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
         String instanceId = UUID.randomUUID().toString();
         String name = "test_gen" + Math.random();
 
-        StringTemplate stringTemplate = getStringTemplate("/register_pregnantmother.st");
+        StringTemplate stringTemplate = getStringTemplate("/preregister_pregnantmother.st");
         stringTemplate.setAttribute("caseId",caseId);
         stringTemplate.setAttribute("instanceId",instanceId);
         stringTemplate.setAttribute("name", name);
@@ -72,6 +72,41 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
+    }
+
+    @Test
+    //TO be fixed asap.
+    public void shouldSendATT1AlertForAPregnantMother() throws IOException {
+
+        final String caseId = UUID.randomUUID().toString();
+        String instanceId = UUID.randomUUID().toString();
+        String name = "test_gen" + Math.random();
+
+        StringTemplate stringTemplate = getStringTemplate("/register_pregnantmother_with_edd.st");
+        stringTemplate.setAttribute("caseId",caseId);
+        stringTemplate.setAttribute("instanceId",instanceId);
+        stringTemplate.setAttribute("edd", DateUtil.now().toLocalDate().toString());
+        String final_xml = stringTemplate.toString();
+
+
+        HttpResponse response = postToCommCare(final_xml);
+        StatusLine statusLine = response.getStatusLine();
+        Assert.assertEquals(201,statusLine.getStatusCode());
+        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
+
+        RetryTask<Mother> task = new RetryTask<Mother>() {
+            @Override
+            protected Mother perform() {
+                return allMothers.findByCaseId(caseId);
+            }
+        };
+
+        Mother mother = task.execute(100, 1000);
+        markForDeletion(mother);
+        markScheduleForUnEnrollment(caseId, TTSchedulerService.tt1Milestone);
+        Assert.assertEquals(name, mother.getName());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
+        Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
 
 
         RetryTask<AlertDocCase> taskForGettingAlertDocCase = new RetryTask<AlertDocCase>() {
@@ -83,6 +118,7 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
         AlertDocCase alertDocCase = taskForGettingAlertDocCase.execute(300, 1000);
         Assert.assertTrue(alertDocCase.getXmlDocument().contains("xcxfdxcxcx"));
+
     }
 
     private HttpResponse postToCommCare(String final_xml) throws IOException {
