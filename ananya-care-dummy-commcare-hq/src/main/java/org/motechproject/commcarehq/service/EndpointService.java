@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -58,7 +60,12 @@ public class EndpointService {
         try {
             parser.parse(inputSource);
             Document document = parser.getDocument();
-            return new AlertDocCase(document.getDocumentElement().getAttribute("case_id"), xmlDocument, DateTime.now());
+            NodeList caseList = document.getDocumentElement().getElementsByTagName("case");
+            if(caseList.getLength() == 0) {
+                throw new MalformedXmlException();
+            }
+            Element caseElement = (Element) caseList.item(0);
+            return new AlertDocCase(caseElement.getAttribute("case_id"), xmlDocument, DateTime.now());
 
         } catch (IOException ex) {
             throw new MalformedXmlException();
