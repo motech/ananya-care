@@ -30,8 +30,8 @@ public class AlertMotherVaccination extends AlertVaccination{
 
         if(dueDateTime.isAfter(mother.getEdd()))
             return;
-        DateTime dateEligible = dueDateTime.isBefore(now) ? now : dueDateTime;
-        DateTime dateExpires = lateDateTime.isAfter(mother.getEdd()) ? mother.getEdd() : lateDateTime;
+        DateTime dateEligible = !dueDateTime.isAfter(now) ? now : dueDateTime;
+        DateTime dateExpires = !lateDateTime.isBefore(mother.getEdd()) ? mother.getEdd() : lateDateTime;
 
         postToCommCare(dateEligible, dateExpires, mother.getGroupId(), mother.getCaseType(),clientElementTag);
     }
