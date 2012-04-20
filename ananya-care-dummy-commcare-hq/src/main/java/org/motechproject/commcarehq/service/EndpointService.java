@@ -1,7 +1,6 @@
 package org.motechproject.commcarehq.service;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import org.joda.time.DateTime;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.motechproject.util.StringUtil;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -25,10 +22,12 @@ import java.io.StringReader;
 public class EndpointService {
 
     private AllAlertDocCases allCareCases;
+    private AlertDocCaseFactory alertDocCaseFactory;
 
     @Autowired
-    public EndpointService(AllAlertDocCases allCareCases) {
+    public EndpointService(AllAlertDocCases allCareCases, AlertDocCaseFactory alertDocCaseFactory) {
         this.allCareCases = allCareCases;
+        this.alertDocCaseFactory = alertDocCaseFactory;
     }
 
     @RequestMapping(value="/", method= RequestMethod.GET)
@@ -60,8 +59,7 @@ public class EndpointService {
         try {
             parser.parse(inputSource);
             Document document = parser.getDocument();
-            String clientCaseId = clientCaseId(document);
-            return new AlertDocCase(clientCaseId, xmlDocument, DateTime.now());
+            return alertDocCaseFactory.getAlertDocCase(xmlDocument, document);
 
         } catch (IOException ex) {
             throw new MalformedXmlException();
@@ -69,19 +67,6 @@ public class EndpointService {
         catch (SAXException ex){
             throw new MalformedXmlException();
         }
-
-    }
-
-    private String clientCaseId(Document document) {
-        Element documentElement = document.getDocumentElement();
-        NodeList caseList = documentElement.getElementsByTagName("mother_id");
-        if(caseList.getLength() == 0) {
-            caseList =  documentElement.getElementsByTagName("child_id");
-        }
-        if(caseList.getLength() == 0) {
-            throw new MalformedXmlException();
-        }
-        return caseList.item(0).getTextContent();
     }
 
     private ValidationResponse processDocument(String xmlDocument) {

@@ -18,10 +18,14 @@ public class AlertDocCase extends MotechBaseDataObject {
     @JsonProperty
     private DateTime submittedAt;
 
-    public AlertDocCase(String caseId, String xmlDocument, DateTime submittedAt) {
+    @JsonProperty
+    private String name;
+
+    public AlertDocCase(String caseId, String xmlDocument, DateTime submittedAt,String name) {
         this.caseId = caseId;
         this.xmlDocument = xmlDocument;
         this.submittedAt = submittedAt;
+        this.name = name;
     }
 
     public AlertDocCase() {
@@ -50,5 +54,13 @@ public class AlertDocCase extends MotechBaseDataObject {
 
     public void setSubmittedAt(DateTime submittedAt) {
         this.submittedAt = submittedAt;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
