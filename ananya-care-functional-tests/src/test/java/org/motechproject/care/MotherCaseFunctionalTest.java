@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 
-public class CareCaseFunctionalTest extends SpringIntegrationTest {
+public class MotherCaseFunctionalTest extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;
 
@@ -65,15 +65,6 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
         Assert.assertFalse(motherFromDb.isActive());
     }
 
-    private void postXmlToUrl(String uniqueCaseId, String xmlFileName) throws IOException {
-        RestTemplate restTemplate = new RestTemplate();
-        File file = new File(getClass().getResource("/"+xmlFileName).getPath());
-        String body = FileUtils.readFileToString(file);
-        String modifiedXml = body.replace("caseId", uniqueCaseId);
-
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", modifiedXml);
-    }
-
     @Test
     public void shouldCloseMother() throws IOException {
         String uniqueCaseId = CaseUtils.getUniqueCaseId();
@@ -89,5 +80,14 @@ public class CareCaseFunctionalTest extends SpringIntegrationTest {
 
         markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertFalse(motherFromDb.isActive());
+    }
+
+    private void postXmlToUrl(String uniqueCaseId, String xmlFileName) throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        File file = new File(getClass().getResource("/"+xmlFileName).getPath());
+        String body = FileUtils.readFileToString(file);
+        String modifiedXml = body.replace("caseId", uniqueCaseId);
+
+        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", modifiedXml);
     }
 }
