@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,7 +61,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         String ttScheduleName = MotherVaccinationSchedule.TT.getName();
         LocalDate edd = DateUtil.today().plusMonths(4);
 
-        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).build();
+        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).withTT2(null).build();
         motherService.process(careCase);
         markScheduleForUnEnrollment(caseId, ttScheduleName);
         EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
@@ -70,19 +71,37 @@ public class TTIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyTTScheduleFulfillmentWhenMotherHasTakenTT1() {
+    public void shouldVerifyTT1ScheduleFulfillmentWhenMotherHasTakenTT1() {
         String ttScheduleName = MotherVaccinationSchedule.TT.getName();
         LocalDate edd = DateUtil.today().plusMonths(4);
         LocalDate tt1Taken = DateUtil.today().plusMonths(1);
 
-        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).build();
+        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).withTT2(null).build();
         motherService.process(careCase);
-        careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(tt1Taken.toString()).build();
+        careCase = new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(tt1Taken.toString()).withTT2(null).build();
         motherService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, ttScheduleName);
         EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
 
         assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
+    }
+
+    @Test
+    public void shouldVerifyTT2ScheduleFulfillmentWhenMotherHasTakenTT2() {
+        String ttScheduleName = MotherVaccinationSchedule.TT.getName();
+        LocalDate edd = DateUtil.today().plusMonths(4);
+        LocalDate tt1Taken = DateUtil.today().plusMonths(1);
+        LocalDate tt2Taken = DateUtil.today().plusMonths(3);
+
+        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).withTT2(null).build();
+        motherService.process(careCase);
+        careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(tt1Taken.toString()).withTT2(null).build();
+        motherService.process(careCase);
+        careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(tt1Taken.toString()).withTT2(tt2Taken.toString()).build();
+        motherService.process(careCase);
+
+        markScheduleForUnEnrollment(caseId, ttScheduleName);
+        assertNull(scheduleTrackingService.getEnrollment(caseId, ttScheduleName));
     }
 }

@@ -52,7 +52,7 @@ public class TTServiceTest {
     }
 
     @Test
-    public void shouldFulfillTTIfTTDatePresentInMother(){
+    public void shouldFulfillTT1IfTT1DatePresentInMother(){
         DateTime tt1Date = new DateTime();
         String caseId = "caseId";
         Mother mother = new Mother();
@@ -64,7 +64,19 @@ public class TTServiceTest {
     }
 
     @Test
-    public void shouldNotFulfillTTIfTTDateNotPresentInMother(){
+    public void shouldFulfillTT2IfTT2DatePresentInMother(){
+        DateTime tt1Date = new DateTime();
+        String caseId = "caseId";
+        Mother mother = new Mother();
+        mother.setTt2Date(tt1Date);
+        mother.setCaseId(caseId);
+
+        ttService.process(mother);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TT2.toString(),  tt1Date, scheduleName);
+    }
+
+    @Test
+    public void shouldNotFulfillTTIOrTT2IfTTTakenDateNotPresentInMother(){
         Mother mother = new Mother();
         mother.setCaseId("caseId");
 

@@ -29,5 +29,8 @@ public class TTService extends VaccinationService{
         if(mother.getTt1Date() != null){
             schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT1.toString(),  mother.getTt1Date(), scheduleName);
         }
+        if(mother.getTt2Date() != null){
+            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT2.toString(),  mother.getTt2Date(), scheduleName);
+        }
     }
 }

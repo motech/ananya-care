@@ -11,6 +11,7 @@ public class TaskIdMapper {
     public TaskIdMapper() {
         taskMap = new HashMap<String,String>();
         taskMap.put(MilestoneType.TT1.toString(),"tt_1");
+        taskMap.put(MilestoneType.TT2.toString(),"tt_2");
 
         taskMap.put(MilestoneType.Measles.toString(),"measles");
         taskMap.put(MilestoneType.Bcg.toString(),"bcg");
