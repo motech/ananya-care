@@ -60,12 +60,8 @@ public class EndpointService {
         try {
             parser.parse(inputSource);
             Document document = parser.getDocument();
-            NodeList caseList = document.getDocumentElement().getElementsByTagName("case");
-            if(caseList.getLength() == 0) {
-                throw new MalformedXmlException();
-            }
-            Element caseElement = (Element) caseList.item(0);
-            return new AlertDocCase(caseElement.getAttribute("case_id"), xmlDocument, DateTime.now());
+            String clientCaseId = clientCaseId(document);
+            return new AlertDocCase(clientCaseId, xmlDocument, DateTime.now());
 
         } catch (IOException ex) {
             throw new MalformedXmlException();
@@ -74,6 +70,18 @@ public class EndpointService {
             throw new MalformedXmlException();
         }
 
+    }
+
+    private String clientCaseId(Document document) {
+        Element documentElement = document.getDocumentElement();
+        NodeList caseList = documentElement.getElementsByTagName("mother_id");
+        if(caseList.getLength() == 0) {
+            caseList =  documentElement.getElementsByTagName("child_id");
+        }
+        if(caseList.getLength() == 0) {
+            throw new MalformedXmlException();
+        }
+        return caseList.item(0).getTextContent();
     }
 
     private ValidationResponse processDocument(String xmlDocument) {
