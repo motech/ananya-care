@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
@@ -27,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-@Ignore
 public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
 
     @Autowired
@@ -39,60 +37,14 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
     @Autowired
     private ScheduleTrackingService trackingService;
 
-
     @Test
-    public void shouldPreRegisterAPregnantMother() throws IOException {
-        final String caseId = UUID.randomUUID().toString();
-        String instanceId = UUID.randomUUID().toString();
-        String name = "test_gen" + Math.random();
-
-        StringTemplate stringTemplate = getStringTemplate("/preregister_pregnantmother.st");
-        stringTemplate.setAttribute("caseId",caseId);
-        stringTemplate.setAttribute("instanceId",instanceId);
-        stringTemplate.setAttribute("name", name);
-        String final_xml = stringTemplate.toString();
-
-
-        HttpResponse response = postToCommCare(final_xml);
-        StatusLine statusLine = response.getStatusLine();
-        Assert.assertEquals(201,statusLine.getStatusCode());
-        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
-
-        RetryTask<Mother> task = new RetryTask<Mother>() {
-            @Override
-            protected Mother perform() {
-               return allMothers.findByCaseId(caseId);
-            }
-        };
-
-        Mother mother = task.execute(100, 1000);
-        markForDeletion(mother);
-        markScheduleForUnEnrollment(caseId, MilestoneType.TT1.toString());
-        Assert.assertEquals(name, mother.getName());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", mother.getGroupId());
-        Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
-    }
-
-    @Test
-    //TO be fixed asap.
     public void shouldSendATT1AlertForAPregnantMother() throws IOException {
 
         final String caseId = UUID.randomUUID().toString();
         String instanceId = UUID.randomUUID().toString();
         String name = "test_gen" + Math.random();
 
-        StringTemplate stringTemplate = getStringTemplate("/register_pregnantmother_with_edd.st");
-        stringTemplate.setAttribute("caseId",caseId);
-        stringTemplate.setAttribute("instanceId",instanceId);
-        stringTemplate.setAttribute("edd", DateUtil.now().toLocalDate().toString());
-        String final_xml = stringTemplate.toString();
-
-
-        HttpResponse response = postToCommCare(final_xml);
-        StatusLine statusLine = response.getStatusLine();
-        Assert.assertEquals(201,statusLine.getStatusCode());
-        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
+        postXmlWithAttributes(caseId, instanceId, name, null, "/pregnantmother_new.st");
 
         RetryTask<Mother> task = new RetryTask<Mother>() {
             @Override
@@ -101,12 +53,17 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
             }
         };
 
-        Mother mother = task.execute(100, 1000);
+        Mother mother = task.execute(120, 1000);
+        Assert.assertNotNull(mother);
         markForDeletion(mother);
         markScheduleForUnEnrollment(caseId, MilestoneType.TT1.toString());
         Assert.assertEquals(name, mother.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
+
+        instanceId = UUID.randomUUID().toString();
+        String edd = DateUtil.now().plusMonths(1).toLocalDate().toString();
+        postXmlWithAttributes(caseId, instanceId, name, edd, "/pregnantmother_register_with_edd.st");
 
 
         RetryTask<AlertDocCase> taskForGettingAlertDocCase = new RetryTask<AlertDocCase>() {
@@ -115,10 +72,25 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest{
                 return allAlertDocCases.findByCaseId(caseId);
             }
         };
-
         AlertDocCase alertDocCase = taskForGettingAlertDocCase.execute(300, 1000);
-        Assert.assertTrue(alertDocCase.getXmlDocument().contains("xcxfdxcxcx"));
+        Assert.assertNotNull(alertDocCase);
+        markForDeletion(alertDocCase);
+        Assert.assertTrue(alertDocCase.getXmlDocument().contains(caseId));
 
+    }
+
+    private void postXmlWithAttributes(String caseId, String instanceId, String name, String edd, String templateFilePath) throws IOException {
+        StringTemplate stringTemplate = getStringTemplate(templateFilePath);
+        stringTemplate.setAttribute("caseId",caseId);
+        stringTemplate.setAttribute("instanceId",instanceId);
+        stringTemplate.setAttribute("name", name);
+        stringTemplate.setAttribute("edd", edd);
+        String final_xml = stringTemplate.toString();
+
+        HttpResponse response = postToCommCare(final_xml);
+        StatusLine statusLine = response.getStatusLine();
+        Assert.assertEquals(201, statusLine.getStatusCode());
+        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
     }
 
     private HttpResponse postToCommCare(String final_xml) throws IOException {

@@ -8,6 +8,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.request.CareCase;
+import org.springframework.http.HttpEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class CareCaseServiceTest  {
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 
-        careCaseService.ProcessCase(xml, null);
+        careCaseService.processCase(new HttpEntity<String>(xml));
         verify(motherService).process((CareCase) Matchers.any());
 
     }
@@ -47,7 +48,7 @@ public class CareCaseServiceTest  {
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 
-        careCaseService.ProcessCase(xml, null);
+        careCaseService.processCase(new HttpEntity<String>(xml));
         verify(motherService).closeCase("caseId");
     }
 
@@ -57,7 +58,7 @@ public class CareCaseServiceTest  {
         File file = new File(path);
         String xml = FileUtils.readFileToString(file);
 
-        careCaseService.ProcessCase(xml, null);
+        careCaseService.processCase(new HttpEntity<String>(xml));
         verify(childService).process((CareCase) Matchers.any());
 
     }

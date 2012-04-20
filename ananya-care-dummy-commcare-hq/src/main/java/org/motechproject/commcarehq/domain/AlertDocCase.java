@@ -24,16 +24,31 @@ public class AlertDocCase extends MotechBaseDataObject {
         this.submittedAt = submittedAt;
     }
 
+    public AlertDocCase() {
 
-    public String getXmlDocument() {
-        return xmlDocument;
     }
 
     public String getCaseId() {
         return caseId;
     }
 
+    public void setCaseId(String caseId) {
+        this.caseId = caseId;
+    }
+
+    public String getXmlDocument() {
+        return xmlDocument;
+    }
+
+    public void setXmlDocument(String xmlDocument) {
+        this.xmlDocument = xmlDocument;
+    }
+
     public DateTime getSubmittedAt() {
         return submittedAt;
+    }
+
+    public void setSubmittedAt(DateTime submittedAt) {
+        this.submittedAt = submittedAt;
     }
 }
