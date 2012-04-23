@@ -92,86 +92,6 @@ public class AlertChildVaccinationTest {
     }
 
     @Test
-    public void shouldSendChildVaccinationAlertToGatewayWhenEligibleDateIsBeforeToday() {
-        String scheduleName = "Measles Vaccination";
-        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
-        String motherCaseId = "motherCaseId";
-        String milestoneName = "Measles";
-        String groupId = "groupId";
-        String flwId = "FLW1234";
-        String childName = "Sita";
-        DateTime now = DateUtil.now();
-        DateTime dob = now.minusWeeks(10);
-
-        Milestone milestone = new Milestone(milestoneName, weeks(5), weeks(40), null, null);
-        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
-
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
-        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
-
-        ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
-        verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
-        CaseTask task = argumentCaptor.getValue();
-
-        assertEquals(now.toString("yyyy-MM-dd"), task.getDateEligible());
-        assertEquals(now.plusWeeks(35).toString("yyyy-MM-dd"), task.getDateExpires());
-    }
-
-    @Test
-    public void shouldNotSendChildVaccinationAlertToGatewayWhenEligibleDateIsAfter2YearsOfAge() {
-        String scheduleName = "Measles Vaccination";
-        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
-        String motherCaseId = "motherCaseId";
-        String milestoneName = "Measles";
-        String groupId = "groupId";
-        String flwId = "FLW1234";
-        String childName = "Sita";
-        DateTime now = DateUtil.now();
-        DateTime dob = now.minusWeeks(10);
-
-        Milestone milestone = new Milestone(milestoneName, weeks(110), weeks(10), null, null);
-        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
-
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
-        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
-
-        verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
-    }
-
-    @Test
-    public void shouldTerminateTheExpiryDateToMinimumOfExpiryDateAnd2YearsAgeCompletion() {
-        String scheduleName = "Measles Vaccination";
-        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
-        String motherCaseId = "motherCaseId";
-        String milestoneName = "Measles";
-        String groupId = "groupId";
-        String flwId = "FLW1234";
-        String childName = "Sita";
-        DateTime now = DateUtil.now();
-        DateTime dob = now.minusMonths(2);
-
-        Milestone milestone = new Milestone(milestoneName, months(20), months(10), null, null);
-        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
-
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
-        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
-
-        ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
-        verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
-        CaseTask task = argumentCaptor.getValue();
-
-        assertEquals(now.plusMonths(18).toString("yyyy-MM-dd"), task.getDateEligible());
-        assertEquals(now.plusMonths(22).toString("yyyy-MM-dd"), task.getDateExpires());
-    }
-
-    // Assert saving write CareCaseTask in db
-    @Test
     public void shouldSaveTaskToDB() {
         String scheduleName = "Measles Vaccination";
         String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
@@ -209,6 +129,109 @@ public class AlertChildVaccinationTest {
         assertEquals(CaseType.Child.getType(),task.getClientCaseType());
         assertEquals(AlertChildVaccination.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
+    }
+
+    @Test
+    public void shouldSendChildVaccinationAlertToGatewayWhenEligibleDateIsBeforeToday() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String childName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime dob = now.minusWeeks(10);
+
+        Milestone milestone = new Milestone(milestoneName, weeks(5), weeks(40), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
+        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
+        CaseTask task = argumentCaptor.getValue();
+
+        assertEquals(now.toString("yyyy-MM-dd"), task.getDateEligible());
+        assertEquals(now.plusWeeks(35).toString("yyyy-MM-dd"), task.getDateExpires());
+    }
+
+    @Test
+    public void shouldTerminateTheExpiryDateToMinimumOfExpiryDateAnd2YearsAgeCompletion() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String childName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime dob = now.minusMonths(2);
+
+        Milestone milestone = new Milestone(milestoneName, months(20), months(10), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
+        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
+        verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
+        CaseTask task = argumentCaptor.getValue();
+
+        assertEquals(now.plusMonths(18).toString("yyyy-MM-dd"), task.getDateEligible());
+        assertEquals(now.plusMonths(22).toString("yyyy-MM-dd"), task.getDateExpires());
+    }
+
+    @Test
+    public void shouldNotSendChildVaccinationAlertToGatewayWhenEligibleDateIsAfter2YearsOfAge() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String childName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime dob = now.minusWeeks(10);
+
+        Milestone milestone = new Milestone(milestoneName, weeks(110), weeks(10), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
+        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
+    }
+
+    @Test
+    public void shouldNotSendChildVaccinationAlertToGatewayWhenExpiryDateIsBeforeToday() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String childName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime dob = now.minusMonths(1);
+        DateTime startOfSchedule = now.minusMonths(25);
+
+        Milestone milestone = new Milestone(milestoneName, months(9), months(15), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
+        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
 
 

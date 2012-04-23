@@ -29,13 +29,21 @@ public class AlertChildVaccination extends AlertVaccination{
         Child child = allChildren.findByCaseId(externalId);
         DateTime now = DateTime.now();
 
-        if(dueDateTime.isAfter(dateOf2ndYear(child))) {
+        DateTime windowStart = getWindowStart(dueDateTime, now);
+        DateTime windowEnd = getWindowEnd(lateDateTime, child);
+        if(windowStart.isAfter(dateOf2ndYear(child)) || windowEnd.isBefore(now)) {
             return;
         }
-        DateTime dateEligible = dueDateTime.isBefore(now) ? now : dueDateTime;
-        DateTime dateExpires = lateDateTime.isAfter(dateOf2ndYear(child)) ? dateOf2ndYear(child) : lateDateTime;
 
-        postToCommCare(dateEligible, dateExpires, child.getGroupId(), child.getCaseType(), clientElementTag);
+        postToCommCare(windowStart, windowEnd, child.getGroupId(), child.getCaseType(), clientElementTag);
+    }
+
+    private DateTime getWindowEnd(DateTime lateDateTime, Child child) {
+        return lateDateTime.isAfter(dateOf2ndYear(child)) ? dateOf2ndYear(child) : lateDateTime;
+    }
+
+    private DateTime getWindowStart(DateTime dueDateTime, DateTime now) {
+        return dueDateTime.isBefore(now) ? now : dueDateTime;
     }
 
     private DateTime dateOf2ndYear(Child child) {

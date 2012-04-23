@@ -28,12 +28,22 @@ public class AlertMotherVaccination extends AlertVaccination{
         Mother mother = allMothers.findByCaseId(externalId);
         DateTime now = DateTime.now();
 
-        if(dueDateTime.isAfter(mother.getEdd()))
-            return;
-        DateTime dateEligible = !dueDateTime.isAfter(now) ? now : dueDateTime;
-        DateTime dateExpires = !lateDateTime.isBefore(mother.getEdd()) ? mother.getEdd() : lateDateTime;
+        DateTime windowStart = getWindowStart(dueDateTime, now);
+        DateTime windowEnd = getWindowEnd(lateDateTime, mother);
 
-        postToCommCare(dateEligible, dateExpires, mother.getGroupId(), mother.getCaseType(),clientElementTag);
+        if(windowStart.isAfter(mother.getEdd()) || windowEnd.isBefore(now) ) {
+            return;
+        }
+
+        postToCommCare(windowStart, windowEnd, mother.getGroupId(), mother.getCaseType(),clientElementTag);
+    }
+
+    private DateTime getWindowEnd(DateTime lateDateTime, Mother mother) {
+        return lateDateTime.isAfter(mother.getEdd()) ? mother.getEdd() : lateDateTime;
+    }
+
+    private DateTime getWindowStart(DateTime dueDateTime, DateTime now) {
+        return dueDateTime.isBefore(now) ? now : dueDateTime;
     }
 }
 
