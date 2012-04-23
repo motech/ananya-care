@@ -5,6 +5,7 @@ import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.quartz.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,10 @@ public abstract class SpringQAIntegrationTest {
     @Autowired
     protected CouchDbConnector ananyaCareDbConnector;
 
+    @Qualifier("ananyaCareDummyAppDbConnector")
+    @Autowired
+    protected CouchDbConnector ananyaCareDummyAppDbConnector;
+
 
     @Qualifier("ananyaCareProperties")
     @Autowired
@@ -32,17 +37,24 @@ public abstract class SpringQAIntegrationTest {
     protected ScheduleTrackingService trackingService;
 
     protected ArrayList<BulkDeleteDocument> toDelete;
+
+    protected ArrayList<BulkDeleteDocument> alertDocCasesToDelete;
+
     protected ArrayList<Pair> schedulesToDelete;
 
     @Before
     public void before() {
         toDelete = new ArrayList<BulkDeleteDocument>();
         schedulesToDelete = new ArrayList<Pair>();
+        alertDocCasesToDelete = new ArrayList<BulkDeleteDocument>();
     }
 
     @After
     public void after() {
         ananyaCareDbConnector.executeBulk(toDelete);
+
+        ananyaCareDummyAppDbConnector.executeBulk(alertDocCasesToDelete);
+
         for(int i=0 ;i< schedulesToDelete.size(); i++){
             Pair s = schedulesToDelete.get(i);
             String externalId = s.getFirst().toString();
@@ -56,6 +68,10 @@ public abstract class SpringQAIntegrationTest {
 
     protected void markForDeletion(Object document) {
         toDelete.add(BulkDeleteDocument.of(document));
+    }
+
+    protected void markAlertDocCaseForDeletion(AlertDocCase alertDocCase) {
+        alertDocCasesToDelete.add(BulkDeleteDocument.of(alertDocCase));
     }
 
     protected void markScheduleForUnEnrollment(String externalId, String scheduleName) {
