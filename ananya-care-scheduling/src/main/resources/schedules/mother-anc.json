@@ -1,0 +1,53 @@
+{
+    "name": "Anc Visit",
+    "milestones": [
+        {
+            "name": "Anc1",
+            "scheduleWindows": {
+                "earliest": ["0 Months"],
+                "due": ["9 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "Anc2",
+            "scheduleWindows": {
+                "earliest": ["30 Days"],
+                "due": ["9 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "Anc3",
+            "scheduleWindows": {
+                "earliest": ["30 Days"],
+                "due": ["9 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}

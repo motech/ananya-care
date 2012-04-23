@@ -6,7 +6,11 @@ public enum MilestoneType {
     TT1("TT 1"),
     TT2("TT 2"),
     VitaminA("Vita"),
-    Bcg("Bcg");
+    Bcg("Bcg"),
+    Anc1("Anc 1"),
+    Anc2("Anc 2"),
+    Anc3("Anc 3"),
+    Anc4("Anc 4");
 
     private String type;
 

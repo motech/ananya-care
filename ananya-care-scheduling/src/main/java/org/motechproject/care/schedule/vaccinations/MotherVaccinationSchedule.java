@@ -1,7 +1,9 @@
 package org.motechproject.care.schedule.vaccinations;
 
 public enum MotherVaccinationSchedule {
-    TT("TT Vaccination");
+    TT("TT Vaccination"),
+    Anc("Anc Visit"),
+    Anc4("Anc4 Visit");
 
     private String vaccinationScheduleName;
 

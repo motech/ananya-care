@@ -1,0 +1,21 @@
+{
+    "name": "Anc4 Visit",
+    "milestones": [
+        {
+            "name": "Anc4",
+            "scheduleWindows": {
+                "earliest": ["0 Months"],
+                "due": ["3 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}
