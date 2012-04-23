@@ -18,7 +18,9 @@ import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.service.schedule.VitaService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +72,17 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId,vitaScheduleName);
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(caseId)
+                .havingState(EnrollmentStatus.ACTIVE)
+                .havingSchedule(vitaScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId,vitaScheduleName);
+        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+
         assertEquals(MilestoneType.VitaminA.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(add, enrollment.getReferenceDateTime());
+        assertEquals(add.plusMonths(9), enrollment.getStartOfDueWindow());
+        assertEquals(add.plusMonths(24), enrollment.getStartOfLateWindow());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());

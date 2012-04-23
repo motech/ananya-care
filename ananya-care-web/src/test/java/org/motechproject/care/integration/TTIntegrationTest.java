@@ -16,7 +16,9 @@ import org.motechproject.care.service.schedule.TTService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,10 +66,12 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).withTT2(null).build();
         motherService.process(careCase);
         markScheduleForUnEnrollment(caseId, ttScheduleName);
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
+        EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getReferenceDateTime());
+        assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getStartOfDueWindow());
+        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
     }
 
     @Test
@@ -82,7 +86,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         motherService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, ttScheduleName);
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, ttScheduleName);
+        EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
     }
@@ -103,5 +107,14 @@ public class TTIntegrationTest extends SpringIntegrationTest {
 
         markScheduleForUnEnrollment(caseId, ttScheduleName);
         assertNull(scheduleTrackingService.getEnrollment(caseId, ttScheduleName));
+    }
+
+    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingState(status)
+                .havingSchedule(ttScheduleName);
+
+        return scheduleTrackingService.searchWithWindowDates(query).get(0);
     }
 }

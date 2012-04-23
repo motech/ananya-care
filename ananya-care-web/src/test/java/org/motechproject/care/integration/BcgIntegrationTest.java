@@ -18,7 +18,9 @@ import org.motechproject.care.service.schedule.BcgService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +72,17 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, bcgScheduleName);
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(caseId)
+                .havingState(EnrollmentStatus.ACTIVE)
+                .havingSchedule(bcgScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId, bcgScheduleName);
+        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+
         assertEquals(MilestoneType.Bcg.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(add, enrollment.getReferenceDateTime());
+        assertEquals(add, enrollment.getStartOfDueWindow());
+        assertEquals(add.plusMonths(12), enrollment.getStartOfLateWindow());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());
@@ -103,5 +112,14 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());
         assertEquals(bcgTaken, child.getBcgDate());
+    }
+
+    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingState(status)
+                .havingSchedule(ttScheduleName);
+
+        return scheduleTrackingService.searchWithWindowDates(query).get(0);
     }
 }

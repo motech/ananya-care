@@ -18,7 +18,9 @@ import org.motechproject.care.service.schedule.MeaslesService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +72,17 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId,  measlesScheduleName);
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(caseId)
+                .havingState(EnrollmentStatus.ACTIVE)
+                .havingSchedule(measlesScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.getEnrollment(caseId,  measlesScheduleName);
+        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+
         assertEquals(MilestoneType.Measles.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(add, enrollment.getReferenceDateTime());
+        assertEquals(add.plusMonths(9), enrollment.getStartOfDueWindow());
+        assertEquals(add.plusMonths(24), enrollment.getStartOfLateWindow());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(add , child.getDOB());
