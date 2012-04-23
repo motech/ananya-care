@@ -1,7 +1,7 @@
 package org.motechproject.care.service.schedule.listener;
 
-import org.joda.time.DateTime;
 import org.motechproject.care.domain.CareCaseTask;
+import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.service.util.TaskIdMapper;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
@@ -32,14 +32,14 @@ public abstract class AlertVaccination {
         externalId = msEvent.getExternalId();
         MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
         milestoneName = milestoneAlert.getMilestoneName();
-        process(milestoneAlert.getDueDateTime(), milestoneAlert.getLateDateTime());
+        process(new Window(milestoneAlert.getDueDateTime(), milestoneAlert.getLateDateTime()));
     }
     
-    public abstract void process(DateTime dueDateTime, DateTime lateDateTime);
+    public abstract void process(Window alertWindow);
 
-    protected void postToCommCare(DateTime dateEligible, DateTime dateExpires, String ownerId, String clientCaseType, String clientElementTag) {
+    protected void postToCommCare(Window alertWindow, String ownerId, String clientCaseType, String clientElementTag) {
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
-        CareCaseTask careCasetask = createCaseTask(dateEligible.toString("yyyy-MM-dd"), dateExpires.toString("yyyy-MM-dd"), ownerId, clientCaseType, clientElementTag);
+        CareCaseTask careCasetask = createCaseTask(alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), ownerId, clientCaseType, clientElementTag);
         allCareCaseTasks.add(careCasetask);
         commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
     }

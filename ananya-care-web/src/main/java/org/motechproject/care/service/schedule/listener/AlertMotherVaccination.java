@@ -3,6 +3,7 @@ package org.motechproject.care.service.schedule.listener;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Mother;
+import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
@@ -24,26 +25,15 @@ public class AlertMotherVaccination extends AlertVaccination{
     }
 
     @Override
-    public void process(DateTime dueDateTime, DateTime lateDateTime) {
+    public void process(Window alertWindow) {
         Mother mother = allMothers.findByCaseId(externalId);
-        DateTime now = DateTime.now();
+        alertWindow = alertWindow.resize(new Window(DateTime.now(), mother.getEdd()));
 
-        DateTime windowStart = getWindowStart(dueDateTime, now);
-        DateTime windowEnd = getWindowEnd(lateDateTime, mother);
-
-        if(windowStart.isAfter(mother.getEdd()) || windowEnd.isBefore(now) ) {
+        if(!alertWindow.isValid()) {
             return;
         }
 
-        postToCommCare(windowStart, windowEnd, mother.getGroupId(), mother.getCaseType(),clientElementTag);
-    }
-
-    private DateTime getWindowEnd(DateTime lateDateTime, Mother mother) {
-        return lateDateTime.isAfter(mother.getEdd()) ? mother.getEdd() : lateDateTime;
-    }
-
-    private DateTime getWindowStart(DateTime dueDateTime, DateTime now) {
-        return dueDateTime.isBefore(now) ? now : dueDateTime;
+        postToCommCare(alertWindow, mother.getGroupId(), mother.getCaseType(),clientElementTag);
     }
 }
 

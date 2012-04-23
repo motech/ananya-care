@@ -3,6 +3,7 @@ package org.motechproject.care.service.schedule.listener;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
@@ -25,26 +26,17 @@ public class AlertChildVaccination extends AlertVaccination{
     }
 
     @Override
-    public void process(DateTime dueDateTime, DateTime lateDateTime) {
+    public void process(Window alertWindow) {
         Child child = allChildren.findByCaseId(externalId);
-        DateTime now = DateTime.now();
 
-        DateTime windowStart = getWindowStart(dueDateTime, now);
-        DateTime windowEnd = getWindowEnd(lateDateTime, child);
-        if(windowStart.isAfter(dateOf2ndYear(child)) || windowEnd.isBefore(now)) {
+        alertWindow = alertWindow.resize(new Window(DateTime.now(), dateOf2ndYear(child)));
+        if(!alertWindow.isValid()) {
             return;
         }
 
-        postToCommCare(windowStart, windowEnd, child.getGroupId(), child.getCaseType(), clientElementTag);
+        postToCommCare(alertWindow, child.getGroupId(), child.getCaseType(), clientElementTag);
     }
 
-    private DateTime getWindowEnd(DateTime lateDateTime, Child child) {
-        return lateDateTime.isAfter(dateOf2ndYear(child)) ? dateOf2ndYear(child) : lateDateTime;
-    }
-
-    private DateTime getWindowStart(DateTime dueDateTime, DateTime now) {
-        return dueDateTime.isBefore(now) ? now : dueDateTime;
-    }
 
     private DateTime dateOf2ndYear(Child child) {
         return child.getDOB().plusYears(2);
