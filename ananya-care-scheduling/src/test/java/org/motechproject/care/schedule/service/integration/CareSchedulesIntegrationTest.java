@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
@@ -125,6 +126,28 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         schedule.assertNoAlerts("Vita", late);
         schedule.assertNoAlerts("Vita", max);
         visualization.outputTo("child-vita.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAlertsForAncVisitsAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(25, JANUARY), date(11, MARCH), date(30, APRIL)).enrollFor(MotherVaccinationSchedule.Anc.getName(), newDate(2012, 1, 1), null);
+
+        schedule.assertNoAlerts("Anc 1", earliest);
+        schedule.assertAlertsStartWith("Anc 1", due, date(1, JANUARY));
+        schedule.assertNoAlerts("Anc 1", late);
+        schedule.assertNoAlerts("Anc 1", max);
+
+        schedule.assertNoAlerts("Anc 2", earliest);
+        schedule.assertAlerts("Anc 2", due, date(10, FEBRUARY));
+        schedule.assertNoAlerts("Anc 2", late);
+        schedule.assertNoAlerts("Anc 2", max);
+
+        schedule.assertNoAlerts("Anc 3", earliest);
+        schedule.assertAlerts("Anc 3", due, date(27, MARCH));
+        schedule.assertNoAlerts("Anc 3", late);
+        schedule.assertNoAlerts("Anc 3", max);
+
+        visualization.outputTo("mother-anc.html", 2);
     }
 
     private Date date(int day, int month) {

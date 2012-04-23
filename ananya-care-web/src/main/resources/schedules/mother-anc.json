@@ -2,7 +2,7 @@
     "name": "Anc Visit",
     "milestones": [
         {
-            "name": "Anc1",
+            "name": "Anc 1",
             "scheduleWindows": {
                 "earliest": ["0 Months"],
                 "due": ["9 Months"]
@@ -18,7 +18,7 @@
             ]
         },
         {
-            "name": "Anc2",
+            "name": "Anc 2",
             "scheduleWindows": {
                 "earliest": ["30 Days"],
                 "due": ["9 Months"]
@@ -34,7 +34,7 @@
             ]
         },
         {
-            "name": "Anc3",
+            "name": "Anc 3",
             "scheduleWindows": {
                 "earliest": ["30 Days"],
                 "due": ["9 Months"]
