@@ -2,10 +2,10 @@
     "name": "Anc4 Visit",
     "milestones": [
         {
-            "name": "Anc4",
+            "name": "Anc 4",
             "scheduleWindows": {
-                "earliest": ["0 Months"],
-                "due": ["3 Months"]
+                "earliest": ["2 Weeks"],
+                "due": ["3 Months", "2 Weeks"]
             },
             "alerts": [
                 {
@@ -17,5 +17,6 @@
                 }
             ]
         }
+
     ]
 }

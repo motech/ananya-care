@@ -150,6 +150,18 @@ public class CareSchedulesIntegrationTest extends BaseUnitTest {
         visualization.outputTo("mother-anc.html", 2);
     }
 
+    @Test
+    public void shouldProvideAlertsForAnc4VisitsAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(25, FEBRUARY)).enrollFor(MotherVaccinationSchedule.Anc4.getName(), newDate(2012, 2, 1), null);
+
+        schedule.assertNoAlerts("Anc 4", earliest);
+        schedule.assertAlerts("Anc 4", due, date(1, FEBRUARY));
+        schedule.assertNoAlerts("Anc 4", late);
+        schedule.assertNoAlerts("Anc 4", max);
+        visualization.outputTo("mother-anc4.html", 2);
+
+    }
+
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);
     }

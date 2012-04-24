@@ -55,13 +55,13 @@ public class AncIntegrationTest extends SpringIntegrationTest {
     
     @Test
     public void shouldVerifyAncScheduleCreationWhenMotherIsRegistered() {
-        String ttScheduleName = MotherVaccinationSchedule.Anc.getName();
+        String ancScheduleName = MotherVaccinationSchedule.Anc.getName();
         LocalDate edd = DateUtil.today().plusMonths(4);
 
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(null).withANC2(null).withANC3(null).build();
         motherService.process(careCase);
-        markScheduleForUnEnrollment(caseId, ttScheduleName);
-        EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
+        markScheduleForUnEnrollment(caseId, ancScheduleName);
+        EnrollmentRecord enrollment = getEnrollmentRecord(ancScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.Anc1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getReferenceDateTime());
@@ -133,11 +133,11 @@ public class AncIntegrationTest extends SpringIntegrationTest {
     }
 
 
-    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
+    private EnrollmentRecord getEnrollmentRecord(String scheduleName, String externalId, EnrollmentStatus status) {
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(externalId)
                 .havingState(status)
-                .havingSchedule(ttScheduleName);
+                .havingSchedule(scheduleName);
 
         return scheduleTrackingService.searchWithWindowDates(query).get(0);
     }

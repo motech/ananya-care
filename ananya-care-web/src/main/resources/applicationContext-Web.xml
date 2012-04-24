@@ -22,6 +22,7 @@
             <list>
                 <ref bean="TTService"/>
                 <ref bean="ancService"/>
+                <ref bean="anc4Service"/>
             </list>
         </constructor-arg>
     </bean>
