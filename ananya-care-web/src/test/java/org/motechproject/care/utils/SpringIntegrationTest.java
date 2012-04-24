@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.motechproject.testing.utils.BaseUnitTest;
 import org.quartz.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +18,7 @@ import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-Web.xml")
-public abstract class SpringIntegrationTest {
+public abstract class SpringIntegrationTest extends BaseUnitTest {
 
     @Qualifier("ananyaCareDbConnector")
     @Autowired
@@ -50,6 +51,7 @@ public abstract class SpringIntegrationTest {
             scheduleNames.add(scheduleName);
             trackingService.unenroll(externalId, scheduleNames);
         }
+        super.tearDown();
     }
 
 

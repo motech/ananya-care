@@ -1,4 +1,4 @@
-package org.motechproject.care.schedule.service.integration;
+package org.motechproject.care.integration.schedule;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -7,19 +7,16 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
 import org.motechproject.delivery.schedule.util.SetDateAction;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
-import org.motechproject.testing.utils.BaseUnitTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.util.Date;
@@ -27,9 +24,7 @@ import java.util.Date;
 import static org.motechproject.scheduletracking.api.domain.WindowName.*;
 import static org.motechproject.util.DateUtil.newDate;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-Scheduling.xml")
-public class CareSchedulesIntegrationTest extends BaseUnitTest {
+public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     private static final int JANUARY = 1;
     private static final int FEBRUARY = 2;
     private static final int MARCH = 3;
