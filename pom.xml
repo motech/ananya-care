@@ -64,10 +64,6 @@
             <url>http://maven.springframework.org/milestone</url>
         </repository>
         <repository>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
             <id>motech.nexus</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>

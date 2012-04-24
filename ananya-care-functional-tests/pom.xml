@@ -69,7 +69,6 @@
                 <version>8.0.1.v20110908</version>
                 <configuration>
                     <webApp>${project.parent.basedir}/ananya-care-web/target/ananya-care-web-0.1-SNAPSHOT.war</webApp>
-                    <!--<webAppSourceDirectory>${project.parent.basedir}/ananya-care-web/src/main/webapp</webAppSourceDirectory>-->
                     <classesDirectory>${project.parent.basedir}/ananya-care-functional-tests/target/test-classes</classesDirectory>
                     <systemProperties>
                         <systemProperty>
