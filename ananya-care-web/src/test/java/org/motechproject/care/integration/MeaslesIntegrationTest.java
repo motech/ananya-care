@@ -5,9 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
@@ -39,8 +37,6 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
-    @Autowired
-    private AllMothers allMothers;
 
     private final String caseId = CaseUtils.getUniqueCaseId();
     private ChildService childService;
@@ -49,26 +45,20 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) measlesService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
-        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
+        childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
     @After
     public void tearDown() {
         allChildren.removeAll();
-        allMothers.removeAll();
     }
 
     @Test
     public void shouldVerifyMeaslesScheduleCreationWhenChildIsRegistered() {
         String measlesScheduleName = ChildVaccinationSchedule.Measles.getName();
-        DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
-        String motherCaseId = "motherCaseId";
-        Mother mother = new Mother(motherCaseId);
-        mother.setAdd(add);
-        allMothers.add(mother);
-
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBabyMeaslesDate(null).withMotherCaseId("motherCaseId").build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId,  measlesScheduleName);
@@ -80,29 +70,25 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Measles.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(add, enrollment.getReferenceDateTime());
-        assertEquals(add.plusMonths(9), enrollment.getStartOfDueWindow());
-        assertEquals(add.plusMonths(24), enrollment.getStartOfLateWindow());
+        assertEquals(dob, enrollment.getReferenceDateTime());
+        assertEquals(dob.plusMonths(9), enrollment.getStartOfDueWindow());
+        assertEquals(dob.plusMonths(24), enrollment.getStartOfLateWindow());
 
         Child child = allChildren.findByCaseId(caseId);
-        assertEquals(add , child.getDOB());
+        assertEquals(dob , child.getDOB());
         assertNull(child.getMeaslesDate());
     }
 
     @Test
     public void shouldVerifyMeaslesScheduleFulfillmentWhenChildHasTakenMeasles() {
         String measlesScheduleName = ChildVaccinationSchedule.Measles.getName();
-        DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
         DateTime measlesTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
         String motherCaseId = "motherCaseId";
 
-        Mother mother = new Mother(motherCaseId);
-        mother.setAdd(add);
-        allMothers.add(mother);
-
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBabyMeaslesDate(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withBabyMeaslesDate( measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBabyMeaslesDate( measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, measlesScheduleName);
@@ -110,7 +96,7 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         assertNull(scheduleTrackingService.getEnrollment(caseId, measlesScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
-        assertEquals(add , child.getDOB());
+        assertEquals(dob, child.getDOB());
         assertEquals(measlesTaken, child.getMeaslesDate());
     }
 }

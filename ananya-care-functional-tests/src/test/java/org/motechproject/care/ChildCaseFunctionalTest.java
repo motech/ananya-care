@@ -7,9 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
@@ -25,24 +23,18 @@ import static org.junit.Assert.assertNull;
 
 public class ChildCaseFunctionalTest extends SpringIntegrationTest {
     @Autowired
-    private AllMothers allMothers;
-    @Autowired
     private AllChildren allChildren;
     String motherCaseId;
-    DateTime add;
+    DateTime dob;
 
     @Before
     public void setUp(){
         motherCaseId = CaseUtils.getUniqueCaseId();
-        Mother mother = new Mother(motherCaseId);
-        add = DateUtil.newDateTime(DateUtil.today());
-        mother.setAdd(add);
-        allMothers.add(mother);
+        dob = DateUtil.newDateTime(DateUtil.today());
     }
 
     @After
     public void tearDown(){
-        allMothers.removeAll();
         allChildren.removeAll();
     }
 
@@ -56,7 +48,8 @@ public class ChildCaseFunctionalTest extends SpringIntegrationTest {
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());
         Assert.assertEquals("RAM",childFromDb.getName());
-        Assert.assertEquals(add , childFromDb.getDOB());
+        Assert.assertEquals(dob, childFromDb.getDOB());
+        Assert.assertNull(childFromDb.getMotherCaseId());
         Assert.assertTrue(childFromDb.isActive());
 
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName());
@@ -78,7 +71,8 @@ public class ChildCaseFunctionalTest extends SpringIntegrationTest {
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());
         Assert.assertEquals("RAM",childFromDb.getName());
-        Assert.assertEquals(add , childFromDb.getDOB());
+        Assert.assertEquals(dob, childFromDb.getDOB());
+        Assert.assertEquals(motherCaseId, childFromDb.getMotherCaseId());
         Assert.assertEquals(DateTime.parse("2012-12-04") , childFromDb.getBcgDate());
         Assert.assertEquals(DateTime.parse("2012-12-05") , childFromDb.getMeaslesDate());
         Assert.assertTrue(childFromDb.isActive());
@@ -96,6 +90,7 @@ public class ChildCaseFunctionalTest extends SpringIntegrationTest {
         File file = new File(getClass().getResource("/"+xmlFileName).getPath());
         String body = FileUtils.readFileToString(file);
         body = body.replace("caseId", uniqueCaseId);
+        body = body.replace("dobDate", DateUtil.newDate(dob).toString());
         body = body.replace("motherCaseId", motherCaseId);
 
         restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", body);

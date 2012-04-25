@@ -31,8 +31,8 @@ public class ChildCareCaseBuilder {
         careCase.setVit_a_1_date(vit_a_1_date);
         careCase.setBaby_measles(baby_measles);
         careCase.setMother_id(motherCaseId);
-        careCase.setAdd(DOB);
         careCase.setHep_b_0_date(hep0Date);
+        careCase.setDob(DOB);
         return careCase;
     }
 

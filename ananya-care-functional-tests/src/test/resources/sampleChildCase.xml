@@ -7,8 +7,6 @@
   </create>
   <update>
     <gender>male</gender>
+    <dob>dobDate</dob>
   </update>
-  <index>
-    <mother_id case_type="cc_bihar_pregnancy">motherCaseId</mother_id>
-  </index>
 </case>

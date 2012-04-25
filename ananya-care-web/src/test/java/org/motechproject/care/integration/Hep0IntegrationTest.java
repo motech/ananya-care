@@ -5,9 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
@@ -38,8 +36,6 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
-    @Autowired
-    private AllMothers allMothers;
 
     private final String caseId = CaseUtils.getUniqueCaseId();
     private ChildService childService;
@@ -48,26 +44,22 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) hep0Service);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
-        childService = new ChildService(allChildren, childVaccinationProcessor, allMothers);
+        childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
     @After
     public void tearDown() {
         allChildren.removeAll();
-        allMothers.removeAll();
     }
 
     @Test
     public void shouldVerifyHep0ScheduleCreationWhenChildIsRegistered() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime add = DateUtil.newDateTime(DateUtil.today());
+        DateTime dob = DateUtil.newDateTime(DateUtil.today());
 
         String motherCaseId = "motherCaseId";
-        Mother mother = new Mother(motherCaseId);
-        mother.setAdd(add);
-        allMothers.add(mother);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId,  scheduleName);
@@ -79,26 +71,23 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Hep0.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(add, enrollment.getReferenceDateTime());
-        assertEquals(add, enrollment.getStartOfDueWindow());
-        assertEquals(add.plusDays(1), enrollment.getStartOfLateWindow());
+        assertEquals(dob, enrollment.getReferenceDateTime());
+        assertEquals(dob, enrollment.getStartOfDueWindow());
+        assertEquals(dob.plusDays(1), enrollment.getStartOfLateWindow());
 
         Child child = allChildren.findByCaseId(caseId);
-        assertEquals(add , child.getDOB());
+        assertEquals(dob , child.getDOB());
         assertNull(child.getHep0Date());
     }
 
     @Test
     public void shouldVerifyHep0ScheduleNotCreatedWhenChildIsOlderThanADay() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime add = DateUtil.newDateTime(DateUtil.today().minusDays(1));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(1));
 
         String motherCaseId = "motherCaseId";
-        Mother mother = new Mother(motherCaseId);
-        mother.setAdd(add);
-        allMothers.add(mother);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId,  scheduleName);
@@ -110,22 +99,18 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         assertTrue(scheduleTrackingService.searchWithWindowDates(query).isEmpty());
 
         Child child = allChildren.findByCaseId(caseId);
-        assertEquals(add , child.getDOB());
+        assertEquals(dob, child.getDOB());
         assertNull(child.getHep0Date());
     }
 
     @Test
     public void shouldVerifyHep0ScheduleFulfillmentWhenChildHasTakenHep0() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime add = DateUtil.newDateTime(DateUtil.today().minusMonths(2));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(2));
         DateTime hep0Taken = DateUtil.newDateTime(DateUtil.today().minusMonths(1));
         String motherCaseId = "motherCaseId";
 
-        Mother mother = new Mother(motherCaseId);
-        mother.setAdd(add);
-        allMothers.add(mother);
-
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -136,7 +121,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         assertFalse(scheduleTrackingService.searchWithWindowDates(query).isEmpty());
 
 
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withHep0Date(hep0Taken.toString()).withMotherCaseId(motherCaseId).build();
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(hep0Taken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, scheduleName);
@@ -144,7 +129,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
-        assertEquals(add , child.getDOB());
+        assertEquals(dob, child.getDOB());
         assertEquals(hep0Taken, child.getHep0Date());
     }
 }

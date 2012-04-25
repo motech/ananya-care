@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
@@ -75,14 +76,14 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest {
         final String childCaseId = UUID.randomUUID().toString();
         String childInstanceId = UUID.randomUUID().toString();
         String childName = "child_test_gen" + random;
-        String dob = DateUtil.now().minusDays(1).toLocalDate().toString();
+        LocalDate dob = DateUtil.now().minusDays(1).toLocalDate();
 
         HashMap<String, String> childAttributes = new HashMap<String, String>();
         childAttributes.put("caseId", childCaseId);
         childAttributes.put("instanceId", childInstanceId);
         childAttributes.put("name", childName);
         childAttributes.put("motherCaseId", motherCaseId);
-        childAttributes.put("dob", dob);
+        childAttributes.put("dob", dob.toString());
 
         postXmlWithAttributes(childAttributes, "/newbornchild.st");
         RetryTask<Child> taskToFetchChild = new RetryTask<Child>() {
@@ -97,6 +98,7 @@ public class RegistrationFunctionalTest extends SpringQAIntegrationTest {
         Assert.assertEquals(childName, child.getName());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", child.getFlwId());
         Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
+        Assert.assertEquals(DateUtil.newDateTime(dob), child.getDOB());
         markForDeletion(child);
         markScheduleForUnEnrollment(childCaseId, MilestoneType.Bcg.toString());
 

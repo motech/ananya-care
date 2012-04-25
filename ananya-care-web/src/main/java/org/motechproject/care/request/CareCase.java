@@ -27,10 +27,11 @@ public class CareCase{
     private String baby_measles;
     private String bcg_date;
     private String vit_a_1_date;
+    private String mother_id;
+    private String dob;
 
     private String hep_b_0_date;
 
-    private String mother_id;
     public CareCase() {
     }
 
@@ -211,5 +212,13 @@ public class CareCase{
 
     public void setHep_b_0_date(String hep_b_0_date) {
         this.hep_b_0_date = hep_b_0_date;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 }
