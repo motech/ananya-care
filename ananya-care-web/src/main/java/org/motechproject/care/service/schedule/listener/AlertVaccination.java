@@ -1,5 +1,6 @@
 package org.motechproject.care.service.schedule.listener;
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
@@ -20,6 +21,7 @@ public abstract class AlertVaccination {
     private static TaskIdMapper taskIdMapper = new TaskIdMapper();
     protected String externalId;
     protected String milestoneName;
+    Logger logger = Logger.getLogger(AlertVaccination.class);
 
     public AlertVaccination(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
         this.commcareCaseGateway = commcareCaseGateway;
@@ -41,6 +43,8 @@ public abstract class AlertVaccination {
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
         CareCaseTask careCasetask = createCaseTask(alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), ownerId, clientCaseType, clientElementTag);
         allCareCaseTasks.add(careCasetask);
+        logger.info(String.format("Notifying commcare for vaccination due with task_id: %s, client_id: %s, eligible_date: %s, expiry_date: %s ",
+                careCasetask.getTaskId(), careCasetask.getClientCaseId(), careCasetask.getDateEligible(), careCasetask.getDateExpires()));
         commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
     }
 

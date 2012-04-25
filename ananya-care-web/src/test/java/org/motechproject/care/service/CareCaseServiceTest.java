@@ -9,9 +9,10 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.casexml.service.exception.CaseValidationException;
+import org.motechproject.casexml.exception.CaseParserException;
+import org.motechproject.casexml.parser.CommcareCaseParser;
+import org.motechproject.casexml.service.exception.CaseException;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,10 +37,7 @@ public class CareCaseServiceTest  {
 
     @Test
     public void shouldRedirectToMotherServiceIfCaseTypeBelongsToMother() throws IOException {
-        String path = getClass().getResource("/sampleMotherCase.xml").getPath();
-        File file = new File(path);
-        String xml = FileUtils.readFileToString(file);
-
+        String xml = readFile("/sampleMotherCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(motherService).process((CareCase) Matchers.any());
 
@@ -47,68 +45,120 @@ public class CareCaseServiceTest  {
 
     @Test
     public void shouldSetMotherAsNotActiveIfCaseIsClosedAndCaseIdIsAMother() throws IOException {
-        String path = getClass().getResource("/sampleMotherCaseForClose.xml").getPath();
-        File file = new File(path);
-        String xml = FileUtils.readFileToString(file);
-
+        String xml = readFile("/sampleMotherCaseForClose.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(motherService).closeCase("caseId");
     }
 
     @Test
     public void shouldRedirectToChildServiceIfCaseTypeBelongsToChild() throws IOException {
-        String path = getClass().getResource("/sampleChildCase.xml").getPath();
-        File file = new File(path);
-        String xml = FileUtils.readFileToString(file);
-
+        String xml = readFile("/sampleChildCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(childService).process((CareCase) Matchers.any());
 
     }
 
+    private String readFile(String resourcePath) throws IOException {
+        String path = getClass().getResource(resourcePath).getPath();
+        File file = new File(path);
+        return FileUtils.readFileToString(file);
+    }
+
+
     @Test
-    public void shouldThrowExceptionWhenCaseIdIsEmptyForCreateCase() {
-        CareCase careCase = new CareCase();
-        careCase.setUser_id("userId");
+    public void shouldThrowCaseValidationExceptionIfCaseIdIsNotPresentInCreateCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCase.xml");
 
-        try{
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setCase_id(null);
+        try {
             careCaseService.createCase(careCase);
-            Assert.fail("Should have thrown a CaseValidationException");
-        }catch (CaseValidationException exception){
-            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
-            Assert.assertEquals("case_id is a mandatory field.",exception.getMessage());
-
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Case Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
         }
     }
 
     @Test
-    public void shouldThrowExceptionWhenUserIdIsEmptyForCreateCase() {
-        CareCase careCase = new CareCase();
-        careCase.setCase_id("caseId");
+    public void shouldThrowCaseValidationExceptionIfCaseIdIsEmptyInCreateCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCase.xml");
 
-        try{
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setCase_id("");
+        try {
             careCaseService.createCase(careCase);
-            Assert.fail("Should have thrown a CaseValidationException");
-        }catch (CaseValidationException exception){
-            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
-            Assert.assertEquals("user_id is a mandatory field.",exception.getMessage());
-
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Case Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
         }
     }
 
     @Test
-    public void shouldThrowExceptionWhenCaseIdIsEmptyForCloseCase() {
-        CareCase careCase = new CareCase();
-        careCase.setUser_id("userId");
+    public void shouldThrowCaseValidationExceptionIfOwnerIdIsNotPresentInCreateCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCase.xml");
 
-        try{
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setOwner_id(null);
+        try {
+            careCaseService.createCase(careCase);
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Owner Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
+        }
+    }
+
+    @Test
+    public void shouldThrowCaseValidationExceptionIfOwnerIdIsEmptyInCreateCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCase.xml");
+
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setOwner_id("");
+        try {
+            careCaseService.createCase(careCase);
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Owner Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
+        }
+    }
+
+
+    @Test
+    public void shouldThrowCaseValidationExceptionIfCaseIdIsNotPresentInCloseCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCaseForClose.xml");
+
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setCase_id(null);
+        try {
             careCaseService.closeCase(careCase);
-            Assert.fail("Should have thrown a CaseValidationException");
-        }catch (CaseValidationException exception){
-            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
-            Assert.assertEquals("case_id is a mandatory field.",exception.getMessage());
-
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Case Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
         }
     }
 
+    @Test
+    public void shouldThrowCaseValidationExceptionIfCaseIdIsEmptyInCloseCareCase() throws IOException, CaseParserException {
+        String xml = readFile("/sampleMotherCaseForClose.xml");
+
+        CommcareCaseParser<CareCase> caseParser = new CommcareCaseParser<CareCase>(CareCase.class, xml);
+        CareCase careCase = caseParser.parseCase();
+        careCase.setCase_id("");
+        try {
+            careCaseService.closeCase(careCase);
+            Assert.fail("Should have thrown CaseValidationException for null user id");
+        } catch (CaseException ex) {
+            Assert.assertEquals("Case Id is a mandatory field.", ex.getMessage());
+            Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
+        }
+    }
 }

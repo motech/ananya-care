@@ -234,8 +234,6 @@ public class AlertChildVaccinationTest {
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
 
-
-
     public static Period weeks(int numberOfWeeks) {
         return new Period(0, 0, numberOfWeeks, 0, 0, 0, 0, 0);
     }

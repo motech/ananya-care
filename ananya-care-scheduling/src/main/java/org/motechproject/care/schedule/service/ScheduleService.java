@@ -1,5 +1,6 @@
 package org.motechproject.care.schedule.service;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.model.Time;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduleService {
     protected ScheduleTrackingService trackingService;
+    Logger logger = Logger.getLogger(ScheduleService.class);
 
     @Autowired
     public ScheduleService(ScheduleTrackingService trackingService) {
@@ -20,8 +22,10 @@ public class ScheduleService {
     }
 
     public void enroll(String caseId, DateTime referenceDate, String scheduleName) {
-        if (isNotEnrolled(caseId,scheduleName))
+        if (isNotEnrolled(caseId,scheduleName)){
+            logger.info(String.format("Enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
             trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate(),scheduleName));
+        }
     }
 
     public void fulfillMileStone(String caseId, String milestoneName, DateTime measlesDate, String scheduleName) {
@@ -42,6 +46,7 @@ public class ScheduleService {
     private void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDateTime, String scheduleName) {
         LocalDate fulfillmentDate = fulfillmentDateTime.toLocalDate();
         Time fulfillmentTime = DateUtil.time(fulfillmentDateTime);
+        logger.info(String.format("Fulfilling current milestone for external id : %s , schedule : %s", caseId, scheduleName));
         trackingService.fulfillCurrentMilestone(caseId, scheduleName,fulfillmentDate, fulfillmentTime );
     }
 

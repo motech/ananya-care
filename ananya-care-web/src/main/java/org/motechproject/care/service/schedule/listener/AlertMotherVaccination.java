@@ -1,6 +1,5 @@
 package org.motechproject.care.service.schedule.listener;
 
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.domain.Window;
@@ -16,8 +15,8 @@ import java.util.Properties;
 @Component
 public class AlertMotherVaccination extends AlertVaccination{
     private AllMothers allMothers;
-    Logger logger = Logger.getLogger(AlertMotherVaccination.class);
     public static String clientElementTag = "mother_id";
+
     @Autowired
     public AlertMotherVaccination(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
         super(commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
@@ -28,11 +27,9 @@ public class AlertMotherVaccination extends AlertVaccination{
     public void process(Window alertWindow) {
         Mother mother = allMothers.findByCaseId(externalId);
         alertWindow = alertWindow.resize(new Window(DateTime.now(), mother.getEdd()));
-
         if(!alertWindow.isValid()) {
             return;
         }
-
         postToCommCare(alertWindow, mother.getGroupId(), mother.getCaseType(),clientElementTag);
     }
 }
