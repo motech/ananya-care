@@ -4,7 +4,8 @@ public enum ChildVaccinationSchedule {
 
     Measles("Measles Vaccination"),
     Vita("Vita Vaccination"),
-    Bcg("Bcg Vaccination");
+    Bcg("Bcg Vaccination"),
+    Hepatitis0("Hepatitis0 Vaccination");
 
     private String vaccinationScheduleName;
 

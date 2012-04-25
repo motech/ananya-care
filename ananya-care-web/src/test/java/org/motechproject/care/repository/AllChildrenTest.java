@@ -22,9 +22,10 @@ public class AllChildrenTest extends SpringIntegrationTest {
         DateTime measlesDate = DateUtil.now().plusDays(10);
         DateTime bcgDate = DateUtil.now().plusWeeks(15);
         DateTime vitamin1Date = DateUtil.now().plusWeeks(20);
+        DateTime hep0Date = DateUtil.now().plusMonths(1);
         DateTime dob = DateUtil.now().minusDays(20);
         String motherCaseId = "MotherCaseId";
-        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId);
+        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date);
         allChildren.add(child);
 
         Child childFromDb = allChildren.findByCaseId(caseId);
@@ -37,6 +38,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
         assertEquals(bcgDate, childFromDb.getBcgDate());
         assertEquals(dob, childFromDb.getDOB());
         assertEquals(measlesDate, childFromDb.getMeaslesDate());
+        assertEquals(hep0Date, childFromDb.getHep0Date());
         assertEquals(vitamin1Date, childFromDb.getVitamin1Date());
         assertEquals(motherCaseId, childFromDb.getMotherCaseId());
     }

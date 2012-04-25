@@ -13,6 +13,7 @@ public class Child extends Client {
     private DateTime measlesDate;
     private DateTime bcgDate;
     private DateTime vitamin1Date;
+    private DateTime hep0Date;
 
     private String caseType= CaseType.Child.getType();
     private String motherCaseId;
@@ -23,7 +24,7 @@ public class Child extends Client {
         this.caseId = caseId;
     }
 
-    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date,String motherCaseId) {
+    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId, DateTime hep0Date) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
@@ -35,6 +36,7 @@ public class Child extends Client {
         this.measlesDate = measlesDate;
         this.bcgDate = bcgDate;
         this.vitamin1Date = vitamin1Date;
+        this.hep0Date = hep0Date;
     }
 
     public DateTime getDOB() {
@@ -95,5 +97,13 @@ public class Child extends Client {
 
     public void setMotherCaseId(String motherCaseId) {
         this.motherCaseId = motherCaseId;
+    }
+
+    public DateTime getHep0Date() {
+        return DateUtil.setTimeZone(hep0Date);
+    }
+
+    public void setHep0Date(DateTime hep0Date) {
+        this.hep0Date = hep0Date;
     }
 }

@@ -49,6 +49,7 @@
 </n2:create>
 <n2:update>
 <n2:gender>male</n2:gender>
+<n2:dob>$dob$</n2:dob>
 </n2:update>
 <n2:index>
 <n2:mother_id case_type="cc_bihar_pregnancy">$motherCaseId$</n2:mother_id>

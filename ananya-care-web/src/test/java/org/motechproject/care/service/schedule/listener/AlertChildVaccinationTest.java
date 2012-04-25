@@ -66,7 +66,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
-        Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         String commCareUrl = "commCareUrl";
         String motechUserId = "motechUserId";
@@ -107,7 +107,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
-        Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
@@ -147,7 +147,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
 
@@ -175,7 +175,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
 
@@ -203,7 +203,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
 
@@ -227,7 +227,7 @@ public class AlertChildVaccinationTest {
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
 
-        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId);
+        Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
 

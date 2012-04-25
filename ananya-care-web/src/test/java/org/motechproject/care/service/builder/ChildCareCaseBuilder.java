@@ -17,6 +17,7 @@ public class ChildCareCaseBuilder {
     private String vit_a_1_date = "2012-01-02";
     private String motherCaseId="motherCaseId";
     private String DOB="2009-01-02";
+    private String hep0Date="2012-01-02";
 
     public CareCase build(){
         CareCase careCase = new CareCase();
@@ -31,6 +32,7 @@ public class ChildCareCaseBuilder {
         careCase.setBaby_measles(baby_measles);
         careCase.setMother_id(motherCaseId);
         careCase.setAdd(DOB);
+        careCase.setHep_b_0_date(hep0Date);
         return careCase;
     }
 
@@ -83,4 +85,9 @@ public class ChildCareCaseBuilder {
         return this;
     }
 
+    public ChildCareCaseBuilder withHep0Date(String hep0Date) {
+
+        this.hep0Date = hep0Date;
+        return this;
+    }
 }

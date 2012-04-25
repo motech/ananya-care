@@ -15,6 +15,7 @@ import org.motechproject.delivery.schedule.util.ScheduleVisualization;
 import org.motechproject.delivery.schedule.util.ScheduleWithCapture;
 import org.motechproject.delivery.schedule.util.SetDateAction;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
@@ -155,6 +156,18 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("Anc 4", max);
         visualization.outputTo("mother-anc4.html", 2);
 
+    }
+
+    @Test
+    public void shouldProvideAlertsForHepatitis0VaccinationOnlyOnTheBabyDOB() throws Exception {
+        LocalDate today = DateUtil.today();
+        schedule.enrollFor(ChildVaccinationSchedule.Hepatitis0.getName(), today, null);
+
+        schedule.assertNoAlerts("Hep 0", earliest);
+        schedule.assertAlertsStartWith("Hep 0", due, today.toDate());
+        schedule.assertNoAlerts("Hep 0", late);
+        schedule.assertNoAlerts("Hep 0", max);
+        visualization.outputTo("child-hepatitis0.html", 2);
     }
 
     private Date date(int day, int month) {

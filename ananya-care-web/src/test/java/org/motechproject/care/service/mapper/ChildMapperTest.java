@@ -24,6 +24,7 @@ public class ChildMapperTest {
         assertEquals(new DateTime(2012, 1, 1, 0, 0), child.getBcgDate());
         assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getVitamin1Date());
         assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getMeaslesDate());
+        assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getHep0Date());
 
     }
 

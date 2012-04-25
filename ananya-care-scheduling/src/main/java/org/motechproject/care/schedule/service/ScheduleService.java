@@ -28,9 +28,9 @@ public class ScheduleService {
         }
     }
 
-    public void fulfillMileStone(String caseId, String milestoneName, DateTime measlesDate, String scheduleName) {
+    public void fulfillMileStone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {
         if(isCurrentMilestone(caseId, milestoneName,scheduleName))
-            fulfillCurrentMilestone(caseId,measlesDate,scheduleName);
+            fulfillCurrentMilestone(caseId,vaccinationTakenDate,scheduleName);
     }
 
     private boolean isNotEnrolled(String caseId, String scheduleName) {

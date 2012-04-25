@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;
@@ -31,7 +30,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.UUID;
 
-@Ignore
 public class RegistrationFunctionalTest extends SpringQAIntegrationTest {
 
     @Autowired
