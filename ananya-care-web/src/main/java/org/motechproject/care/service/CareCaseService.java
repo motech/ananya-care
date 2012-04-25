@@ -3,7 +3,10 @@ package org.motechproject.care.service;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.casexml.service.CaseService;
+import org.motechproject.casexml.service.exception.CaseValidationException;
+import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,7 +25,9 @@ public class CareCaseService extends CaseService<CareCase>{
     }
 
     @Override
-    public void closeCase(CareCase careCase) {
+    public void closeCase(CareCase careCase) throws CaseValidationException {
+        validate(careCase);
+
         boolean wasClosed = motherService.closeCase(careCase.getCase_id());
          // if wasClosed is false
         // then
@@ -31,14 +36,27 @@ public class CareCaseService extends CaseService<CareCase>{
     }
 
     @Override
-    public void updateCase(CareCase careCase) {
+    public void updateCase(CareCase careCase)  throws CaseValidationException{
     }
 
     @Override
-    public void createCase(CareCase careCase) {
+    public void createCase(CareCase careCase) throws CaseValidationException {
+        validate(careCase);
+
         if(careCase.getCase_type().equals(CaseType.Mother.getType()))
             motherService.process(careCase);
         else
             childService.process(careCase);
     }
+    
+    private void validate(CareCase careCase) throws  CaseValidationException {
+        if(StringUtil.isNullOrEmpty(careCase.getCase_id()))
+            throw new CaseValidationException("case_id is a mandatory field.", HttpStatus.valueOf(400));
+
+        if(StringUtil.isNullOrEmpty(careCase.getUser_id()))
+            throw new CaseValidationException("user_id is a mandatory field.", HttpStatus.valueOf(400));
+
+    }
+    
+    
 }

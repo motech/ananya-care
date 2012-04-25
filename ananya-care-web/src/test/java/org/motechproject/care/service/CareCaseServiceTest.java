@@ -1,5 +1,6 @@
 package org.motechproject.care.service;
 
+import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +9,9 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.request.CareCase;
+import org.motechproject.casexml.service.exception.CaseValidationException;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +64,51 @@ public class CareCaseServiceTest  {
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(childService).process((CareCase) Matchers.any());
 
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenCaseIdIsEmptyForCreateCase() {
+        CareCase careCase = new CareCase();
+        careCase.setUser_id("userId");
+
+        try{
+            careCaseService.createCase(careCase);
+            Assert.fail("Should have thrown a CaseValidationException");
+        }catch (CaseValidationException exception){
+            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
+            Assert.assertEquals("case_id is a mandatory field.",exception.getMessage());
+
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUserIdIsEmptyForCreateCase() {
+        CareCase careCase = new CareCase();
+        careCase.setCase_id("caseId");
+
+        try{
+            careCaseService.createCase(careCase);
+            Assert.fail("Should have thrown a CaseValidationException");
+        }catch (CaseValidationException exception){
+            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
+            Assert.assertEquals("user_id is a mandatory field.",exception.getMessage());
+
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenCaseIdIsEmptyForCloseCase() {
+        CareCase careCase = new CareCase();
+        careCase.setUser_id("userId");
+
+        try{
+            careCaseService.closeCase(careCase);
+            Assert.fail("Should have thrown a CaseValidationException");
+        }catch (CaseValidationException exception){
+            Assert.assertEquals(HttpStatus.valueOf(400), exception.getStatusCode());
+            Assert.assertEquals("case_id is a mandatory field.",exception.getMessage());
+
+        }
     }
 
 }
