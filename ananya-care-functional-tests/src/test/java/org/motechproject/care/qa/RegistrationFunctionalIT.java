@@ -106,6 +106,7 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
             protected AlertDocCase perform() {
                 List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(childCaseId);
                 for(AlertDocCase alertDocCase : alertDocCases) {
+                    markAlertDocCaseForDeletion(alertDocCase);
                     if(alertDocCase.getXmlDocument().contains("<task_id>bcg</task_id>")) {
                         return alertDocCase;
                     }
@@ -115,7 +116,6 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
         };
         AlertDocCase alertDocCase = taskToFetchAlertDocCase.execute(300, 1000);
         Assert.assertNotNull(alertDocCase);
-        markAlertDocCaseForDeletion(alertDocCase);
     }
 
     @Test
@@ -158,6 +158,7 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
             protected AlertDocCase perform() {
                 List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(caseId);
                 for(AlertDocCase alertDocCase : alertDocCases) {
+                    markAlertDocCaseForDeletion(alertDocCase);
                     if(alertDocCase.getXmlDocument().contains("<task_id>tt_1</task_id>")) {
                         return alertDocCase;
                     }
@@ -167,7 +168,7 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
         };
         AlertDocCase alertDocCase = taskToFetchAlertDocCase.execute(300, 1000);
         Assert.assertNotNull(alertDocCase);
-        markAlertDocCaseForDeletion(alertDocCase);
+
     }
 
     private void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {

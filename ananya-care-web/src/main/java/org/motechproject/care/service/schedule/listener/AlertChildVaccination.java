@@ -24,13 +24,13 @@ public class AlertChildVaccination extends AlertVaccination{
     }
 
     @Override
-    public void process(Window alertWindow) {
+    public void process(Window alertWindow, String externalId, String milestoneName) {
         Child child = allChildren.findByCaseId(externalId);
         alertWindow = alertWindow.resize(new Window(DateTime.now(), dateOf2ndYear(child)));
         if(!alertWindow.isValid()) {
             return;
         }
-        postToCommCare(alertWindow, child.getGroupId(), child.getCaseType(), clientElementTag);
+        postToCommCare(alertWindow, externalId, milestoneName, child, clientElementTag);
     }
 
     private DateTime dateOf2ndYear(Child child) {

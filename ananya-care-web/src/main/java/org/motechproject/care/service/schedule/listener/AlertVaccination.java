@@ -2,6 +2,7 @@ package org.motechproject.care.service.schedule.listener;
 
 import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
+import org.motechproject.care.domain.Client;
 import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.service.util.TaskIdMapper;
@@ -19,8 +20,6 @@ public abstract class AlertVaccination {
     private AllCareCaseTasks allCareCaseTasks;
     private Properties ananyaCareProperties;
     private static TaskIdMapper taskIdMapper = new TaskIdMapper();
-    protected String externalId;
-    protected String milestoneName;
     Logger logger = Logger.getLogger(AlertVaccination.class);
 
     public AlertVaccination(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
@@ -31,28 +30,29 @@ public abstract class AlertVaccination {
 
     public void invoke(MotechEvent event){
         MilestoneEvent msEvent = new MilestoneEvent(event);
-        externalId = msEvent.getExternalId();
+        String externalId = msEvent.getExternalId();
         MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
-        milestoneName = milestoneAlert.getMilestoneName();
-        process(new Window(milestoneAlert.getDueDateTime(), milestoneAlert.getLateDateTime()));
-    }
-    
-    public abstract void process(Window alertWindow);
+        String milestoneName = milestoneAlert.getMilestoneName();
 
-    protected void postToCommCare(Window alertWindow, String ownerId, String clientCaseType, String clientElementTag) {
+        process(new Window(milestoneAlert.getDueDateTime(), milestoneAlert.getLateDateTime()), externalId, milestoneName);
+    }
+
+    public abstract void process(Window alertWindow, String externalId, String milestoneName);
+
+    protected void postToCommCare(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
-        CareCaseTask careCasetask = createCaseTask(alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), ownerId, clientCaseType, clientElementTag);
+        CareCaseTask careCasetask = createCaseTask(alertWindow, externalId, milestoneName, client, clientElementTag);
         allCareCaseTasks.add(careCasetask);
         logger.info(String.format("Notifying commcare for vaccination due with task_id: %s, client_id: %s, eligible_date: %s, expiry_date: %s ",
                 careCasetask.getTaskId(), careCasetask.getClientCaseId(), careCasetask.getDateEligible(), careCasetask.getDateExpires()));
         commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
     }
 
-    private CareCaseTask createCaseTask(String dateEligible, String dateExpires, String ownerId, String clientCaseType, String clientElementTag) {
+    private CareCaseTask createCaseTask(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
         String motechUserId = ananyaCareProperties.getProperty("motech.user.id");
         String currentTime = DateUtil.now().toString();
         String taskId = taskIdMapper.getTaskId(milestoneName);
         String caseId = UUID.randomUUID().toString();
-        return new CareCaseTask(milestoneName, ownerId, caseId, motechUserId, currentTime, taskId, dateEligible, dateExpires, clientCaseType, externalId, clientElementTag);
+        return new CareCaseTask(milestoneName, client.getGroupId(), caseId, motechUserId, currentTime, taskId, alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), client.getCaseType(), externalId, clientElementTag);
     }
 }

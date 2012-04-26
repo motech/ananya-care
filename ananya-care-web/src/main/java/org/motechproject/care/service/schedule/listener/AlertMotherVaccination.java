@@ -24,13 +24,13 @@ public class AlertMotherVaccination extends AlertVaccination{
     }
 
     @Override
-    public void process(Window alertWindow) {
+    public void process(Window alertWindow, String externalId, String milestoneName) {
         Mother mother = allMothers.findByCaseId(externalId);
         alertWindow = alertWindow.resize(new Window(DateTime.now(), mother.getEdd()));
         if(!alertWindow.isValid()) {
             return;
         }
-        postToCommCare(alertWindow, mother.getGroupId(), mother.getCaseType(),clientElementTag);
+        postToCommCare(alertWindow, externalId, milestoneName, mother,clientElementTag);
     }
 }
 

@@ -17,7 +17,6 @@ public class CareCaseService extends CaseService<CareCase>{
 
     private MotherService motherService;
     private ChildService childService;
-    private VelocityEngine velocityEngine;
 
     @Autowired
     public CareCaseService(MotherService motherService, ChildService childService, VelocityEngine velocityEngine) {
