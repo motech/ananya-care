@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 
-public class MotherCaseFunctionalTest extends SpringIntegrationTest {
+public class MotherCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;
 

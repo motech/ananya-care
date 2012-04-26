@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @Ignore
-public class RegistrationFunctionalTest extends SpringQAIntegrationTest {
+public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
 
     @Autowired
     private AllMothers allMothers;

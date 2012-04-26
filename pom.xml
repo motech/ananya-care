@@ -312,5 +312,57 @@
             <version>1.1.1</version>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>DefaultDevProfile</id>
+            <activation><activeByDefault>true</activeByDefault></activation>
+           <build>
+               <plugins>
+                   <plugin>
+                       <groupId>org.apache.maven.plugins</groupId>
+                       <artifactId>maven-failsafe-plugin</artifactId>
+                       <version>2.9</version>
+                       <executions>
+                           <execution>
+                               <goals>
+                                   <goal>integration-test</goal>
+                                   <goal>verify</goal>
+                               </goals>
+                               <configuration>
+                                   <argLine>-XX:MaxPermSize=1024M</argLine>
+                                   <excludes>
+                                       <exclude>**/qa/*.java</exclude>
+                                   </excludes>
+                               </configuration>
+                           </execution>
+                       </executions>
+                   </plugin>
+               </plugins>
+           </build>
+        </profile>
+        <profile>
+            <id>hudson</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.9</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                                <configuration>
+                                    <argLine>-XX:MaxPermSize=1024M</argLine>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

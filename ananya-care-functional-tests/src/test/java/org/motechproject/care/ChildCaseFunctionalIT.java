@@ -21,7 +21,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class ChildCaseFunctionalTest extends SpringIntegrationTest {
+public class ChildCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
     private AllChildren allChildren;
     String motherCaseId;
