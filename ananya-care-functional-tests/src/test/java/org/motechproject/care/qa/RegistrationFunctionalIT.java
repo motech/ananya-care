@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
@@ -103,14 +104,18 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
         RetryTask<AlertDocCase> taskToFetchAlertDocCase = new RetryTask<AlertDocCase>() {
             @Override
             protected AlertDocCase perform() {
-                return allAlertDocCases.findByCaseId(childCaseId);
+                List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(childCaseId);
+                for(AlertDocCase alertDocCase : alertDocCases) {
+                    if(alertDocCase.getXmlDocument().contains("<task_id>bcg</task_id>")) {
+                        return alertDocCase;
+                    }
+                }
+                return null;
             }
         };
         AlertDocCase alertDocCase = taskToFetchAlertDocCase.execute(300, 1000);
         Assert.assertNotNull(alertDocCase);
         markAlertDocCaseForDeletion(alertDocCase);
-        Assert.assertTrue(alertDocCase.getXmlDocument().contains(childCaseId));
-        Assert.assertTrue(alertDocCase.getXmlDocument().contains("<task_id>bcg</task_id>"));
     }
 
     @Test
@@ -151,14 +156,18 @@ public class RegistrationFunctionalIT extends SpringQAIntegrationTest {
         RetryTask<AlertDocCase> taskToFetchAlertDocCase = new RetryTask<AlertDocCase>() {
             @Override
             protected AlertDocCase perform() {
-                return allAlertDocCases.findByCaseId(caseId);
+                List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(caseId);
+                for(AlertDocCase alertDocCase : alertDocCases) {
+                    if(alertDocCase.getXmlDocument().contains("<task_id>tt_1</task_id>")) {
+                        return alertDocCase;
+                    }
+                }
+                return null;
             }
         };
         AlertDocCase alertDocCase = taskToFetchAlertDocCase.execute(300, 1000);
         Assert.assertNotNull(alertDocCase);
         markAlertDocCaseForDeletion(alertDocCase);
-        Assert.assertTrue(alertDocCase.getXmlDocument().contains(caseId));
-        Assert.assertTrue(alertDocCase.getXmlDocument().contains("<task_id>tt_1</task_id>"));
     }
 
     private void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {

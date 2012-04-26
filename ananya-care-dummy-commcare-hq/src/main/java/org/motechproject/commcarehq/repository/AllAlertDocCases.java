@@ -28,4 +28,14 @@ public class AllAlertDocCases extends MotechBaseRepository<AlertDocCase> {
         }
         return alertDocCases.get(0);
     }
+
+    @GenerateView
+    public List<AlertDocCase> findAllByCaseId(String caseId) {
+        ViewQuery find_by_caseId = createQuery("by_caseId").key(caseId).includeDocs(true);
+        List<AlertDocCase> alertDocCases = db.queryView(find_by_caseId, AlertDocCase.class);
+        if (alertDocCases == null || alertDocCases.isEmpty()) {
+            return null;
+        }
+        return alertDocCases;
+    }
 }

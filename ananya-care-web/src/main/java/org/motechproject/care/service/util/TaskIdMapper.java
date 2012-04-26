@@ -13,6 +13,11 @@ public class TaskIdMapper {
         taskMap.put(MilestoneType.TT1.toString(),"tt_1");
         taskMap.put(MilestoneType.TT2.toString(),"tt_2");
 
+        taskMap.put(MilestoneType.Anc1.toString(), "anc_1");
+        taskMap.put(MilestoneType.Anc2.toString(), "anc_2");
+        taskMap.put(MilestoneType.Anc3.toString(), "anc_3");
+        taskMap.put(MilestoneType.Anc4.toString(), "anc_4");
+
         taskMap.put(MilestoneType.Measles.toString(),"measles");
         taskMap.put(MilestoneType.Bcg.toString(),"bcg");
         taskMap.put(MilestoneType.VitaminA.toString(),"vita_1");
