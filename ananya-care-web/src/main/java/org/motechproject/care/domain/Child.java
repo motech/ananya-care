@@ -14,6 +14,13 @@ public class Child extends Client {
     private DateTime bcgDate;
     private DateTime vitamin1Date;
     private DateTime hep0Date;
+    private DateTime hep1Date;
+    private DateTime hep2Date;
+    private DateTime hep3Date;
+    private DateTime dpt1Date;
+    private DateTime dpt2Date;
+    private DateTime dpt3Date;
+    private DateTime dptBoosterDate;
 
     private String caseType= CaseType.Child.getType();
     private String motherCaseId;
@@ -24,7 +31,9 @@ public class Child extends Client {
         this.caseId = caseId;
     }
 
-    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId, DateTime hep0Date) {
+    public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
+                 DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,
+                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
@@ -37,6 +46,13 @@ public class Child extends Client {
         this.bcgDate = bcgDate;
         this.vitamin1Date = vitamin1Date;
         this.hep0Date = hep0Date;
+        this.hep1Date = hep1Date;
+        this.hep2Date = hep2Date;
+        this.hep3Date = hep3Date;
+        this.dpt1Date = dpt1Date;
+        this.dpt2Date = dpt2Date;
+        this.dpt3Date = dpt3Date;
+        this.dptBoosterDate = dptBoosterDate;
     }
 
     public DateTime getDOB() {
@@ -105,5 +121,61 @@ public class Child extends Client {
 
     public void setHep0Date(DateTime hep0Date) {
         this.hep0Date = hep0Date;
+    }
+
+    public DateTime getHep1Date() {
+        return DateUtil.setTimeZone(hep1Date);
+    }
+
+    public void setHep1Date(DateTime hep1Date) {
+        this.hep1Date = hep1Date;
+    }
+
+    public DateTime getHep2Date() {
+        return DateUtil.setTimeZone(hep2Date);
+    }
+
+    public void setHep2Date(DateTime hep2Date) {
+        this.hep2Date = hep2Date;
+    }
+
+    public DateTime getHep3Date() {
+        return DateUtil.setTimeZone(hep3Date);
+    }
+
+    public void setHep3Date(DateTime hep3Date) {
+        this.hep3Date = hep3Date;
+    }
+
+    public DateTime getDpt1Date() {
+        return DateUtil.setTimeZone(dpt1Date);
+    }
+
+    public void setDpt1Date(DateTime dpt1Date) {
+        this.dpt1Date = dpt1Date;
+    }
+
+    public DateTime getDpt2Date() {
+        return DateUtil.setTimeZone(dpt2Date);
+    }
+
+    public void setDpt2Date(DateTime dpt2Date) {
+        this.dpt2Date = dpt2Date;
+    }
+
+    public DateTime getDpt3Date() {
+        return DateUtil.setTimeZone(dpt3Date);
+    }
+
+    public void setDpt3Date(DateTime dpt3Date) {
+        this.dpt3Date = dpt3Date;
+    }
+
+    public DateTime getDptBoosterDate() {
+        return DateUtil.setTimeZone(dptBoosterDate);
+    }
+
+    public void setDptBoosterDate(DateTime dptBoosterDate) {
+        this.dptBoosterDate = dptBoosterDate;
     }
 }

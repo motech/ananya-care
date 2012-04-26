@@ -11,8 +11,10 @@ public class ChildMapper {
 
         return new Child(
                 careCase.getCase_id(), get_date_obj(careCase.getDate_modified()), careCase.getUser_id(), careCase.getCase_name(),
-                careCase.getOwner_id(), get_date_obj(careCase.getDob())
-                , get_date_obj(careCase.getBaby_measles()), get_date_obj(careCase.getBcg_date()), get_date_obj(careCase.getVit_a_1_date()),careCase.getMother_id(),get_date_obj(careCase.getHep_b_0_date()));
+                careCase.getOwner_id(), get_date_obj(careCase.getDob()),
+                get_date_obj(careCase.getBaby_measles()), get_date_obj(careCase.getBcg_date()), get_date_obj(careCase.getVit_a_1_date()),careCase.getMother_id(),
+                get_date_obj(careCase.getHep_b_0_date()),get_date_obj(careCase.getHep_b_1_date()),get_date_obj(careCase.getHep_b_2_date()),get_date_obj(careCase.getHep_b_3_date()),
+                get_date_obj(careCase.getDpt_1_date()),get_date_obj(careCase.getDpt_2_date()),get_date_obj(careCase.getDpt_3_date()),get_date_obj(careCase.getDpt_booster_date()));
     }
 
     private static DateTime get_date_obj(String date_string) {

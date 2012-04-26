@@ -4,6 +4,13 @@ public enum MilestoneType {
 
     Measles("Measles"),
     Hep0("Hep 0"),
+    Hep1("Hep 1"),
+    Hep2("Hep 2"),
+    Hep3("Hep 3"),
+    DPT1("DPT 1"),
+    DPT2("DPT 2"),
+    DPT3("DPT 3"),
+    DPTBooster("DPT Booster"),
     TT1("TT 1"),
     TT2("TT 2"),
     VitaminA("Vita"),

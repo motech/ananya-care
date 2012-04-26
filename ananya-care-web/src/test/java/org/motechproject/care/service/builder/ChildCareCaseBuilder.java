@@ -18,6 +18,14 @@ public class ChildCareCaseBuilder {
     private String motherCaseId="motherCaseId";
     private String DOB="2009-01-02";
     private String hep0Date="2012-01-02";
+    private String hep1Date="2012-02-02";
+    private String hep2Date="2012-03-02";
+    private String hep3Date="2012-04-02";
+
+    private String dpt1Date="2012-08-02";
+    private String dpt2Date="2012-09-02";
+    private String dpt3Date="2012-10-02";
+    private String dptBoosterDate="2012-11-02";
 
     public CareCase build(){
         CareCase careCase = new CareCase();
@@ -32,6 +40,13 @@ public class ChildCareCaseBuilder {
         careCase.setBaby_measles(baby_measles);
         careCase.setMother_id(motherCaseId);
         careCase.setHep_b_0_date(hep0Date);
+        careCase.setHep_b_1_date(hep1Date);
+        careCase.setHep_b_2_date(hep2Date);
+        careCase.setHep_b_3_date(hep3Date);
+        careCase.setDpt_1_date(dpt1Date);
+        careCase.setDpt_2_date(dpt2Date);
+        careCase.setDpt_3_date(dpt3Date);
+        careCase.setDpt_booster_date(dptBoosterDate);
         careCase.setDob(DOB);
         return careCase;
     }
@@ -86,8 +101,35 @@ public class ChildCareCaseBuilder {
     }
 
     public ChildCareCaseBuilder withHep0Date(String hep0Date) {
-
         this.hep0Date = hep0Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withHep1Date(String hep1Date) {
+        this.hep1Date = hep1Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withHep2Date(String hep2Date) {
+        this.hep2Date = hep2Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withHep3Date(String hep3Date) {
+        this.hep3Date = hep3Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withDpt1Date(String dpt1Date) {
+        this.dpt1Date = dpt1Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withDpt2Date(String dpt2Date) {
+        this.dpt2Date = dpt2Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withDpt3Date(String dpt3Date) {
+        this.dpt3Date = dpt3Date;
+        return this;
+    }
+    public ChildCareCaseBuilder withDptBoosterDate(String dptBoosterDate) {
+        this.dptBoosterDate = dptBoosterDate;
         return this;
     }
 }

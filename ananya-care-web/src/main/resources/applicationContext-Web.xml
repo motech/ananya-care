@@ -35,6 +35,9 @@
                 <ref bean="measlesService"/>
                 <ref bean="bcgService"/>
                 <ref bean="vitaService"/>
+                <ref bean="hep0Service"/>
+                <ref bean="hepService"/>
+                <ref bean="dptService"/>
             </list>
         </constructor-arg>
     </bean>

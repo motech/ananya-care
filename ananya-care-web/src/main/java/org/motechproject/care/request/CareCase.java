@@ -31,6 +31,14 @@ public class CareCase{
     private String dob;
 
     private String hep_b_0_date;
+    private String hep_b_1_date;
+    private String hep_b_2_date;
+    private String hep_b_3_date;
+
+    private String dpt_1_date;
+    private String dpt_2_date;
+    private String dpt_3_date;
+    private String dpt_booster_date;
 
     public CareCase() {
     }
@@ -220,5 +228,61 @@ public class CareCase{
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public String getHep_b_1_date() {
+        return hep_b_1_date;
+    }
+
+    public void setHep_b_1_date(String hep_b_1_date) {
+        this.hep_b_1_date = hep_b_1_date;
+    }
+
+    public String getHep_b_2_date() {
+        return hep_b_2_date;
+    }
+
+    public void setHep_b_2_date(String hep_b_2_date) {
+        this.hep_b_2_date = hep_b_2_date;
+    }
+
+    public String getHep_b_3_date() {
+        return hep_b_3_date;
+    }
+
+    public void setHep_b_3_date(String hep_b_3_date) {
+        this.hep_b_3_date = hep_b_3_date;
+    }
+
+    public String getDpt_1_date() {
+        return dpt_1_date;
+    }
+
+    public void setDpt_1_date(String dpt_1_date) {
+        this.dpt_1_date = dpt_1_date;
+    }
+
+    public String getDpt_2_date() {
+        return dpt_2_date;
+    }
+
+    public void setDpt_2_date(String dpt_2_date) {
+        this.dpt_2_date = dpt_2_date;
+    }
+
+    public String getDpt_3_date() {
+        return dpt_3_date;
+    }
+
+    public void setDpt_3_date(String dpt_3_date) {
+        this.dpt_3_date = dpt_3_date;
+    }
+
+    public String getDpt_booster_date() {
+        return dpt_booster_date;
+    }
+
+    public void setDpt_booster_date(String dpt_booster_date) {
+        this.dpt_booster_date = dpt_booster_date;
     }
 }

@@ -1,0 +1,69 @@
+{
+    "name": "DPT Vaccination",
+    "milestones": [
+        {
+            "name": "DPT 1",
+            "scheduleWindows": {
+                "earliest": ["6 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "DPT 2",
+            "scheduleWindows": {
+                "earliest": ["4 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "DPT 3",
+            "scheduleWindows": {
+                "earliest": ["4 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "DPT Booster",
+            "scheduleWindows": {
+                "earliest": ["180 Days"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}

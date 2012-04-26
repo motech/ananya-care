@@ -170,6 +170,55 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         visualization.outputTo("child-hepatitis0.html", 2);
     }
 
+    @Test
+    public void shouldProvideAlertsForHepVisitsAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(22, FEBRUARY), date(18, APRIL), date(30, APRIL)).enrollFor(ChildVaccinationSchedule.Hepatitis.getName(), newDate(2012, 1, 1), null);
+
+        schedule.assertNoAlerts("Hep 1", earliest);
+        schedule.assertAlertsStartWith("Hep 1", due, date(29, JANUARY));
+        schedule.assertNoAlerts("Hep 1", late);
+        schedule.assertNoAlerts("Hep 1", max);
+
+        schedule.assertNoAlerts("Hep 2", earliest);
+        schedule.assertAlerts("Hep 2", due, date(7, MARCH));
+        schedule.assertNoAlerts("Hep 2", late);
+        schedule.assertNoAlerts("Hep 2", max);
+
+        schedule.assertNoAlerts("Hep 3", earliest);
+        schedule.assertAlerts("Hep 3", due, date(2, MAY));
+        schedule.assertNoAlerts("Hep 3", late);
+        schedule.assertNoAlerts("Hep 3", max);
+
+        visualization.outputTo("mother-hepatitis.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAlertsForDptVisitsAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(12, FEBRUARY), date(11, MARCH), date(8, APRIL)).enrollFor(ChildVaccinationSchedule.DPT.getName(), newDate(2012, 1, 1), null);
+
+        schedule.assertNoAlerts("DPT 1", earliest);
+        schedule.assertAlertsStartWith("DPT 1", due, date(29, JANUARY));
+        schedule.assertNoAlerts("DPT 1", late);
+        schedule.assertNoAlerts("DPT 1", max);
+
+        schedule.assertNoAlerts("DPT 2", earliest);
+        schedule.assertAlerts("DPT 2", due, date(26, FEBRUARY));
+        schedule.assertNoAlerts("DPT 2", late);
+        schedule.assertNoAlerts("DPT 2", max);
+
+        schedule.assertNoAlerts("DPT 3", earliest);
+        schedule.assertAlerts("DPT 3", due, date(25, MARCH));
+        schedule.assertNoAlerts("DPT 3", late);
+        schedule.assertNoAlerts("DPT 3", max);
+        
+        schedule.assertNoAlerts("DPT Booster", earliest);
+        schedule.assertAlerts("DPT Booster", due, date(21, SEPTEMBER));
+        schedule.assertNoAlerts("DPT Booster", late);
+        schedule.assertNoAlerts("DPT Booster", max);
+
+        visualization.outputTo("mother-dpt.html", 2);
+    }
+
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);
     }
