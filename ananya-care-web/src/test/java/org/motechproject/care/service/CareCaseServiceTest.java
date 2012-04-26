@@ -2,6 +2,8 @@ package org.motechproject.care.service;
 
 import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +19,9 @@ import org.springframework.http.HttpEntity;
 import java.io.File;
 import java.io.IOException;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,11 +32,16 @@ public class CareCaseServiceTest  {
     @Mock
     private ChildService childService;
     private CareCaseService careCaseService;
+    @Mock
+    private VelocityEngine velocityEngine;
+    @Mock
+    private Template template;
 
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        careCaseService = new CareCaseService(motherService,childService);
+        when(velocityEngine.getTemplate(anyString())).thenReturn(template);
+        careCaseService = new CareCaseService(motherService,childService, velocityEngine);
     }
 
     @Test

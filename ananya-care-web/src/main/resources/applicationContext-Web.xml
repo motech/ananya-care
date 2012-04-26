@@ -16,6 +16,8 @@
 
     <import resource="classpath:applicationContext-Scheduling.xml"/>
     <import resource="classpath:applicationContext-commcare-gateway.xml"/>
+    <import resource="classpath:applicationContext-caseService.xml"/>
+
 
     <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.MotherVaccinationProcessor">
         <constructor-arg>
