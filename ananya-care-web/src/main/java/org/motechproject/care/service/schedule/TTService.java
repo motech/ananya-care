@@ -5,6 +5,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class TTService extends VaccinationService{
     public void process(Client client) {
         Mother mother = (Mother) client;
         if(mother.getEdd() != null){
-            schedulerService.enroll(mother.getCaseId(), mother.getEdd().plusMonths(-9), scheduleName);
+            schedulerService.enroll(mother.getCaseId(), mother.getEdd().minusDays(PeriodUtil.DAYS_IN_9_MONTHS), scheduleName);
         }
         if(mother.getTt1Date() != null){
             schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT1.toString(),  mother.getTt1Date(), scheduleName);

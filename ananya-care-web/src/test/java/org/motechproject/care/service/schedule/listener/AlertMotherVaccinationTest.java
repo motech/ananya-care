@@ -230,11 +230,7 @@ public class AlertMotherVaccinationTest {
         alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
-
     }
-
-
-
 
     public static Period months(int numberOfMonths) {
         return new Period(0, numberOfMonths, 0, 0, 0, 0, 0, 0);

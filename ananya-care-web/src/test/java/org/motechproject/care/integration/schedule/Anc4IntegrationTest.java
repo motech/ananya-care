@@ -13,6 +13,7 @@ import org.motechproject.care.service.MotherVaccinationProcessor;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 import org.motechproject.care.service.schedule.Anc4Service;
 import org.motechproject.care.service.schedule.VaccinationService;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
@@ -61,8 +62,8 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         LocalDate anc1Date = today.plusDays(10);
         LocalDate anc2Date = today.plusDays(50);
         LocalDate anc3Date = today.plusMonths(3);
-        LocalDate expectedReferenceDate = edd.minusMonths(3).minusWeeks(2);
-        LocalDate expectedStartDueDate = edd.minusMonths(3);
+        LocalDate expectedReferenceDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).minusWeeks(2);
+        LocalDate expectedStartDueDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER);
 
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(null).withANC2(null).withANC3(null).withANC4(null).build();
         motherService.process(careCase);
@@ -89,7 +90,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         LocalDate anc3Date = today.plusMonths(7);
         LocalDate expectedReferenceDate = anc3Date.plusDays(30).minusWeeks(2);
         LocalDate expectedStartDueDate = anc3Date.plusDays(30);
-        LocalDate expectedStartLateDate = anc3Date.plusDays(30).plusMonths(3);
+        LocalDate expectedStartLateDate = anc3Date.plusDays(30).plusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER);
 
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(null).withANC2(null).withANC3(null).withANC4(null).build();
         motherService.process(careCase);

@@ -7,6 +7,7 @@ import org.motechproject.care.domain.Window;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,7 @@ public class Anc4Service extends VaccinationService{
 
     private Window getAnc4Window(DateTime anc3Date, DateTime edd) {
         DateTime nextPossibleAnc4Date = anc3Date.plusDays(30);
-        DateTime trimesterStartDate = edd.minusMonths(3);
+        DateTime trimesterStartDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER);
 
         Window anc4Window = new Window(nextPossibleAnc4Date, edd);
         Window trimesterWindow = new Window(trimesterStartDate, edd);

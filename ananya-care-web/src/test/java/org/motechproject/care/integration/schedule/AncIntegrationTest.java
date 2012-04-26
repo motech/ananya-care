@@ -14,6 +14,7 @@ import org.motechproject.care.service.MotherVaccinationProcessor;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 import org.motechproject.care.service.schedule.AncService;
 import org.motechproject.care.service.schedule.VaccinationService;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
@@ -64,8 +65,8 @@ public class AncIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ancScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.Anc1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getStartOfDueWindow());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow());
         assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
     }
 
@@ -85,7 +86,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
 
         assertEquals(MilestoneType.Anc2.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(anc1Date.plusDays(30)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(anc1Date.plusMonths(9)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(anc1Date.plusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfLateWindow());
 
     }
 
@@ -108,7 +109,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
 
         assertEquals(MilestoneType.Anc3.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(anc2FulfillmentDate.plusDays(30)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(anc2FulfillmentDate.plusMonths(9)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(anc2FulfillmentDate.plusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfLateWindow());
     }
 
     @Test

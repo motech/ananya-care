@@ -5,7 +5,7 @@
             "name": "Anc 1",
             "scheduleWindows": {
                 "earliest": ["0 Months"],
-                "due": ["9 Months"]
+                "due": ["274 Days"]
             },
             "alerts": [
                 {
@@ -21,7 +21,7 @@
             "name": "Anc 2",
             "scheduleWindows": {
                 "earliest": ["30 Days"],
-                "due": ["9 Months"]
+                "due": ["274 Days"]
             },
             "alerts": [
                 {
@@ -37,7 +37,7 @@
             "name": "Anc 3",
             "scheduleWindows": {
                 "earliest": ["30 Days"],
-                "due": ["9 Months"]
+                "due": ["274 Days"]
             },
             "alerts": [
                 {

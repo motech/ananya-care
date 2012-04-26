@@ -13,6 +13,7 @@ import org.motechproject.care.service.MotherVaccinationProcessor;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 import org.motechproject.care.service.schedule.TTService;
 import org.motechproject.care.service.schedule.VaccinationService;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
@@ -64,8 +65,8 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(edd.minusMonths(9)), enrollment.getStartOfDueWindow());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow());
         assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
     }
 
@@ -84,6 +85,8 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
+        assertEquals(DateUtil.newDateTime(tt1Taken.plusWeeks(4)), enrollment.getStartOfDueWindow());
+        assertEquals(DateUtil.newDateTime(tt1Taken.plusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfLateWindow());
     }
 
     @Test

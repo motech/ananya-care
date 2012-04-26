@@ -5,7 +5,7 @@
             "name": "TT 1",
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
-                "due": ["9 Months"]
+                "due": ["274 Days"]
             },
             "alerts": [
                 {
@@ -21,7 +21,7 @@
             "name": "TT 2",
             "scheduleWindows": {
                 "earliest": ["4 Weeks"],
-                "due": ["9 Months"]
+                "due": ["274 Days"]
             },
             "alerts": [
                 {

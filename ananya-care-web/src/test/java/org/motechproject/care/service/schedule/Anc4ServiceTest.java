@@ -11,6 +11,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.util.PeriodUtil;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -54,7 +55,7 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
 
         anc4Service.process(mother);
-        Mockito.verify(schedulerService).enroll(caseId, edd.minusMonths(3).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).minusWeeks(2), scheduleName);
     }
 
     @Test
