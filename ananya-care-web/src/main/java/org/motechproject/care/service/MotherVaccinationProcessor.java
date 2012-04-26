@@ -21,4 +21,8 @@ public class MotherVaccinationProcessor {
         for(VaccinationService vaccineService : vaccinationServices)
             vaccineService.process(mother);
     }
+
+    public List<VaccinationService> getVaccinationServices() {
+        return vaccinationServices;
+    }
 }

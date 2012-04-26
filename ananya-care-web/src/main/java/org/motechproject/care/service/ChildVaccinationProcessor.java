@@ -7,15 +7,20 @@ import java.util.List;
 
 public class ChildVaccinationProcessor {
 
-    List<VaccinationService> vaccinationServices;
+    protected List<VaccinationService> vaccinationServices;
 
     public ChildVaccinationProcessor(List<VaccinationService> vaccinationServices) {
         this.vaccinationServices = vaccinationServices;
     }
 
+
     public void enrollUpdateVaccines(Child child){
         for(VaccinationService vaccineService : vaccinationServices)
             vaccineService.process(child);
+    }
+
+    public List<VaccinationService> getVaccinationServices() {
+        return vaccinationServices;
     }
 }
 

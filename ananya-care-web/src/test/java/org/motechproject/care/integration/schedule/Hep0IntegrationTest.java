@@ -1,4 +1,4 @@
-package org.motechproject.care.integration;
+package org.motechproject.care.integration.schedule;
 
 import org.joda.time.DateTime;
 import org.junit.After;

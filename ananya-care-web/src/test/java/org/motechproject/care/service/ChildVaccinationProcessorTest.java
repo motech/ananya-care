@@ -6,7 +6,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.service.schedule.*;
+import org.motechproject.care.service.schedule.BcgService;
+import org.motechproject.care.service.schedule.MeaslesService;
+import org.motechproject.care.service.schedule.VaccinationService;
+import org.motechproject.care.service.schedule.VitaService;
 
 import java.util.Arrays;
 
@@ -29,4 +32,6 @@ public class ChildVaccinationProcessorTest{
         Mockito.verify(vitaService).process(child);
     }
 }
+
+
 
