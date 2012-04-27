@@ -27,6 +27,8 @@ public class ChildCareCaseBuilder {
     private String dpt3Date="2012-10-02";
     private String dptBoosterDate="2012-11-02";
 
+    private String opv0Date="2012-11-02";
+
     public CareCase build(){
         CareCase careCase = new CareCase();
         careCase.setCase_id(caseId);
@@ -48,6 +50,7 @@ public class ChildCareCaseBuilder {
         careCase.setDpt_3_date(dpt3Date);
         careCase.setDpt_booster_date(dptBoosterDate);
         careCase.setDob(DOB);
+        careCase.setOpv_0_date(opv0Date);
         return careCase;
     }
 
@@ -130,6 +133,11 @@ public class ChildCareCaseBuilder {
     }
     public ChildCareCaseBuilder withDptBoosterDate(String dptBoosterDate) {
         this.dptBoosterDate = dptBoosterDate;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withOPV0Date(String opv0Date) {
+        this.opv0Date = opv0Date;
         return this;
     }
 }

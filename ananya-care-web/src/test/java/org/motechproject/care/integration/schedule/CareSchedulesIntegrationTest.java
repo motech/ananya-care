@@ -219,6 +219,19 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         visualization.outputTo("mother-dpt.html", 2);
     }
 
+    @Test
+    public void shouldProvideAlertsForOPV0VaccinationOnlyOnTheBabyDOB() throws Exception {
+        LocalDate today = DateUtil.today();
+        schedule.enrollFor(ChildVaccinationSchedule.OPV0.getName(), today, null);
+
+        schedule.assertNoAlerts("OPV 0", earliest);
+        schedule.assertAlertsStartWith("OPV 0", due, today.toDate());
+        schedule.assertNoAlerts("OPV 0", late);
+        schedule.assertNoAlerts("OPV 0", max);
+        visualization.outputTo("child-opv0.html", 2);
+    }
+
+
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);
     }

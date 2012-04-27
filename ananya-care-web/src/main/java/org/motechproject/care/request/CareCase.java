@@ -40,6 +40,8 @@ public class CareCase{
     private String dpt_3_date;
     private String dpt_booster_date;
 
+    private String opv_0_date;
+
     public CareCase() {
     }
 
@@ -51,11 +53,11 @@ public class CareCase{
         this.mother_alive = mother_alive;
     }
 
-
-
     public String getTt_1_date() {
         return tt_1_date;
     }
+
+
 
     public void setTt_1_date(String tt_1_date) {
         this.tt_1_date = tt_1_date;
@@ -189,10 +191,10 @@ public class CareCase{
         return bcg_date;
     }
 
-
     public String getVit_a_1_date() {
         return vit_a_1_date;
     }
+
 
     public void setBaby_measles(String baby_measles) {
         this.baby_measles = baby_measles;
@@ -284,5 +286,13 @@ public class CareCase{
 
     public void setDpt_booster_date(String dpt_booster_date) {
         this.dpt_booster_date = dpt_booster_date;
+    }
+
+    public String getOpv_0_date() {
+        return opv_0_date;
+    }
+
+    public void setOpv_0_date(String opv_0_date) {
+        this.opv_0_date = opv_0_date;
     }
 }

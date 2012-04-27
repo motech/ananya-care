@@ -22,9 +22,11 @@ public class Child extends Client {
     private DateTime dpt3Date;
     private DateTime dptBoosterDate;
 
-    private String caseType= CaseType.Child.getType();
-    private String motherCaseId;
+    private DateTime opv0Date;
 
+    private String caseType= CaseType.Child.getType();
+
+    private String motherCaseId;
     public Child() {}
 
     public Child(String caseId) {
@@ -33,7 +35,7 @@ public class Child extends Client {
 
     public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
                  DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,
-                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate) {
+                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
@@ -53,6 +55,7 @@ public class Child extends Client {
         this.dpt2Date = dpt2Date;
         this.dpt3Date = dpt3Date;
         this.dptBoosterDate = dptBoosterDate;
+        this.opv0Date = opv0Date;
     }
 
     public DateTime getDOB() {
@@ -177,5 +180,13 @@ public class Child extends Client {
 
     public void setDptBoosterDate(DateTime dptBoosterDate) {
         this.dptBoosterDate = dptBoosterDate;
+    }
+
+    public DateTime getOpv0Date() {
+        return DateUtil.setTimeZone(opv0Date);
+    }
+
+    public void setOpv0Date(DateTime opv0Date) {
+        this.opv0Date = opv0Date;
     }
 }

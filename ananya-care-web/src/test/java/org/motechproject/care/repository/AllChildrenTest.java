@@ -30,9 +30,10 @@ public class AllChildrenTest extends SpringIntegrationTest {
         DateTime dpt2Date = DateUtil.now().plusMonths(6);
         DateTime dpt3Date = DateUtil.now().plusMonths(7);
         DateTime dptBoosterDate = DateUtil.now().plusMonths(8);
+        DateTime opv0Date = DateUtil.now().plusDays(5);
         DateTime dob = DateUtil.now().minusDays(20);
         String motherCaseId = "MotherCaseId";
-        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate);
+        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate,opv0Date);
         allChildren.add(child);
 
         Child childFromDb = allChildren.findByCaseId(caseId);
@@ -53,6 +54,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
         assertEquals(dpt2Date, childFromDb.getDpt2Date());
         assertEquals(dpt3Date, childFromDb.getDpt3Date());
         assertEquals(dptBoosterDate, childFromDb.getDptBoosterDate());
+        assertEquals(opv0Date, childFromDb.getOpv0Date());
         assertEquals(vitamin1Date, childFromDb.getVitamin1Date());
         assertEquals(motherCaseId, childFromDb.getMotherCaseId());
     }

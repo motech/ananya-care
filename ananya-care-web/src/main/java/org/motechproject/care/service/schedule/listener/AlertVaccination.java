@@ -5,7 +5,7 @@ import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Client;
 import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
-import org.motechproject.care.service.util.TaskIdMapper;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
@@ -19,7 +19,6 @@ public abstract class AlertVaccination {
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
     private Properties ananyaCareProperties;
-    private static TaskIdMapper taskIdMapper = new TaskIdMapper();
     Logger logger = Logger.getLogger(AlertVaccination.class);
 
     public AlertVaccination(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
@@ -51,7 +50,7 @@ public abstract class AlertVaccination {
     private CareCaseTask createCaseTask(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
         String motechUserId = ananyaCareProperties.getProperty("motech.user.id");
         String currentTime = DateUtil.now().toString();
-        String taskId = taskIdMapper.getTaskId(milestoneName);
+        String taskId = MilestoneType.forType(milestoneName).getTaskId();
         String caseId = UUID.randomUUID().toString();
         return new CareCaseTask(milestoneName, client.getGroupId(), caseId, motechUserId, currentTime, taskId, alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), client.getCaseType(), externalId, clientElementTag);
     }
