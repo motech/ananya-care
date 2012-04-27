@@ -137,7 +137,6 @@ public class DptIntegrationTest extends SpringIntegrationTest {
                 .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(dptBoosterDate.toString()).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, dptScheduleName);
         Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, dptScheduleName));
     }
 

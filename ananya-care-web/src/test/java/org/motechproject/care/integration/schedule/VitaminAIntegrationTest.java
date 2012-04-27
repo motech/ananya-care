@@ -96,8 +96,6 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withVitamin1Date(vitaTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, vitaScheduleName);
-
         assertNull(scheduleTrackingService.getEnrollment(caseId, vitaScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);

@@ -92,8 +92,6 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate( bcgTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, bcgScheduleName);
-
         assertNull(scheduleTrackingService.getEnrollment(caseId, bcgScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);

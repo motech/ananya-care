@@ -129,7 +129,6 @@ public class AncIntegrationTest extends SpringIntegrationTest {
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1((anc1FulfillmentDate.toString())).withANC2(anc2FulfillmentDate.toString()).withANC3(anc3FulfillmentDate.toString()).build();
         motherService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, ancScheduleName);
         Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, ancScheduleName));
     }
 

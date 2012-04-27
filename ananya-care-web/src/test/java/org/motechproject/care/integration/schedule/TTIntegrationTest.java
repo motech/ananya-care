@@ -103,7 +103,6 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(tt1Taken.toString()).withTT2(tt2Taken.toString()).build();
         motherService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, ttScheduleName);
         assertNull(scheduleTrackingService.getEnrollment(caseId, ttScheduleName));
     }
 

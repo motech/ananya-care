@@ -124,8 +124,6 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(hep0Taken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, scheduleName);
-
         assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
 
         Child child = allChildren.findByCaseId(caseId);

@@ -115,7 +115,6 @@ public class HepIntegrationTest extends SpringIntegrationTest {
                 .withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(hep3Date.toString()).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, hepScheduleName);
         Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, hepScheduleName));
     }
 

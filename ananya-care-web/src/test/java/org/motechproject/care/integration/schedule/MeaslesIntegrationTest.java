@@ -91,8 +91,6 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBabyMeaslesDate( measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, measlesScheduleName);
-
         assertNull(scheduleTrackingService.getEnrollment(caseId, measlesScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
