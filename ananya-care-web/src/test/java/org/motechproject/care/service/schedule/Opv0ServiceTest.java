@@ -23,19 +23,19 @@ public class Opv0ServiceTest {
     private ScheduleService schedulerService;
     private String scheduleName = ChildVaccinationSchedule.OPV0.getName();
 
-    private Opv0Service opv0Service;
+    private Opv0Service Opv0Service;
 
 
     @Before
     public void setUp(){
-        opv0Service =new Opv0Service(schedulerService);
+        Opv0Service =new Opv0Service(schedulerService);
     }
 
     @Test
     public void shouldNotEnrollChildForOPV0ScheduleWhenDOBIsNull(){
         Child child = new Child();
         child.setCaseId("caseId");
-        opv0Service.process(child);
+        Opv0Service.process(child);
         verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
@@ -44,7 +44,7 @@ public class Opv0ServiceTest {
         Child child = new Child();
         child.setCaseId("caseId");
         child.setDOB(DateTime.now());
-        opv0Service.process(child);
+        Opv0Service.process(child);
         verify(schedulerService).enroll(any(String.class), any(DateTime.class), anyString());
     }
 
@@ -56,7 +56,7 @@ public class Opv0ServiceTest {
         child.setDOB(DateTime.now());
         DateTime opv0Date = DateTime.now().minusDays(1);
         child.setOpv0Date(opv0Date);
-        opv0Service.process(child);
+        Opv0Service.process(child);
         verify(schedulerService).fulfillMileStone(caseId, MilestoneType.OPV0.toString(),opv0Date,ChildVaccinationSchedule.OPV0.getName());
     }
 

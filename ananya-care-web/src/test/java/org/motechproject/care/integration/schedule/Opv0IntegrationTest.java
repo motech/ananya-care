@@ -28,10 +28,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class OPV0IntegrationTest extends SpringIntegrationTest {
+public class Opv0IntegrationTest extends SpringIntegrationTest {
 
     @Autowired
-    private Opv0Service opv0Service;
+    private Opv0Service Opv0Service;
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
@@ -43,7 +43,7 @@ public class OPV0IntegrationTest extends SpringIntegrationTest {
 
     @Before
     public void setUp(){
-        List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) opv0Service);
+        List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) Opv0Service);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
