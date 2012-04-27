@@ -26,6 +26,7 @@ public class Child extends Client {
     private DateTime opv1Date;
     private DateTime opv2Date;
     private DateTime opv3Date;
+    private DateTime opvBoosterDate;
 
     private String caseType= CaseType.Child.getType();
 
@@ -38,7 +39,7 @@ public class Child extends Client {
 
     public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
                  DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,
-                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date) {
+                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date, DateTime opvBoosterDate) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
@@ -62,6 +63,7 @@ public class Child extends Client {
         this.opv1Date = opv1Date;
         this.opv2Date = opv2Date;
         this.opv3Date = opv3Date;
+        this.opvBoosterDate = opvBoosterDate;
     }
 
     public DateTime getDOB() {
@@ -218,5 +220,13 @@ public class Child extends Client {
 
     public void setOpv3Date(DateTime opv3Date) {
         this.opv3Date = opv3Date;
+    }
+
+    public DateTime getOpvBoosterDate() {
+        return DateUtil.setTimeZone(opvBoosterDate);
+    }
+
+    public void setOpvBoosterDate(DateTime opvBoosterDate) {
+        this.opvBoosterDate = opvBoosterDate;
     }
 }

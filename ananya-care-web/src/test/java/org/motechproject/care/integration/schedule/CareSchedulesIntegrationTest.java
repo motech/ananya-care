@@ -155,7 +155,6 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("Anc 4", late);
         schedule.assertNoAlerts("Anc 4", max);
         visualization.outputTo("mother-anc4.html", 2);
-
     }
 
     @Test
@@ -189,7 +188,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("Hep 3", late);
         schedule.assertNoAlerts("Hep 3", max);
 
-        visualization.outputTo("mother-hepatitis.html", 2);
+        visualization.outputTo("child-hepatitis.html", 2);
     }
 
     @Test
@@ -216,7 +215,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("DPT Booster", late);
         schedule.assertNoAlerts("DPT Booster", max);
 
-        visualization.outputTo("mother-dpt.html", 2);
+        visualization.outputTo("child-dpt.html", 2);
     }
 
     @Test
@@ -250,7 +249,18 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("OPV 3", late);
         schedule.assertNoAlerts("OPV 3", max);
 
-        visualization.outputTo("mother-hepatitis.html", 2);
+        visualization.outputTo("child-opv.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAlertsForOPVBoosterVisitsAtTheRightTimes() throws Exception {
+        schedule.enrollFor(ChildVaccinationSchedule.OPVBooster.getName(), newDate(2012, 2, 1), null);
+
+        schedule.assertNoAlerts("OPV Booster", earliest);
+        schedule.assertAlerts("OPV Booster", due, date(1, FEBRUARY));
+        schedule.assertNoAlerts("OPV Booster", late);
+        schedule.assertNoAlerts("OPV Booster", max);
+        visualization.outputTo("child-opvbooster.html", 2);
     }
 
     private Date date(int day, int month) {

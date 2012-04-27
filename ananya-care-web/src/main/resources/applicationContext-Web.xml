@@ -40,6 +40,7 @@
                 <ref bean="dptService"/>
                 <ref bean="opv0Service"/>
                 <ref bean="opvService"/>
+                <ref bean="opvBoosterService"/>
             </list>
         </constructor-arg>
     </bean>

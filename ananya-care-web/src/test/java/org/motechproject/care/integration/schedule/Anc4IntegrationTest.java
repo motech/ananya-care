@@ -82,7 +82,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyAnc4ScheduleWithWithAnc3DateWhenAnc3IsFulfilledInTrimester() {
+    public void shouldVerifyAnc4ScheduleWithAnc3DateWhenAnc3IsFulfilledInThirdTrimester() {
         LocalDate today = DateUtil.today();
         LocalDate edd = today.plusMonths(9);
         LocalDate anc1Date = today.plusDays(10);

@@ -15,6 +15,7 @@ public enum MilestoneType {
     OPV1("OPV 1", "opv_1"),
     OPV2("OPV 2", "opv_2"),
     OPV3("OPV 3", "opv_3"),
+    OPVBooster("OPV Booster", "opv_booster"),
 
     TT1("TT 1", "tt_1"),
     TT2("TT 2", "tt_2"),
@@ -23,7 +24,7 @@ public enum MilestoneType {
     Anc1("Anc 1", "anc_1"),
     Anc2("Anc 2", "anc_2"),
     Anc3("Anc 3", "anc_3"),
-    Anc4("Anc 4", "anc_4");
+    Anc4("Anc 4", "anc_4"), ;
 
     private String name;
     private String taskId;

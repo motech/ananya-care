@@ -1,0 +1,22 @@
+{
+    "name": "OPVBooster Vaccination",
+    "milestones": [
+        {
+            "name": "OPV Booster",
+            "scheduleWindows": {
+                "earliest": ["2 Weeks"],
+                "due": ["8 Months", "2 Weeks"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+
+    ]
+}

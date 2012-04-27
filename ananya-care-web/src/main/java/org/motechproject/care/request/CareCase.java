@@ -44,6 +44,7 @@ public class CareCase{
     private String opv_1_date;
     private String opv_2_date;
     private String opv_3_date;
+    private String opv_booster_date;
 
     public CareCase() {
     }
@@ -323,4 +324,11 @@ public class CareCase{
         this.opv_3_date = opv_3_date;
     }
 
+    public String getOpv_booster_date() {
+        return opv_booster_date;
+    }
+
+    public void setOpv_booster_date(String opv_booster_date) {
+        this.opv_booster_date = opv_booster_date;
+    }
 }

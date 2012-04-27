@@ -34,9 +34,10 @@ public class AllChildrenTest extends SpringIntegrationTest {
         DateTime opv1Date = DateUtil.now().plusMonths(2);
         DateTime opv2Date = DateUtil.now().plusMonths(3);
         DateTime opv3Date = DateUtil.now().plusMonths(4);
+        DateTime opvBoosterDate = DateUtil.now().plusMonths(5);
         DateTime dob = DateUtil.now().minusDays(20);
         String motherCaseId = "MotherCaseId";
-        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate,opv0Date,opv1Date,opv2Date,opv3Date);
+        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate,opv0Date,opv1Date,opv2Date,opv3Date,opvBoosterDate);
         allChildren.add(child);
 
         Child childFromDb = allChildren.findByCaseId(caseId);
@@ -61,6 +62,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
         assertEquals(opv1Date, childFromDb.getOpv1Date());
         assertEquals(opv2Date, childFromDb.getOpv2Date());
         assertEquals(opv3Date, childFromDb.getOpv3Date());
+        assertEquals(opvBoosterDate, childFromDb.getOpvBoosterDate());
         assertEquals(vitamin1Date, childFromDb.getVitamin1Date());
         assertEquals(motherCaseId, childFromDb.getMotherCaseId());
     }

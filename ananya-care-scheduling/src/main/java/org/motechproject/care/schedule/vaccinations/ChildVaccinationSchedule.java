@@ -9,7 +9,8 @@ public enum ChildVaccinationSchedule {
     Hepatitis("Hepatitis Vaccination"),
     DPT("DPT Vaccination"),
     OPV0("OPV0 Vaccination"),
-    OPV("OPV Vaccination");
+    OPV("OPV Vaccination"),
+    OPVBooster("OPVBooster Vaccination");
 
     private String vaccinationScheduleName;
 

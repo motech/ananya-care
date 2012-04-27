@@ -14,7 +14,7 @@ public class ChildMapper {
                 careCase.getOwner_id(), get_date_obj(careCase.getDob()),
                 get_date_obj(careCase.getBaby_measles()), get_date_obj(careCase.getBcg_date()), get_date_obj(careCase.getVit_a_1_date()),careCase.getMother_id(),
                 get_date_obj(careCase.getHep_b_0_date()),get_date_obj(careCase.getHep_b_1_date()),get_date_obj(careCase.getHep_b_2_date()),get_date_obj(careCase.getHep_b_3_date()),
-                get_date_obj(careCase.getDpt_1_date()),get_date_obj(careCase.getDpt_2_date()),get_date_obj(careCase.getDpt_3_date()),get_date_obj(careCase.getDpt_booster_date()), get_date_obj(careCase.getOpv_0_date()), get_date_obj(careCase.getOpv_1_date()), get_date_obj(careCase.getOpv_2_date()), get_date_obj(careCase.getOpv_3_date()));
+                get_date_obj(careCase.getDpt_1_date()),get_date_obj(careCase.getDpt_2_date()),get_date_obj(careCase.getDpt_3_date()),get_date_obj(careCase.getDpt_booster_date()), get_date_obj(careCase.getOpv_0_date()), get_date_obj(careCase.getOpv_1_date()), get_date_obj(careCase.getOpv_2_date()), get_date_obj(careCase.getOpv_3_date()), get_date_obj(careCase.getOpv_booster_date()));
     }
 
     private static DateTime get_date_obj(String date_string) {
