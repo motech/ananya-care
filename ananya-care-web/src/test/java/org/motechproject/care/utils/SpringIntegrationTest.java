@@ -1,10 +1,10 @@
 package org.motechproject.care.utils;
 
-import org.ektorp.BulkDeleteDocument;
 import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.testing.utils.BaseUnitTest;
 import org.quartz.utils.Pair;
@@ -31,18 +31,20 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
     @Autowired
     protected ScheduleTrackingService trackingService;
 
-    protected ArrayList<BulkDeleteDocument> toDelete;
+    protected ArrayList<MotechBaseDataObject> toDelete;
     protected ArrayList<Pair> schedulesToDelete;
 
     @Before
     public void before() {
-        toDelete = new ArrayList<BulkDeleteDocument>();
+        toDelete = new ArrayList<MotechBaseDataObject>();
         schedulesToDelete = new ArrayList<Pair>();
     }
 
     @After
     public void after() {
-        ananyaCareDbConnector.executeBulk(toDelete);
+        for(MotechBaseDataObject obj : toDelete){
+            ananyaCareDbConnector.delete(obj);
+        }
         for(int i=0 ;i< schedulesToDelete.size(); i++){
             Pair s = schedulesToDelete.get(i);
             String externalId = s.getFirst().toString();
@@ -55,8 +57,8 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
     }
 
 
-    protected void markForDeletion(Object document) {
-        toDelete.add(BulkDeleteDocument.of(document));
+    protected void markForDeletion(MotechBaseDataObject document) {
+        toDelete.add(document);
     }
 
     protected void markScheduleForUnEnrollment(String externalId, String scheduleName) {
