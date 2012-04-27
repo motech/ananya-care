@@ -231,6 +231,27 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         visualization.outputTo("child-opv0.html", 2);
     }
 
+    @Test
+    public void shouldProvideAlertsForOPVVaccinationsAtTheRightTimes() throws Exception {
+        schedule.withFulfillmentDates(date(22, FEBRUARY), date(18, APRIL), date(30, APRIL)).enrollFor(ChildVaccinationSchedule.OPV.getName(), newDate(2012, 1, 1), null);
+
+        schedule.assertNoAlerts("OPV 1", earliest);
+        schedule.assertAlertsStartWith("OPV 1", due, date(29, JANUARY));
+        schedule.assertNoAlerts("OPV 1", late);
+        schedule.assertNoAlerts("OPV 1", max);
+
+        schedule.assertNoAlerts("OPV 2", earliest);
+        schedule.assertAlerts("OPV 2", due, date(7, MARCH));
+        schedule.assertNoAlerts("OPV 2", late);
+        schedule.assertNoAlerts("OPV 2", max);
+
+        schedule.assertNoAlerts("OPV 3", earliest);
+        schedule.assertAlerts("OPV 3", due, date(2, MAY));
+        schedule.assertNoAlerts("OPV 3", late);
+        schedule.assertNoAlerts("OPV 3", max);
+
+        visualization.outputTo("mother-hepatitis.html", 2);
+    }
 
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);

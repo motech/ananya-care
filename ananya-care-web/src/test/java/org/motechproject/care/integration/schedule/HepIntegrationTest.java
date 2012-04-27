@@ -57,7 +57,7 @@ public class HepIntegrationTest extends SpringIntegrationTest {
     public void shouldVerifyHepScheduleCreationWhenChildIsRegistered() {
         LocalDate dob = DateUtil.today().plusMonths(4);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(null).withHep2Date(null).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(null).withHep2Date(null).withHep3Date(null).build();
         childService.process(careCase);
         markScheduleForUnEnrollment(caseId, hepScheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(hepScheduleName, caseId, EnrollmentStatus.ACTIVE);
@@ -69,13 +69,13 @@ public class HepIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyHep1ScheduleFulfillmentWhenHep1VisitIsOver() {
+    public void shouldVerifyHep1ScheduleFulfillmentWhenHep1VaccinationIsTaken() {
         LocalDate dob = DateUtil.today().minusMonths(4);
         LocalDate hep1Date = dob.plusMonths(2);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(null).withHep2Date(null).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(null).withHep2Date(null).withHep3Date(null).build();
         childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(null).build();
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(null).withHep3Date(null).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, hepScheduleName);
@@ -87,12 +87,16 @@ public class HepIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyHep2ScheduleFulfillmentWhenHep2VisitIsOver() {
+    public void shouldVerifyHep2ScheduleFulfillmentWhenHep2VaccinationIsTaken() {
         LocalDate dob = DateUtil.today().minusMonths(6);
         LocalDate hep1Date = dob.plusMonths(2);
         LocalDate hep2Date = dob.plusMonths(3);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(null).build();
+        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(null).withHep2Date(null).withHep3Date(null).build();
+        childService.process(careCase);
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(null).withHep3Date(null).build();
+        childService.process(careCase);
+        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(null).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, hepScheduleName);
@@ -104,15 +108,14 @@ public class HepIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyHep3ScheduleFulfillmentWhenHep3VisitIsOver() {
+    public void shouldVerifyHep3ScheduleFulfillmentWhenHep3VaccinationIsTaken() {
         LocalDate today = DateUtil.today();
         LocalDate dob = today.minusMonths(6);
         LocalDate hep1Date = dob.plusMonths(2);
         LocalDate hep2Date = dob.plusMonths(3);
         LocalDate hep3Date = today;
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
-                .withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(hep3Date.toString()).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(hep3Date.toString()).build();
         childService.process(careCase);
 
         Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, hepScheduleName));

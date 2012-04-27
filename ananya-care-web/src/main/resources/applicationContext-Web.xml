@@ -39,6 +39,7 @@
                 <ref bean="hepService"/>
                 <ref bean="dptService"/>
                 <ref bean="opv0Service"/>
+                <ref bean="opvService"/>
             </list>
         </constructor-arg>
     </bean>

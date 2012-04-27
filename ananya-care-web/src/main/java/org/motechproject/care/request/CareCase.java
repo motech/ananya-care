@@ -41,6 +41,9 @@ public class CareCase{
     private String dpt_booster_date;
 
     private String opv_0_date;
+    private String opv_1_date;
+    private String opv_2_date;
+    private String opv_3_date;
 
     public CareCase() {
     }
@@ -295,4 +298,29 @@ public class CareCase{
     public void setOpv_0_date(String opv_0_date) {
         this.opv_0_date = opv_0_date;
     }
+
+    public String getOpv_1_date() {
+        return opv_1_date;
+    }
+
+    public void setOpv_1_date(String opv_1_date) {
+        this.opv_1_date = opv_1_date;
+    }
+
+    public String getOpv_2_date() {
+        return opv_2_date;
+    }
+
+    public void setOpv_2_date(String opv_2_date) {
+        this.opv_2_date = opv_2_date;
+    }
+
+    public String getOpv_3_date() {
+        return opv_3_date;
+    }
+
+    public void setOpv_3_date(String opv_3_date) {
+        this.opv_3_date = opv_3_date;
+    }
+
 }

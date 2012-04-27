@@ -27,7 +27,10 @@ public class ChildCareCaseBuilder {
     private String dpt3Date="2012-10-02";
     private String dptBoosterDate="2012-11-02";
 
-    private String opv0Date="2012-11-02";
+    private String opv0Date="2012-01-02";
+    private String opv1Date="2012-02-02";
+    private String opv2Date="2012-03-02";
+    private String opv3Date="2012-04-02";
 
     public CareCase build(){
         CareCase careCase = new CareCase();
@@ -51,6 +54,9 @@ public class ChildCareCaseBuilder {
         careCase.setDpt_booster_date(dptBoosterDate);
         careCase.setDob(DOB);
         careCase.setOpv_0_date(opv0Date);
+        careCase.setOpv_1_date(opv1Date);
+        careCase.setOpv_2_date(opv2Date);
+        careCase.setOpv_3_date(opv3Date);
         return careCase;
     }
 
@@ -58,10 +64,12 @@ public class ChildCareCaseBuilder {
         this.caseId=caseId;
         return this;
     }
+
     public ChildCareCaseBuilder withCaseName(String caseName){
         this.caseName=caseName;
         return this;
     }
+
     public ChildCareCaseBuilder withDateModified(String dateModified){
         this.dateModified = dateModified;
         return this;
@@ -71,6 +79,7 @@ public class ChildCareCaseBuilder {
         this.groupId = groupId;
         return this;
     }
+
     public ChildCareCaseBuilder withUserId(String userId){
         this.userId = userId;
         return this;
@@ -80,6 +89,7 @@ public class ChildCareCaseBuilder {
         this.case_type=caseType;
         return this;
     }
+
     public ChildCareCaseBuilder withBcgDate(String bcg_date){
         this.bcg_date =bcg_date;
         return this;
@@ -88,6 +98,7 @@ public class ChildCareCaseBuilder {
         this.vit_a_1_date =vita1Date;
         return this;
     }
+
     public ChildCareCaseBuilder withBabyMeaslesDate(String measlesDate){
         this.baby_measles =measlesDate;
         return this;
@@ -107,6 +118,7 @@ public class ChildCareCaseBuilder {
         this.hep0Date = hep0Date;
         return this;
     }
+
     public ChildCareCaseBuilder withHep1Date(String hep1Date) {
         this.hep1Date = hep1Date;
         return this;
@@ -115,22 +127,27 @@ public class ChildCareCaseBuilder {
         this.hep2Date = hep2Date;
         return this;
     }
+
     public ChildCareCaseBuilder withHep3Date(String hep3Date) {
         this.hep3Date = hep3Date;
         return this;
     }
+
     public ChildCareCaseBuilder withDpt1Date(String dpt1Date) {
         this.dpt1Date = dpt1Date;
         return this;
     }
+
     public ChildCareCaseBuilder withDpt2Date(String dpt2Date) {
         this.dpt2Date = dpt2Date;
         return this;
     }
+
     public ChildCareCaseBuilder withDpt3Date(String dpt3Date) {
         this.dpt3Date = dpt3Date;
         return this;
     }
+
     public ChildCareCaseBuilder withDptBoosterDate(String dptBoosterDate) {
         this.dptBoosterDate = dptBoosterDate;
         return this;
@@ -138,6 +155,21 @@ public class ChildCareCaseBuilder {
 
     public ChildCareCaseBuilder withOPV0Date(String opv0Date) {
         this.opv0Date = opv0Date;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withOPV1Date(String opv1Date) {
+        this.opv1Date = opv1Date;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withOPV2Date(String opv2Date) {
+        this.opv2Date = opv2Date;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withOPV3Date(String opv3Date) {
+        this.opv3Date = opv3Date;
         return this;
     }
 }

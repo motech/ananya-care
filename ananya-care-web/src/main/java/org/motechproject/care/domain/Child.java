@@ -23,6 +23,9 @@ public class Child extends Client {
     private DateTime dptBoosterDate;
 
     private DateTime opv0Date;
+    private DateTime opv1Date;
+    private DateTime opv2Date;
+    private DateTime opv3Date;
 
     private String caseType= CaseType.Child.getType();
 
@@ -35,7 +38,7 @@ public class Child extends Client {
 
     public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
                  DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,
-                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date) {
+                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.isActive = true;
@@ -56,6 +59,9 @@ public class Child extends Client {
         this.dpt3Date = dpt3Date;
         this.dptBoosterDate = dptBoosterDate;
         this.opv0Date = opv0Date;
+        this.opv1Date = opv1Date;
+        this.opv2Date = opv2Date;
+        this.opv3Date = opv3Date;
     }
 
     public DateTime getDOB() {
@@ -188,5 +194,29 @@ public class Child extends Client {
 
     public void setOpv0Date(DateTime opv0Date) {
         this.opv0Date = opv0Date;
+    }
+
+    public DateTime getOpv1Date() {
+        return DateUtil.setTimeZone(opv1Date);
+    }
+
+    public void setOpv1Date(DateTime opv1Date) {
+        this.opv1Date = opv1Date;
+    }
+
+    public DateTime getOpv2Date() {
+        return DateUtil.setTimeZone(opv2Date);
+    }
+
+    public void setOpv2Date(DateTime opv2Date) {
+        this.opv2Date = opv2Date;
+    }
+
+    public DateTime getOpv3Date() {
+        return DateUtil.setTimeZone(opv3Date);
+    }
+
+    public void setOpv3Date(DateTime opv3Date) {
+        this.opv3Date = opv3Date;
     }
 }

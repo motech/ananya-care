@@ -32,6 +32,10 @@ public class ChildMapperTest {
         assertEquals(new DateTime(2012, 9, 2, 0, 0), child.getDpt2Date());
         assertEquals(new DateTime(2012, 10, 2, 0, 0), child.getDpt3Date());
         assertEquals(new DateTime(2012, 11, 2, 0, 0), child.getDptBoosterDate());
+        assertEquals(new DateTime(2012, 1, 2, 0, 0), child.getOpv0Date());
+        assertEquals(new DateTime(2012, 2, 2, 0, 0), child.getOpv1Date());
+        assertEquals(new DateTime(2012, 3, 2, 0, 0), child.getOpv2Date());
+        assertEquals(new DateTime(2012, 4, 2, 0, 0), child.getOpv3Date());
 
     }
 
@@ -39,7 +43,7 @@ public class ChildMapperTest {
     public void shouldMapToAChildObjectWithEmptyFields(){
         CareCase careCase = new ChildCareCaseBuilder().withCaseId("").withCaseName("").withCaseType("").withDateModified("").withUserId("").withGroupId("").withBcgDate("").withBabyMeaslesDate("").withVitamin1Date("")
                 .withHep0Date("").withHep1Date("").withHep2Date("").withHep3Date("")
-                .withDpt1Date("").withDpt2Date("").withDpt3Date("").withDptBoosterDate("").build();
+                .withDpt1Date("").withDpt2Date("").withDpt3Date("").withDptBoosterDate("").withOPV0Date("").withOPV1Date("").withOPV2Date("").withOPV3Date("").build();
         Child child = ChildMapper.map(careCase);
         assertEquals("", child.getCaseId());
         assertEquals(null, child.getDateModified());
@@ -57,13 +61,17 @@ public class ChildMapperTest {
         assertEquals(null, child.getDpt2Date());
         assertEquals(null, child.getDpt3Date());
         assertEquals(null, child.getDptBoosterDate());
+        assertEquals(null, child.getOpv0Date());
+        assertEquals(null, child.getOpv1Date());
+        assertEquals(null, child.getOpv2Date());
+        assertEquals(null, child.getOpv3Date());
     }
 
     @Test
     public void shouldMapToAMotherObjectWithNullFields(){
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(null).withCaseName(null).withCaseType(null).withBcgDate(null).withBabyMeaslesDate(null).withDateModified(null).withUserId(null).withGroupId(null).withVitamin1Date(null)
                 .withHep0Date(null).withHep1Date(null).withHep2Date(null).withHep3Date(null)
-                .withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).withDptBoosterDate(null).build();
+                .withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).withDptBoosterDate(null).withOPV0Date(null).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).build();
 
         Child child = ChildMapper.map(careCase);
         assertNull(child.getCaseId());
@@ -82,6 +90,10 @@ public class ChildMapperTest {
         assertNull(child.getDpt2Date());
         assertNull(child.getDpt3Date());
         assertNull(child.getDptBoosterDate());
+        assertNull(child.getOpv0Date());
+        assertNull(child.getOpv1Date());
+        assertNull(child.getOpv2Date());
+        assertNull(child.getOpv3Date());
     }
 
 

@@ -12,6 +12,9 @@ public enum MilestoneType {
     DPT3("DPT 3", "dpt_3"),
     DPTBooster("DPT Booster", "dpt_booster"),
     OPV0("OPV 0", "opv_0"),
+    OPV1("OPV 1", "opv_1"),
+    OPV2("OPV 2", "opv_2"),
+    OPV3("OPV 3", "opv_3"),
 
     TT1("TT 1", "tt_1"),
     TT2("TT 2", "tt_2"),
