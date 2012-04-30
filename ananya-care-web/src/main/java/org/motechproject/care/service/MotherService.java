@@ -1,5 +1,6 @@
 package org.motechproject.care.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
@@ -29,6 +30,7 @@ public class MotherService{
     private Mother createUpdate(Mother mother) {
         Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
         if(motherFromDb ==null){
+           mother.setDoc_create_time(DateTime.now());
            allMothers.add(mother);
             return mother;
         }

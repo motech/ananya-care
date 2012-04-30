@@ -2,11 +2,13 @@ package org.motechproject.care.repository;
 
 import org.joda.time.DateTime;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
@@ -36,6 +38,8 @@ public class AllMothersTest extends SpringIntegrationTest {
         assertEquals(caseId,motherFromDb.getCaseId());
         assertEquals(CaseType.Mother.getType(),motherFromDb.getCaseType());
         assertNotNull(motherFromDb.getId());
+        Assert.assertEquals(DateUtil.today().toDate(), DateUtil.newDate(motherFromDb.getDoc_create_time()).toDate());
+
 
 
     }

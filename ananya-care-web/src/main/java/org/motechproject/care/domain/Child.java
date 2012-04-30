@@ -28,6 +28,7 @@ public class Child extends Client {
     private DateTime opv3Date;
     private DateTime opvBoosterDate;
 
+
     private String caseType= CaseType.Child.getType();
 
     private String motherCaseId;

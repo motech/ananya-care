@@ -3,6 +3,7 @@ package org.motechproject.care.repository;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
+import org.joda.time.DateTime;
 import org.motechproject.care.domain.Child;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,4 +29,10 @@ public class AllChildren extends MotechBaseRepository<Child> {
         }
         return children.get(0);
     }
+
+    public void add(Child child){
+        child.setDoc_create_time(DateTime.now());
+        super.add(child);
+    }
+
 }

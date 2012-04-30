@@ -2,6 +2,7 @@ package org.motechproject.care.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.util.DateUtil;
 
 public abstract class Client extends MotechBaseDataObject{
 
@@ -11,6 +12,8 @@ public abstract class Client extends MotechBaseDataObject{
     protected String name;
     protected String groupId;
     protected boolean isActive;
+    private DateTime doc_create_time;
+
 
     public String getCaseId() {
         return caseId;
@@ -59,6 +62,14 @@ public abstract class Client extends MotechBaseDataObject{
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public DateTime getDoc_create_time() {
+        return DateUtil.setTimeZone(doc_create_time);
+    }
+
+    public void setDoc_create_time(DateTime doc_create_time) {
+        this.doc_create_time = doc_create_time;
     }
 
     public abstract String getCaseType();
