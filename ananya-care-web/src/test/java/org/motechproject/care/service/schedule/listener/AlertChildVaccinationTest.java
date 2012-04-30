@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -161,7 +160,6 @@ public class AlertChildVaccinationTest {
     }
 
     @Test
-    @Ignore
     public void shouldTerminateTheExpiryDateToMinimumOfExpiryDateAnd2YearsAgeCompletion() {
         String scheduleName = "Measles Vaccination";
         String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
@@ -185,8 +183,8 @@ public class AlertChildVaccinationTest {
         verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
         CaseTask task = argumentCaptor.getValue();
 
-        assertEquals(now.plusMonths(18).toString("yyyy-MM-dd"), task.getDateEligible());
-        assertEquals(now.plusMonths(22).toString("yyyy-MM-dd"), task.getDateExpires());
+        assertEquals(dob.plusMonths(20).toString("yyyy-MM-dd"), task.getDateEligible());
+        assertEquals(dob.plusMonths(24).toString("yyyy-MM-dd"), task.getDateExpires());
     }
 
     @Test
