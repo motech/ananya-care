@@ -16,7 +16,7 @@ public class MotherCareCaseBuilder {
     private String case_type= CaseType.Mother.getType();
     private String tt_1_date = "2012-01-01";
     private String tt_2_date = "2012-01-02";
-    private String last_preg_tt = "yes";
+    private String last_preg_tt = "no";
     private String anc_1_date = "2012-01-03";
     private String anc_2_date = "2012-01-04";
     private String anc_3_date = "2012-01-05";

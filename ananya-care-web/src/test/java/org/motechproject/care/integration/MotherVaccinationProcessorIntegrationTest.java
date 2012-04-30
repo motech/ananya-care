@@ -20,9 +20,10 @@ public class MotherVaccinationProcessorIntegrationTest extends SpringIntegration
     public void shouldInitializeChildServiceBeansCorrectly(){
         List<VaccinationService> vaccinationServices = motherVaccinationProcessor.getVaccinationServices();
 
-        assertEquals(3, vaccinationServices.size());
+        assertEquals(4, vaccinationServices.size());
         assertTrue(vaccinationServices.get(0) instanceof TTService);
-        assertTrue(vaccinationServices.get(1) instanceof AncService);
-        assertTrue(vaccinationServices.get(2) instanceof Anc4Service);
+        assertTrue(vaccinationServices.get(1) instanceof TTBoosterService);
+        assertTrue(vaccinationServices.get(2) instanceof AncService);
+        assertTrue(vaccinationServices.get(3) instanceof Anc4Service);
     }
 }

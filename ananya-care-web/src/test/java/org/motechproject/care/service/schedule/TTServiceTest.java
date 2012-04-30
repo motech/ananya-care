@@ -53,6 +53,18 @@ public class TTServiceTest {
     }
 
     @Test
+    public void shouldNotEnrollMotherForTTScheduleWhenEDDPresentAndLastPregFlagSetToTrue(){
+        DateTime edd = new DateTime();
+        Mother mother = new Mother();
+        mother.setEdd(edd);
+        mother.setLastPregTt(true);
+        mother.setCaseId("caseId");
+
+        ttService.process(mother);
+        verify(schedulerService, never()).enroll(any(String.class), any(DateTime.class), anyString());
+    }
+
+    @Test
     public void shouldFulfillTT1IfTT1DatePresentInMother(){
         DateTime tt1Date = new DateTime();
         String caseId = "caseId";

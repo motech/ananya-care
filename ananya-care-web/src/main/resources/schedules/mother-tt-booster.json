@@ -1,0 +1,21 @@
+{
+    "name": "TT Booster",
+    "milestones": [
+        {
+            "name": "TT Booster",
+            "scheduleWindows": {
+                "earliest": ["0 Weeks"],
+                "due": ["274 Days"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}

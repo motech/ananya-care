@@ -19,6 +19,7 @@ public enum MilestoneType {
 
     TT1("TT 1", "tt_1"),
     TT2("TT 2", "tt_2"),
+    TTBooster("TT Booster", "tt_booster"),
     VitaminA("Vita", "vita_1"),
     Bcg("Bcg", "bcg"),
     Anc1("Anc 1", "anc_1"),

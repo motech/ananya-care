@@ -53,7 +53,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         MotherVaccinationProcessor motherVaccinationProcessor = new MotherVaccinationProcessor(ttServices);
         motherService = new MotherService(allMothers, motherVaccinationProcessor);
     }
-    
+
     @Test
     public void shouldVerifyTTScheduleCreationWhenMotherIsRegistered() {
         String ttScheduleName = MotherVaccinationSchedule.TT.getName();

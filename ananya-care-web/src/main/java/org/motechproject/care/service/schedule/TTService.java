@@ -24,7 +24,7 @@ public class TTService extends VaccinationService{
     @Override
     public void process(Client client) {
         Mother mother = (Mother) client;
-        if(mother.getEdd() != null){
+        if(mother.getEdd() != null && isNotEligibleForBooster(mother)){
             schedulerService.enroll(mother.getCaseId(), mother.getEdd().minusDays(PeriodUtil.DAYS_IN_9_MONTHS), scheduleName);
         }
         if(mother.getTt1Date() != null){
@@ -33,5 +33,9 @@ public class TTService extends VaccinationService{
         if(mother.getTt2Date() != null){
             schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT2.toString(),  mother.getTt2Date(), scheduleName);
         }
+    }
+
+    private boolean isNotEligibleForBooster(Mother mother) {
+        return !mother.isLastPregTt();
     }
 }

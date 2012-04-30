@@ -263,6 +263,19 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         visualization.outputTo("child-opvbooster.html", 2);
     }
 
+
+    @Test
+    public void shouldProvideAlertsForTTBoosterVaccinationForMother() throws Exception {
+        LocalDate today = DateUtil.today();
+        schedule.enrollFor(MotherVaccinationSchedule.TTBooster.getName(), today, null);
+
+        schedule.assertNoAlerts("TT Booster", earliest);
+        schedule.assertAlertsStartWith("TT Booster", due, today.toDate());
+        schedule.assertNoAlerts("TT Booster", late);
+        schedule.assertNoAlerts("TT Booster", max);
+        visualization.outputTo("child-tt-booster.html", 2);
+    }
+
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);
     }
