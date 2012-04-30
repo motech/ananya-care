@@ -356,6 +356,9 @@
                                 </goals>
                                 <configuration>
                                     <argLine>-XX:MaxPermSize=1024M</argLine>
+                                    <includes>
+                                        <include>**/qa/*.java</include>
+                                    </includes>
                                 </configuration>
                             </execution>
                         </executions>
