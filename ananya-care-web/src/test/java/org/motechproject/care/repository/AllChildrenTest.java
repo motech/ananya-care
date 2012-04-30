@@ -1,6 +1,7 @@
 package org.motechproject.care.repository;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.request.CaseType;
@@ -18,6 +19,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveChildToDb() {
+        DateTime testStartTime = DateTime.now();
         String caseId = CaseUtils.getUniqueCaseId();
         DateTime measlesDate = DateUtil.now().plusDays(10);
         DateTime bcgDate = DateUtil.now().plusWeeks(15);
@@ -65,5 +67,12 @@ public class AllChildrenTest extends SpringIntegrationTest {
         assertEquals(opvBoosterDate, childFromDb.getOpvBoosterDate());
         assertEquals(vitamin1Date, childFromDb.getVitamin1Date());
         assertEquals(motherCaseId, childFromDb.getMotherCaseId());
+
+
+        DateTime create_time = childFromDb.getDoc_create_time();
+        Assert.assertTrue(create_time.isAfter(testStartTime) || create_time.isEqual(testStartTime));
+        DateTime testEndTime = DateTime.now();
+        Assert.assertTrue(create_time.isBefore(testEndTime) || create_time.isEqual(testEndTime));
     }
+
 }

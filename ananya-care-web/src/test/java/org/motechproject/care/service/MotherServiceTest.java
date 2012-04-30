@@ -51,14 +51,17 @@ public class MotherServiceTest {
         DateTime expectedEdd = new DateTime(2012, 1, 2, 0, 0);
         Assert.assertEquals(expectedEdd,motherInDb.getEdd());
         Assert.assertTrue(motherInDb.isActive());
+        Assert.assertNull(motherInDb.getDoc_create_time());
         verify(motherVaccinationProcessor).enrollUpdateVaccines(motherInDb);
     }
 
     @Test
     public void shouldUpdateMotherCaseIfItExists(){
         DateTime now = DateTime.now();
+        DateTime docCreateTime = DateTime.now().minusDays(1);
         Mother motherInDb = new Mother(caseId);
         motherInDb.setEdd(now);
+        motherInDb.setDoc_create_time(docCreateTime);
         motherInDb.setName("Seema");
 
         when(allMothers.findByCaseId(caseId)).thenReturn(motherInDb);
@@ -73,6 +76,7 @@ public class MotherServiceTest {
         assertEquals(DateTime.parse("2012-01-02"), motherToBeUpdated.getEdd());
         assertEquals(motherToBeUpdated.getCaseId(), motherInDb.getCaseId());
         assertEquals(motherToBeUpdated.getId(), motherInDb.getId());
+        assertEquals(motherToBeUpdated.getDoc_create_time(), docCreateTime);
         assertEquals(careCase.getCase_name(), motherToBeUpdated.getName());
         verify(motherVaccinationProcessor).enrollUpdateVaccines(motherToBeUpdated);
     }

@@ -30,6 +30,7 @@ public class AllMothers extends MotechBaseRepository<Mother> {
         return mothers.get(0);
     }
 
+
     public void add(Mother mother){
         mother.setDoc_create_time(DateTime.now());
         super.add(mother);

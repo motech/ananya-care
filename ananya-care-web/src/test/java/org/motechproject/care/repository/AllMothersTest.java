@@ -8,7 +8,6 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
-import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
@@ -28,6 +27,7 @@ public class AllMothersTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveMother(){
+        DateTime testStartTime = DateTime.now();
         String caseId = CaseUtils.getUniqueCaseId();
         mother = new Mother(caseId, new DateTime(123456), "flwId", "name", "gropuId", new DateTime(123123123)
                 , new DateTime(3423), new DateTime(1123), new DateTime(1123), true, new DateTime(1123)
@@ -38,9 +38,10 @@ public class AllMothersTest extends SpringIntegrationTest {
         assertEquals(caseId,motherFromDb.getCaseId());
         assertEquals(CaseType.Mother.getType(),motherFromDb.getCaseType());
         assertNotNull(motherFromDb.getId());
-        Assert.assertEquals(DateUtil.today().toDate(), DateUtil.newDate(motherFromDb.getDoc_create_time()).toDate());
 
-
-
+        DateTime create_time = motherFromDb.getDoc_create_time();
+        Assert.assertTrue(create_time.isAfter(testStartTime) || create_time.isEqual(testStartTime));
+        DateTime testEndTime = DateTime.now();
+        Assert.assertTrue(create_time.isBefore(testEndTime) || create_time.isEqual(testEndTime));
     }
 }

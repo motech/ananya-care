@@ -44,6 +44,7 @@ public class ChildServiceTest {
         Child child = captor.getValue();
         Assert.assertEquals(caseId,child.getCaseId());
         Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
+        Assert.assertNull(child.getDoc_create_time());
         Assert.assertEquals(DateTime.parse("2012-02-01"), child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
         verify(childVaccinationProcessor).enrollUpdateVaccines(child);
@@ -68,10 +69,12 @@ public class ChildServiceTest {
         String oldName = "Aryan";
         String newBcgDate = "2012-05-04";
         String newName = "Vijay";
+        DateTime docCreateTime = DateTime.now().minus(1);
         DateTime dob = new DateTime(2011, 4, 12, 0, 0);
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).withCaseName(newName).withBcgDate(newBcgDate).build();
         Child childInDb = new Child(caseId);
         childInDb.setName(oldName);
+        childInDb.setDoc_create_time(docCreateTime);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
 
         when(allChildren.findByCaseId(caseId)).thenReturn(childInDb);
@@ -81,6 +84,7 @@ public class ChildServiceTest {
         verify(allChildren).update(captor.capture());
         Child child = captor.getValue();
         Assert.assertEquals(newName,child.getName());
+        Assert.assertEquals(docCreateTime,child.getDoc_create_time());
         Assert.assertEquals(DateTime.parse(newBcgDate),child.getBcgDate());
         verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
     }
