@@ -10,6 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.delivery.schedule.util.FakeSchedule;
 import org.motechproject.delivery.schedule.util.ScheduleVisualization;
@@ -277,6 +278,31 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("TT Booster", max);
         visualization.outputTo("child-tt-booster.html", 2);
     }
+
+    @Test
+    public void shouldProvideAnAlertWhenChilds2YearsAreComplete() throws Exception {
+        LocalDate today = DateUtil.today();
+        schedule.enrollFor(ChildVaccinationSchedule.ChildCare.getName(), today, null);
+
+        schedule.assertNoAlerts("Child Care", earliest);
+        schedule.assertNoAlerts("Child Care", due);
+        schedule.assertAlertsStartWith("Child Care", late, today.plusMonths(24).toDate());
+        schedule.assertNoAlerts("Child Care", max);
+        visualization.outputTo("child-care.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAnAlertWhenMothersEddIsComplete() throws Exception {
+        LocalDate today = DateUtil.today();
+        schedule.enrollFor(MotherVaccinationSchedule.MotherCare.getName(), today, null);
+
+        schedule.assertNoAlerts("Mother Care", earliest);
+        schedule.assertNoAlerts("Mother Care", due);
+        schedule.assertAlertsStartWith("Mother Care", late, today.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).toDate());
+        schedule.assertNoAlerts("Mother Care", max);
+        visualization.outputTo("mother-care.html", 2);
+    }
+
 
     private Date date(int day, int month) {
         return dateWithYear(day, month, 2012);

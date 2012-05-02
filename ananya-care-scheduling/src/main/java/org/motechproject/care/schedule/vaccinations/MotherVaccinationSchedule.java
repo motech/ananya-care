@@ -4,7 +4,8 @@ public enum MotherVaccinationSchedule {
     TT("TT Vaccination"),
     TTBooster("TT Booster"),
     Anc("Anc Visit"),
-    Anc4("Anc4 Visit");
+    Anc4("Anc4 Visit"),
+    MotherCare("Mother Care");
 
     private String vaccinationScheduleName;
 

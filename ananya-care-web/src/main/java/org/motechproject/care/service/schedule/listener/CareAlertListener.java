@@ -26,6 +26,9 @@ public class CareAlertListener {
     @MotechListener(subjects = {EventSubjects.MILESTONE_ALERT})
     public void handleEvent(MotechEvent event){
         String scheduleName = new MilestoneEvent(event).getScheduleName();
+        if(scheduleName.equals(MotherVaccinationSchedule.MotherCare.getName()) ||
+                scheduleName.equals(ChildVaccinationSchedule.ChildCare.getName()) )
+            return;
         if(isChildSchedule(scheduleName))
             alertChildVaccination.invoke(event);
         else if(isMotherSchedule(scheduleName))
