@@ -37,12 +37,13 @@ public class Opv0IntegrationTest extends SpringIntegrationTest {
     @Autowired
     private AllChildren allChildren;
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private ChildService childService;
     private final String scheduleName = ChildVaccinationSchedule.OPV0.getName();
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) Opv0Service);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);

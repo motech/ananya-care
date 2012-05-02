@@ -38,12 +38,14 @@ public class HepIntegrationTest extends SpringIntegrationTest {
     private AllChildren allChildren;
     private String hepScheduleName = ChildVaccinationSchedule.Hepatitis.getName();
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+
+    private String caseId;
     private ChildService childService;
 
     @Before
     public void setUp(){
-        List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) hepService);
+        caseId = CaseUtils.getUniqueCaseId();
+    List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) hepService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }

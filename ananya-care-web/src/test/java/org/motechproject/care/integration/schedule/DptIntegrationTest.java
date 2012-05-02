@@ -37,12 +37,12 @@ public class DptIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private AllChildren allChildren;
     private String dptScheduleName = ChildVaccinationSchedule.DPT.getName();
-
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private ChildService childService;
 
     @Before
-    public void setUp(){
+    public void setUp() {
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) dptService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
@@ -57,7 +57,7 @@ public class DptIntegrationTest extends SpringIntegrationTest {
     public void shouldVerifyDptScheduleCreationWhenChildIsRegistered() {
         LocalDate dob = DateUtil.today().plusMonths(4);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).build();
         childService.process(careCase);
         markScheduleForUnEnrollment(caseId, dptScheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(dptScheduleName, caseId, EnrollmentStatus.ACTIVE);
@@ -73,7 +73,7 @@ public class DptIntegrationTest extends SpringIntegrationTest {
         LocalDate dob = DateUtil.today().minusMonths(4);
         LocalDate dpt1Date = dob.plusMonths(2);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, dptScheduleName);
@@ -90,11 +90,11 @@ public class DptIntegrationTest extends SpringIntegrationTest {
         LocalDate dpt1Date = dob.plusMonths(2);
         LocalDate dpt2Date = dob.plusMonths(3);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).build();
         childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).withDpt3Date(null).build();
+        careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).withDpt3Date(null).build();
         childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(null).build();
+        careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(null).build();
         childService.process(careCase);
 
         markScheduleForUnEnrollment(caseId, dptScheduleName);
@@ -113,7 +113,7 @@ public class DptIntegrationTest extends SpringIntegrationTest {
         LocalDate dpt2Date = dob.plusMonths(3);
         LocalDate dpt3Date = today;
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
                 .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(null).build();
         childService.process(careCase);
 
@@ -133,7 +133,7 @@ public class DptIntegrationTest extends SpringIntegrationTest {
         LocalDate dpt3Date = today;
         LocalDate dptBoosterDate = today.plusDays(4);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
                 .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(dptBoosterDate.toString()).build();
         childService.process(careCase);
 

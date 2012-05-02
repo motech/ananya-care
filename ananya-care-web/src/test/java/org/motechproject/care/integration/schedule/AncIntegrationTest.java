@@ -39,7 +39,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
     @Autowired
 
     private AllMothers allMothers;
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private MotherService motherService;
 
     @After
@@ -49,6 +49,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> ancServices = Arrays.asList((VaccinationService) ancService);
         MotherVaccinationProcessor motherVaccinationProcessor = new MotherVaccinationProcessor(ancServices);
         motherService = new MotherService(allMothers, motherVaccinationProcessor);

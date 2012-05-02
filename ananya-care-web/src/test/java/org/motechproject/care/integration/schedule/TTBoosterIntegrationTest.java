@@ -38,7 +38,7 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
     @Autowired
 
     private AllMothers allMothers;
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private MotherService motherService;
     String scheduleName = MotherVaccinationSchedule.TTBooster.getName();
 
@@ -49,6 +49,7 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> ttServices = Arrays.asList((VaccinationService) ttBoosterService);
         MotherVaccinationProcessor motherVaccinationProcessor = new MotherVaccinationProcessor(ttServices);
         motherService = new MotherService(allMothers, motherVaccinationProcessor);

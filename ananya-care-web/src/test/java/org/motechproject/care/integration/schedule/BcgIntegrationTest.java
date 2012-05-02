@@ -37,12 +37,14 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
+    private String caseId;
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+
     private ChildService childService;
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) bcgService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);

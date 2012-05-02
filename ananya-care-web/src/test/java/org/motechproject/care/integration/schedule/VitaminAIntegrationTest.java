@@ -41,7 +41,7 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private ChildService childService;
 
     @After
@@ -52,6 +52,7 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) vitaService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);

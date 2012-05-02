@@ -38,11 +38,12 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private AllChildren allChildren;
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private ChildService childService;
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) measlesService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);

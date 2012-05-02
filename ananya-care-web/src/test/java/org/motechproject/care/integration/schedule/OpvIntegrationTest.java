@@ -38,11 +38,12 @@ public class OpvIntegrationTest extends SpringIntegrationTest {
     private AllChildren allChildren;
     private String opvScheduleName = ChildVaccinationSchedule.OPV.getName();
 
-    private final String caseId = CaseUtils.getUniqueCaseId();
+    private String caseId;
     private ChildService childService;
 
     @Before
     public void setUp(){
+        caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) opvService);
         ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
