@@ -75,7 +75,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.OPVBooster.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime());
         assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate.plusMonths(8).plusWeeks(2)), enrollment.getStartOfLateWindow());
     }
 
     @Test
