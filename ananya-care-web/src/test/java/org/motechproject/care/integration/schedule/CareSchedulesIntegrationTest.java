@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
@@ -26,7 +25,6 @@ import java.util.Date;
 import static org.motechproject.scheduletracking.api.domain.WindowName.*;
 import static org.motechproject.util.DateUtil.newDate;
 
-@Ignore
 public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     private static final int JANUARY = 1;
     private static final int FEBRUARY = 2;
