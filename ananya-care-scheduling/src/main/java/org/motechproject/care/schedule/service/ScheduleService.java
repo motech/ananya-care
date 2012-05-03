@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,14 @@ public class ScheduleService {
             fulfillCurrentMilestone(caseId,vaccinationTakenDate,scheduleName);
     }
 
-    private boolean isNotEnrolled(String caseId, String scheduleName) {
-        return trackingService.getEnrollment(caseId, scheduleName) == null;
+    private boolean isNotEnrolled(String externalId, String scheduleName) {
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingSchedule(scheduleName);
+
+        if(trackingService.search(query).size() == 1)
+            return false;
+        return true;
     }
 
     private boolean isCurrentMilestone(String caseId, String milestoneName, String scheduleName) {

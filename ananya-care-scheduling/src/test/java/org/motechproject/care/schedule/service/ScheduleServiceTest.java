@@ -13,9 +13,11 @@ import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -36,11 +38,11 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shouldEnrollChildIfNotEnrolledFOrMeaslesAlready(){
+    public void shouldEnrollChildIfNotEnrolledForMeaslesAlready(){
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
         DateTime now = DateTime.now();
-        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
+        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(new ArrayList<EnrollmentRecord>());
 
         schedulerService.enroll(caseId, dob, scheduleName);
 
@@ -54,10 +56,10 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shouldNotEnrollChildIfEnrolledFOrMeaslesAlready() {
+    public void shouldNotEnrollChildIfEnrolledForMeaslesAlready() {
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(null));
+        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(dummyEnrollmentRecordFromQuery(null));
         schedulerService.enroll(caseId, dob, ChildVaccinationSchedule.Measles.getName());
         verify(trackingService, never()).enroll(Matchers.<EnrollmentRequest>any());
     }
@@ -84,12 +86,11 @@ public class ScheduleServiceTest {
         DateTime dob = new DateTime(2012, 10, 10, 0, 0);
         String caseId = "caseId";
 
-        when(trackingService.getEnrollment("caseId", ChildVaccinationSchedule.Measles.getName())).thenReturn(null);
+        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(new ArrayList<EnrollmentRecord>());
         schedulerService.enroll(caseId, dob, ChildVaccinationSchedule.Measles.getName());
 
         ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
         verify(trackingService).enroll(captor.capture());
-        verify(trackingService).getEnrollment("caseId", ChildVaccinationSchedule.Measles.getName());
 
         EnrollmentRequest enrollmentRequest = captor.getValue();
 
@@ -122,5 +123,11 @@ public class ScheduleServiceTest {
 
     private EnrollmentRecord dummyEnrollmentRecord(String currentMilestoneName) {
         return new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null);
+    }
+
+    private ArrayList<EnrollmentRecord> dummyEnrollmentRecordFromQuery(String currentMilestoneName) {
+        ArrayList<EnrollmentRecord> enrollmentRecords = new ArrayList<EnrollmentRecord>();
+        enrollmentRecords.add(new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null));
+        return enrollmentRecords;
     }
 }
