@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MotherService{
+public class MotherService {
 
     private AllMothers allMothers;
     private MotherVaccinationProcessor motherVaccinationProcessor;
@@ -22,39 +22,47 @@ public class MotherService{
 
     public void process(CareCase careCase) {
         Mother mother = MotherMapper.map(careCase);
-        Mother updatedMother = createUpdate(mother);
-
-        if(updatedMother.isActive())
-            motherVaccinationProcessor.enrollUpdateVaccines(updatedMother);
-        else
-            closeSchedules(updatedMother);
-    }
-
-    private Mother createUpdate(Mother mother) {
-        Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
+        Mother existingMother = allMothers.findByCaseId(mother.getCaseId());
         
-        if(motherFromDb ==null){
-            allMothers.add(mother);
-            return mother;
+        if(existingMother == null)
+            processNew(mother);
+        else
+            processExisting(existingMother, mother);
+
+    }
+    
+    private void processNew(Mother mother) {
+        allMothers.add(mother);
+        if(mother.isActive())
+            motherVaccinationProcessor.enrollUpdateVaccines(mother);
+    }
+    
+    private void processExisting(Mother existingMother, Mother newMother) {
+        if(!existingMother.isActive()) {
+            return;
         }
 
-        motherFromDb.setValuesFrom(mother);
+        existingMother.setValuesFrom(newMother);
+        allMothers.update(existingMother);
 
-        allMothers.update(motherFromDb);
-        return motherFromDb;
+        if(existingMother.isActive())
+            motherVaccinationProcessor.enrollUpdateVaccines(existingMother);
+        else
+            motherVaccinationProcessor.closeSchedules(existingMother);
     }
+
 
     public boolean closeCase(String caseId) {
         Mother mother = allMothers.findByCaseId(caseId);
-        if(mother==null)
+        if(mother == null)
             return false;
+
+        if(!mother.isActive()) {
+            return true;
+        }
         mother.setClosedByCommcare(true);
         allMothers.update(mother);
-        closeSchedules(mother);
-        return true;
-    }
-
-    private void closeSchedules(Mother mother) {
         motherVaccinationProcessor.closeSchedules(mother);
+        return true;
     }
 }
