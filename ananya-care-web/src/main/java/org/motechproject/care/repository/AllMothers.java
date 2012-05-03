@@ -32,7 +32,7 @@ public class AllMothers extends MotechBaseRepository<Mother> {
 
 
     public void add(Mother mother){
-        mother.setDoc_create_time(DateTime.now());
+        mother.setDocCreateTime(DateTime.now());
         super.add(mother);
     }
 }

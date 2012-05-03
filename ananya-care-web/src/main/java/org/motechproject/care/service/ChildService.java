@@ -37,7 +37,6 @@ public class ChildService {
             return child;
         }
 
-        child.setActive(childFromDb.isActive());
         childFromDb.setValuesFrom(child);
 
         allChildren.update(childFromDb);

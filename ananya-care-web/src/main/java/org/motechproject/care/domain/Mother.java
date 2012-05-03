@@ -1,5 +1,6 @@
 package org.motechproject.care.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.care.request.CaseType;
@@ -41,6 +42,12 @@ public class Mother extends Client {
         this.anc4Date = anc4Date;
         this.ttBoosterDate = ttBoosterDate;
         this.isAlive = isAlive;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isActive() {
+        return !isClosedByCommcare() && isAlive && add == null;
     }
 
     public DateTime getTt1Date() {
@@ -132,7 +139,6 @@ public class Mother extends Client {
             // do something
         }
     }
-
 
     @Override
     public String getCaseType() {

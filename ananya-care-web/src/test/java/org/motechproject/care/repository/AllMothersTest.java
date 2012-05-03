@@ -41,7 +41,7 @@ public class AllMothersTest extends SpringIntegrationTest {
         assertEquals(CaseType.Mother.getType(),motherFromDb.getCaseType());
         assertNotNull(motherFromDb.getId());
 
-        DateTime create_time = motherFromDb.getDoc_create_time();
+        DateTime create_time = motherFromDb.getDocCreateTime();
         Assert.assertTrue(create_time.isAfter(testStartTime) || create_time.isEqual(testStartTime));
         DateTime testEndTime = DateTime.now();
         Assert.assertTrue(create_time.isBefore(testEndTime) || create_time.isEqual(testEndTime));

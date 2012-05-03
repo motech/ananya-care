@@ -251,7 +251,7 @@ public class AlertChildVaccinationTest {
         MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
 
         Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
-        client.setActive(false);
+        client.setClosedByCommcare(true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
         alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
 

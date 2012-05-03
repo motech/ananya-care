@@ -31,14 +31,12 @@ public class MotherService{
 
     private Mother createUpdate(Mother mother) {
         Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
-
+        
         if(motherFromDb ==null){
-            mother.setActive(mother.isAlive());
             allMothers.add(mother);
             return mother;
         }
 
-        mother.setActive(motherFromDb.isActive() && mother.isAlive());
         motherFromDb.setValuesFrom(mother);
 
         allMothers.update(motherFromDb);
@@ -49,7 +47,7 @@ public class MotherService{
         Mother mother = allMothers.findByCaseId(case_id);
         if(mother==null)
             return false;
-        mother.setActive(false);
+        mother.setClosedByCommcare(true);
         allMothers.update(mother);
         closeSchedules(mother);
         return true;

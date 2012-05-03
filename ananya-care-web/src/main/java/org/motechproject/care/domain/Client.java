@@ -1,5 +1,6 @@
 package org.motechproject.care.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.util.DateUtil;
@@ -11,11 +12,10 @@ public abstract class Client extends MotechBaseDataObject{
     protected String flwId;
     protected String name;
     protected String groupId;
-    protected boolean isActive;
-    private DateTime doc_create_time;
+    private DateTime docCreateTime;
+    private boolean closedByCommcare;
 
     public Client() {
-        this.isActive = true;
     }
 
     public String getCaseId() {
@@ -59,23 +59,28 @@ public abstract class Client extends MotechBaseDataObject{
         this.groupId = groupId;
     }
 
+    @JsonIgnore
     public boolean isActive() {
-        return isActive;
+        return !closedByCommcare;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public DateTime getDocCreateTime() {
+        return DateUtil.setTimeZone(docCreateTime);
     }
 
-    public DateTime getDoc_create_time() {
-        return DateUtil.setTimeZone(doc_create_time);
-    }
-
-    public void setDoc_create_time(DateTime doc_create_time) {
-        this.doc_create_time = doc_create_time;
+    public void setDocCreateTime(DateTime docCreateTime) {
+        this.docCreateTime = docCreateTime;
     }
 
     public abstract String getCaseType();
 
     public abstract void setCaseType(String caseType);
+
+    public boolean isClosedByCommcare() {
+        return closedByCommcare;
+    }
+
+    public void setClosedByCommcare(boolean closedByCommcare) {
+        this.closedByCommcare = closedByCommcare;
+    }
 }

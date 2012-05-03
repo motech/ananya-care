@@ -247,7 +247,7 @@ public class AlertMotherVaccinationTest {
         MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, DateTime.now().plusYears(1), null, null, null, false, null, null, null, null, null, true);
-        client.setActive(false);
+        client.setClosedByCommcare(true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
         alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
 

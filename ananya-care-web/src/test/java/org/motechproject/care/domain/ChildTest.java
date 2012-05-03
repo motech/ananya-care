@@ -10,4 +10,11 @@ public class ChildTest {
         Child child = new Child();
         Assert.assertTrue(child.isActive());
     }
+
+    @Test
+    public void shouldBeInactiveIfClosedByCommcare() {
+        Child child = new Child();
+        child.setClosedByCommcare(true);
+        Assert.assertFalse(child.isActive());
+    }
 }

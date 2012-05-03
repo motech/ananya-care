@@ -9,7 +9,7 @@ public class MotherCareCaseBuilder {
     private String caseId="6055b3ec-bec6-46cc-9e72-435ebc4eaec1";
     private String caseName="Vanaja";
     private String dateModified="2012-03-04";
-    private String add="2012-10-04";
+    private String add=null;
     private String edd="2012-10-02";
     private String groupId="112";
     private String userId="b823ea3d392a06f8b991e9e4933348bd";

@@ -31,7 +31,7 @@ public class AllChildren extends MotechBaseRepository<Child> {
     }
 
     public void add(Child child){
-        child.setDoc_create_time(DateTime.now());
+        child.setDocCreateTime(DateTime.now());
         super.add(child);
     }
 

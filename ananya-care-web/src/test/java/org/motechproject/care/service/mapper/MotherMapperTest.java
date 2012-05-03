@@ -15,7 +15,7 @@ public class MotherMapperTest {
 
     @Test
     public void shouldMapToAMotherObject(){
-        CareCase careCase = new MotherCareCaseBuilder().withLastPregTT("yes").build();
+        CareCase careCase = new MotherCareCaseBuilder().withLastPregTT("yes").withAdd("2012-10-04").build();
         Mother mother = MotherMapper.map(careCase);
         assertEquals("6055b3ec-bec6-46cc-9e72-435ebc4eaec1", mother.getCaseId());
         assertEquals(new DateTime(2012, 3, 4, 0, 0), mother.getDateModified());

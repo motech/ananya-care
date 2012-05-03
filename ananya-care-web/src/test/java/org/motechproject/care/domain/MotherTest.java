@@ -7,9 +7,33 @@ import org.junit.Test;
 public class MotherTest {
 
     @Test
-    public void shouldBeSetToIsActiveByDefault() {
+    public void shouldBeSetToActiveIfAliveAndNoADDIsPresentAndNotClosedByCommcare() {
         Mother mother = new Mother();
+        mother.setAlive(true);
         Assert.assertTrue(mother.isActive());
+    }
+
+    @Test
+    public void shouldBeSetToInActiveIfNotAlive() {
+        Mother mother = new Mother();
+        mother.setAlive(false);
+        Assert.assertFalse(mother.isActive());
+    }
+
+    @Test
+    public void shouldBeSetToInActiveIfNoADDIsPresent() {
+        Mother mother = new Mother();
+        mother.setAlive(true);
+        mother.setAdd(new DateTime());
+        Assert.assertFalse(mother.isActive());
+    }
+
+    @Test
+    public void shouldBeSetToInActiveIfCaseClosedByCommCare() {
+        Mother mother = new Mother();
+        mother.setAlive(true);
+        mother.setClosedByCommcare(true);
+        Assert.assertFalse(mother.isActive());
     }
     
     @Test
@@ -22,7 +46,6 @@ public class MotherTest {
         Assert.assertEquals("name", motherFromDb.getName());
         Assert.assertEquals("groupid2", motherFromDb.getGroupId());
         Assert.assertEquals(DateTime.parse("2010-04-03"), motherFromDb.getAdd());
-        Assert.assertTrue(motherFromDb.isActive());
     }
 
     @Test
@@ -35,7 +58,5 @@ public class MotherTest {
         Assert.assertEquals("arpan", motherFromDb.getName());
         Assert.assertEquals("groupid", motherFromDb.getGroupId());
         Assert.assertEquals(DateTime.parse("2010-04-03"), motherFromDb.getAdd());
-        Assert.assertTrue(motherFromDb.isActive());
-
     }
 }
