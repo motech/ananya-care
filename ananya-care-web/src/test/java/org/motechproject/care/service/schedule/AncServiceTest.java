@@ -11,6 +11,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 
 import static org.mockito.Matchers.any;
@@ -22,13 +23,16 @@ import static org.mockito.Mockito.verify;
 public class AncServiceTest {
     @Mock
     private ScheduleService schedulerService;
+    @Mock
+    CareCaseTaskService careCaseTaskService;
+
     AncService ancService;
     private String scheduleName = MotherVaccinationSchedule.Anc.getName();
 
 
     @Before
     public void setUp(){
-        ancService = new AncService(schedulerService);
+        ancService = new AncService(schedulerService, careCaseTaskService);
     }
 
     @Test
@@ -96,4 +100,13 @@ public class AncServiceTest {
         ancService.process(mother);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
     }
+
+    @Test
+    public void shouldUnenrollFromAncSchedule(){
+        String caseId = "caseId";
+        ancService.close(new Mother(caseId));
+        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+
+    }
+
 }

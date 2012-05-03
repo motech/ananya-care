@@ -20,7 +20,6 @@ import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,8 +33,6 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private VitaService vitaService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
     @Autowired
@@ -73,7 +70,7 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(vitaScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+        EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.VitaminA.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(dob, enrollment.getReferenceDateTime());
@@ -97,7 +94,7 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withVitamin1Date(vitaTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, vitaScheduleName));
+        assertNull(trackingService.getEnrollment(caseId, vitaScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());

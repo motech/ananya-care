@@ -26,6 +26,9 @@ public class AlertMotherVaccination extends AlertVaccination{
     @Override
     public void process(Window alertWindow, String externalId, String milestoneName) {
         Mother mother = allMothers.findByCaseId(externalId);
+        if(!mother.isActive()) {
+            return;
+        }
         alertWindow = alertWindow.resize(new Window(DateTime.now(), mother.getEdd()));
         if(!alertWindow.isValid()) {
             return;

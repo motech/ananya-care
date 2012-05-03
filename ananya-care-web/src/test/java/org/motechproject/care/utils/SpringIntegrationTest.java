@@ -5,6 +5,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
+import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
+import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.testing.utils.BaseUnitTest;
 import org.quartz.utils.Pair;
@@ -14,10 +17,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-Web.xml")
+@ContextConfiguration("classpath*:applicationContext.xml")
 public abstract class SpringIntegrationTest extends BaseUnitTest {
 
     @Qualifier("ananyaCareDbConnector")
@@ -71,5 +75,15 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
 
     protected String getAppServerHostUrl() {
         return "http://localhost:" + getAppServerPort();
+    }
+
+    protected EnrollmentRecord getEnrollmentRecord(String scheduleName, String externalId, EnrollmentStatus status) {
+        EnrollmentsQuery query = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingState(status)
+                .havingSchedule(scheduleName);
+
+        List<EnrollmentRecord> enrollmentRecords = trackingService.searchWithWindowDates(query);
+        return enrollmentRecords.isEmpty() ? null : enrollmentRecords.get(0);
     }
 }

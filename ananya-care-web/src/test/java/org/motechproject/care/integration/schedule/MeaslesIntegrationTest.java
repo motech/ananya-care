@@ -19,7 +19,6 @@ import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +32,6 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private MeaslesService measlesService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
 
@@ -68,7 +65,7 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(measlesScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+        EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Measles.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(dob, enrollment.getReferenceDateTime());
@@ -92,7 +89,7 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBabyMeaslesDate( measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, measlesScheduleName));
+        assertNull(trackingService.getEnrollment(caseId, measlesScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());

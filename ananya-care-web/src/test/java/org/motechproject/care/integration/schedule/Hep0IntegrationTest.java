@@ -19,7 +19,6 @@ import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,8 +31,6 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private Hep0Service hep0Service;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
 
@@ -69,7 +66,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(scheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+        EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Hep0.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(dob, enrollment.getReferenceDateTime());
@@ -97,7 +94,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(scheduleName);
 
-        assertTrue(scheduleTrackingService.searchWithWindowDates(query).isEmpty());
+        assertTrue(trackingService.searchWithWindowDates(query).isEmpty());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());
@@ -119,13 +116,13 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.DEFAULTED)
                 .havingSchedule(scheduleName);
 
-        assertFalse(scheduleTrackingService.searchWithWindowDates(query).isEmpty());
+        assertFalse(trackingService.searchWithWindowDates(query).isEmpty());
 
 
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(hep0Taken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
+        assertNull(trackingService.getEnrollment(caseId, scheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());

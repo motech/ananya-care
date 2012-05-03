@@ -5,18 +5,16 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AncService extends VaccinationService{
-
-    private final String scheduleName = MotherVaccinationSchedule.Anc.getName();
-
     @Autowired
-    public AncService(ScheduleService schedulerService) {
-        super(schedulerService);
+    public AncService(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+        super(schedulerService, MotherVaccinationSchedule.Anc.getName(), careCaseTaskService);
     }
 
     @Override

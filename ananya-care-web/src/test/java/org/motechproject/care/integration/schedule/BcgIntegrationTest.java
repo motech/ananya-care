@@ -19,7 +19,6 @@ import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +32,7 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private BcgService bcgService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
+
     @Autowired
     private AllChildren allChildren;
     private String caseId;
@@ -70,7 +68,7 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(bcgScheduleName);
 
-        EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
+        EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Bcg.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(dob, enrollment.getReferenceDateTime());
@@ -94,7 +92,7 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate( bcgTaken.toString()).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, bcgScheduleName));
+        assertNull(trackingService.getEnrollment(caseId, bcgScheduleName));
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());

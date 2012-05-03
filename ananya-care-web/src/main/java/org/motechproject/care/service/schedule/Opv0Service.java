@@ -5,17 +5,16 @@ import org.motechproject.care.domain.Client;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Opv0Service extends VaccinationService{
 
-    private final String scheduleName = ChildVaccinationSchedule.OPV0.getName();
-
     @Autowired
-    public Opv0Service(ScheduleService schedulerService) {
-        super(schedulerService);
+    public Opv0Service(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+        super(schedulerService, ChildVaccinationSchedule.OPV0.getName(), careCaseTaskService);
     }
 
     @Override

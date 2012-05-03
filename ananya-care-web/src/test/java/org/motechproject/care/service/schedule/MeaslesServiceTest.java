@@ -8,9 +8,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -22,13 +24,16 @@ public class MeaslesServiceTest {
 
     @Mock
     private ScheduleService schedulerService;
+    @Mock
+    CareCaseTaskService careCaseTaskService;
+
     MeaslesService measlesService;
     private String scheduleName = ChildVaccinationSchedule.Measles.getName();
 
 
     @Before
     public void setUp(){
-        measlesService = new MeaslesService(schedulerService);
+        measlesService = new MeaslesService(schedulerService, careCaseTaskService);
     }
 
     @Test
@@ -71,6 +76,15 @@ public class MeaslesServiceTest {
 
         measlesService.process(child);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+    }
+
+
+    @Test
+    public void shouldUnenrollFromMeaslesSchedule(){
+        String caseId = "caseId";
+        measlesService.close(new Mother(caseId));
+        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+
     }
 }
 

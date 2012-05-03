@@ -11,6 +11,8 @@ import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class ScheduleService {
     protected ScheduleTrackingService trackingService;
@@ -26,6 +28,17 @@ public class ScheduleService {
             logger.info(String.format("Enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
             trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate(),scheduleName));
         }
+    }
+
+    public EnrollmentRecord unenroll(String caseId, String scheduleName) {
+        EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, scheduleName);
+        if(enrollment == null) {
+            return null;
+        }
+        logger.info(String.format("Un-enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
+        trackingService.unenroll(caseId, Arrays.asList(scheduleName));
+
+        return enrollment;
     }
 
     public void fulfillMileStone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {

@@ -23,7 +23,10 @@ public class MotherService{
     public void process(CareCase careCase) {
         Mother mother = MotherMapper.map(careCase);
         Mother updatedMother = createUpdate(mother);
-        motherVaccinationProcessor.enrollUpdateVaccines(updatedMother);
+        if(updatedMother.isActive())
+            motherVaccinationProcessor.enrollUpdateVaccines(updatedMother);
+        else
+            closeSchedules(updatedMother);
     }
 
     private Mother createUpdate(Mother mother) {
@@ -43,6 +46,11 @@ public class MotherService{
             return false;
         mother.setActive(false);
         allMothers.update(mother);
+        closeSchedules(mother);
         return true;
+    }
+
+    private void closeSchedules(Mother mother) {
+        motherVaccinationProcessor.closeSchedules(mother);
     }
 }

@@ -18,8 +18,6 @@ import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,8 +30,6 @@ public class DptIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private DptService dptService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
     private String dptScheduleName = ChildVaccinationSchedule.DPT.getName();
@@ -137,15 +133,6 @@ public class DptIntegrationTest extends SpringIntegrationTest {
                 .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(dptBoosterDate.toString()).build();
         childService.process(careCase);
 
-        Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, dptScheduleName));
-    }
-
-    private EnrollmentRecord getEnrollmentRecord(String scheduleName, String externalId, EnrollmentStatus status) {
-        EnrollmentsQuery query = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingState(status)
-                .havingSchedule(scheduleName);
-
-        return scheduleTrackingService.searchWithWindowDates(query).get(0);
+        Assert.assertNull(trackingService.getEnrollment(caseId, dptScheduleName));
     }
 }

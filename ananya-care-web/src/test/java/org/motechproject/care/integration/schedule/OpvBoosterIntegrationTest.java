@@ -17,8 +17,6 @@ import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +31,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private OpvBoosterService opvBoosterService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
+
     @Autowired
     private AllChildren allChilden;
     private String caseId;
@@ -123,16 +120,6 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(opv1Date.toString()).withOPV2Date(opv2Date.toString()).withOPV3Date(opv3Date.toString()).withOPVBoosterDate(opvBoosterDate.toString()).build();
         childService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
-    }
-
-    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
-        EnrollmentsQuery query = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingState(status)
-                .havingSchedule(ttScheduleName);
-
-        List<EnrollmentRecord> enrollmentRecords = scheduleTrackingService.searchWithWindowDates(query);
-        return enrollmentRecords.isEmpty()? null : enrollmentRecords.get(0);
+        assertNull(trackingService.getEnrollment(caseId, scheduleName));
     }
 }

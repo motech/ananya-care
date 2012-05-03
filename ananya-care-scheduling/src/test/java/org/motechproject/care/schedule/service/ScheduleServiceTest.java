@@ -16,6 +16,8 @@ import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -95,6 +97,26 @@ public class ScheduleServiceTest {
         DateTime preferredAlertDateTime = DateUtil.newDateTime(DateUtil.today(), preferredAlertTime);
         assertTrue(preferredAlertDateTime.isAfter(DateUtil.now().plusMinutes(1))); // Assuming that schedule creation time will take atmost 1 min
         assertTrue(preferredAlertDateTime.isBefore(DateUtil.now().plusMinutes(5)));
+    }
+    
+    @Test
+    public void shouldUnenrollFromScheduleIfEnrolled(){
+        String caseId = "caseId";
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(""));
+        schedulerService.unenroll(caseId, scheduleName);
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(trackingService).unenroll(eq(caseId), captor.capture());
+        List scheduleNames = captor.getValue();
+        assertEquals(1, scheduleNames.size());
+        assertEquals(scheduleName,scheduleNames.get(0));
+    }
+
+    @Test
+    public void shouldNotUnenrollFromScheduleIfNotEnrolled(){
+        String caseId = "caseId";
+        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
+        schedulerService.unenroll(caseId, scheduleName);
+        verify(trackingService, never()).unenroll(anyString(), any(List.class));
     }
 
 

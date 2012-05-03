@@ -26,7 +26,7 @@ public class ChildCareServiceTest {
 
     @Before
     public void setUp(){
-        childCareService = new ChildCareService(schedulerService);
+        childCareService = new ChildCareService(schedulerService,null);
     }
 
     @Test

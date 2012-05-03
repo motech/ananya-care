@@ -64,16 +64,16 @@ public class MotherMapperTest {
     @Test
     public void shouldInferMotherAliveCorrectly(){
         Mother mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("").build());
-        assertTrue(mother.isActive());
+        assertTrue(mother.isAlive());
 
         mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive(null).build());
-        assertTrue(mother.isActive());
+        assertTrue(mother.isAlive());
 
         mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("yes").build());
-        assertTrue(mother.isActive());
+        assertTrue(mother.isAlive());
 
         mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("no").build());
-        assertFalse(mother.isActive());
+        assertFalse(mother.isAlive());
     }
 
     @Test

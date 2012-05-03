@@ -11,6 +11,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 
 import static org.mockito.Matchers.any;
@@ -22,13 +23,16 @@ import static org.mockito.Mockito.verify;
 public class TTBoosterServiceTest {
     @Mock
     private ScheduleService schedulerService;
+    @Mock
+    CareCaseTaskService careCaseTaskService;
+
     TTBoosterService ttBoosterService;
     private String scheduleName = MotherVaccinationSchedule.TTBooster.getName();
 
 
     @Before
     public void setUp(){
-        ttBoosterService = new TTBoosterService(schedulerService);
+        ttBoosterService = new TTBoosterService(schedulerService, careCaseTaskService);
     }
 
     @Test
@@ -80,5 +84,14 @@ public class TTBoosterServiceTest {
         ttBoosterService.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TTBooster.toString(),  ttBoosterDate, scheduleName);
     }
+
+    @Test
+    public void shouldUnenrollFromTTBoosterSchedule(){
+        String caseId = "caseId";
+        ttBoosterService.close(new Mother(caseId));
+        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+
+    }
+
 
 }

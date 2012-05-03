@@ -11,6 +11,7 @@ import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 public class AllChildrenTest extends SpringIntegrationTest {
 
@@ -43,6 +44,8 @@ public class AllChildrenTest extends SpringIntegrationTest {
         allChildren.add(child);
 
         Child childFromDb = allChildren.findByCaseId(caseId);
+        assertNotNull(childFromDb);
+        markForDeletion(childFromDb);
 
         assertEquals(caseId, childFromDb.getCaseId());
         assertEquals(CaseType.Child.getType(), childFromDb.getCaseType());

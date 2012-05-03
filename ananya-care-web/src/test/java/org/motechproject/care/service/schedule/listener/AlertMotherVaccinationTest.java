@@ -232,6 +232,29 @@ public class AlertMotherVaccinationTest {
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
 
+    @Test
+    public void shouldNotCaseTaskObjectToGatewayIfMotherIsInactive() {
+        String scheduleName = "TT Vaccination";
+        String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String milestoneName = "TT 1";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String motherName = "Sita";
+        DateTime startOfSchedule = DateUtil.now();
+
+        Milestone milestone = new Milestone(milestoneName, weeks(0), weeks(36), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+
+        Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, DateTime.now().plusYears(1), null, null, null, false, null, null, null, null, null, true);
+        client.setActive(false);
+        when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
+        alertMotherVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
+
+    }
+
     public static Period months(int numberOfMonths) {
         return new Period(0, numberOfMonths, 0, 0, 0, 0, 0, 0);
     }

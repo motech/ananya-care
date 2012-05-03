@@ -82,12 +82,13 @@ public class MotherServiceTest {
     }
     
     @Test
-    public void shouldSetMotherCaseAsInactiveIfExists_WhenMotherCaseIsClosed(){
-        when(allMothers.findByCaseId(caseId)).thenReturn(new Mother(caseId));
+    public void shouldSetMotherCaseAsInactiveAndCloseSchedulesIfExists_WhenMotherCaseIsClosed(){
+        Mother motherFromDb = new Mother(caseId);
+        when(allMothers.findByCaseId(caseId)).thenReturn(motherFromDb);
         boolean wasClosed = motherService.closeCase(caseId);
 
         Assert.assertTrue(wasClosed);
-
+        verify(motherVaccinationProcessor).closeSchedules(motherFromDb);
         ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
         verify(allMothers).update(captor.capture());
         Mother mother = captor.getValue();
@@ -101,4 +102,28 @@ public class MotherServiceTest {
 
         Assert.assertFalse(wasClosed);
     }
+
+    @Test
+    public void shouldCloseMotherCaseIfMotherIsDead(){
+        CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("no").withCaseId(caseId).build();
+
+        Mother mother = new Mother(caseId);
+        mother.setAlive(true);
+        mother.setActive(true);
+
+        when(allMothers.findByCaseId(caseId)).thenReturn(mother);
+
+        motherService.process(motherCase);
+
+        verify(motherVaccinationProcessor).closeSchedules(mother);
+
+        ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).update(captor.capture());
+        Mother motherFromDb = captor.getValue();
+        assertFalse(motherFromDb.isActive());
+        assertFalse(motherFromDb.isAlive());
+    }
+
+
+
 }

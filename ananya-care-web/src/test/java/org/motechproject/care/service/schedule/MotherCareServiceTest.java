@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 
 import static org.mockito.Matchers.any;
@@ -21,13 +22,16 @@ import static org.mockito.Mockito.verify;
 public class MotherCareServiceTest {
     @Mock
     private ScheduleService schedulerService;
+    @Mock
+    CareCaseTaskService careCaseTaskService;
+
     MotherCareService motherCareService;
     private String scheduleName = MotherVaccinationSchedule.MotherCare.getName();
 
 
     @Before
     public void setUp(){
-        motherCareService = new MotherCareService(schedulerService);
+        motherCareService = new MotherCareService(schedulerService, careCaseTaskService);
     }
 
     @Test

@@ -18,8 +18,6 @@ import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,8 +31,6 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private TTBoosterService ttBoosterService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
 
     private AllMothers allMothers;
@@ -81,15 +77,6 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withLastPregTT("yes").withTTBooster(ttBoosterDate.toString()).build();
         motherService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
-    }
-
-    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
-        EnrollmentsQuery query = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingState(status)
-                .havingSchedule(ttScheduleName);
-
-        return scheduleTrackingService.searchWithWindowDates(query).get(0);
+        assertNull(trackingService.getEnrollment(caseId, scheduleName));
     }
 }

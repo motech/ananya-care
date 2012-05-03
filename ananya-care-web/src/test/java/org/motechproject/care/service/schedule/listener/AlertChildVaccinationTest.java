@@ -234,6 +234,30 @@ public class AlertChildVaccinationTest {
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
 
+    @Test
+    public void shouldNotSendChildVaccinationAlertIfChildIsInactive() {
+        String scheduleName = "Measles Vaccination";
+        String childCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
+        String motherCaseId = "motherCaseId";
+        String milestoneName = "Measles";
+        String groupId = "groupId";
+        String flwId = "FLW1234";
+        String childName = "Sita";
+        DateTime now = DateUtil.now();
+        DateTime dob = now.minusWeeks(10);
+
+        Milestone milestone = new Milestone(milestoneName, weeks(15), weeks(20), null, null);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+
+        Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
+        client.setActive(false);
+        when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
+        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+
+        verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
+    }
+
     public static Period weeks(int numberOfWeeks) {
         return new Period(0, 0, numberOfWeeks, 0, 0, 0, 0, 0);
     }

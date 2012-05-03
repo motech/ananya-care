@@ -18,8 +18,6 @@ import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,8 +30,6 @@ public class HepIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private HepService hepService;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
     private AllChildren allChildren;
     private String hepScheduleName = ChildVaccinationSchedule.Hepatitis.getName();
@@ -120,15 +116,6 @@ public class HepIntegrationTest extends SpringIntegrationTest {
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep1Date(hep1Date.toString()).withHep2Date(hep2Date.toString()).withHep3Date(hep3Date.toString()).build();
         childService.process(careCase);
 
-        Assert.assertNull(scheduleTrackingService.getEnrollment(caseId, hepScheduleName));
-    }
-
-    private EnrollmentRecord getEnrollmentRecord(String scheduleName, String externalId, EnrollmentStatus status) {
-        EnrollmentsQuery query = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingState(status)
-                .havingSchedule(scheduleName);
-
-        return scheduleTrackingService.searchWithWindowDates(query).get(0);
+        Assert.assertNull(trackingService.getEnrollment(caseId, hepScheduleName));
     }
 }

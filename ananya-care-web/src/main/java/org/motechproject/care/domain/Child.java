@@ -43,7 +43,6 @@ public class Child extends Client {
                  DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date, DateTime opvBoosterDate) {
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
-        this.isActive = true;
         this.dateModified = dateModified;
         this.flwId = flwId;
         this.name = name;

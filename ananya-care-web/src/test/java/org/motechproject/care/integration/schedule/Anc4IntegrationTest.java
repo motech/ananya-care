@@ -18,8 +18,6 @@ import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
-import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,8 +32,6 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private Anc4Service anc4Service;
-    @Autowired
-    private ScheduleTrackingService scheduleTrackingService;
     @Autowired
 
     private AllMothers allMothers;
@@ -122,16 +118,6 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(anc1Date.toString()).withANC2(anc2Date.toString()).withANC3(anc3Date.toString()).withANC4(anc4Date.toString()).build();
         motherService.process(careCase);
 
-        assertNull(scheduleTrackingService.getEnrollment(caseId, scheduleName));
-    }
-
-    private EnrollmentRecord getEnrollmentRecord(String ttScheduleName, String externalId, EnrollmentStatus status) {
-        EnrollmentsQuery query = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingState(status)
-                .havingSchedule(ttScheduleName);
-
-        List<EnrollmentRecord> enrollmentRecords = scheduleTrackingService.searchWithWindowDates(query);
-        return enrollmentRecords.isEmpty()? null : enrollmentRecords.get(0);
+        assertNull(trackingService.getEnrollment(caseId, scheduleName));
     }
 }

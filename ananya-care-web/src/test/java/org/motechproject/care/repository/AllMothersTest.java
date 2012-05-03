@@ -34,6 +34,8 @@ public class AllMothersTest extends SpringIntegrationTest {
                 , new DateTime(1123), new DateTime(1123), new DateTime(1123), new DateTime(1123),true);
         allMothers.add(mother);
         Mother motherFromDb = allMothers.findByCaseId(caseId);
+        assertNotNull(motherFromDb);
+
 
         assertEquals(caseId,motherFromDb.getCaseId());
         assertEquals(CaseType.Mother.getType(),motherFromDb.getCaseType());

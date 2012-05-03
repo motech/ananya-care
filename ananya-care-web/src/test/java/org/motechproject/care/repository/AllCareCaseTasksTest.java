@@ -15,10 +15,38 @@ public class AllCareCaseTasksTest extends SpringIntegrationTest {
 
     @Test
     public void shouldSaveTheTask(){
-        String caseID = CaseUtils.getUniqueCaseId();
-;
-        CareCaseTask careCaseTask = new CareCaseTask( "TT 1", "ownerID", caseID,"motechUserID", DateUtil.now().toString(),"taskID", DateUtil.today().toString(), DateUtil.today().plusDays(4).toString(), "mother_case_type", "id", "mother_id");
+        String caseId = CaseUtils.getUniqueCaseId();
+        String clientCaseId = CaseUtils.getUniqueCaseId();
+        String milestoneName = "TT 1";
+        String ownerId = "ownerID";
+        String motechUserId = "motechUserID";
+        String currentTime = DateUtil.now().toString();
+        String taskId = "taskID";
+        String dateEligible = DateUtil.today().toString();
+        String dateExpires = DateUtil.today().plusDays(4).toString();
+        String clientCaseType = "mother_case_type";
+        String clientElementTag = "mother_id";
+        
+        CareCaseTask careCaseTask = new CareCaseTask(milestoneName, ownerId, caseId, motechUserId, currentTime, taskId, dateEligible, dateExpires, clientCaseType, clientCaseId, clientElementTag);
         allCareCaseTasks.add(careCaseTask);
-        Assert.assertNotNull(careCaseTask.getId());
+        
+        CareCaseTask careCaseTaskFromDb = allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName);
+        Assert.assertNotNull(careCaseTaskFromDb);
+        markForDeletion(careCaseTaskFromDb);
+        
+        Assert.assertEquals(caseId, careCaseTaskFromDb.getCaseId());
+        Assert.assertEquals(clientCaseId, careCaseTaskFromDb.getClientCaseId());
+        Assert.assertEquals(milestoneName, careCaseTaskFromDb.getMilestoneName());
+        Assert.assertEquals(ownerId, careCaseTaskFromDb.getOwnerId());
+        Assert.assertEquals(motechUserId, careCaseTaskFromDb.getMotechUserId());
+        Assert.assertEquals(currentTime, careCaseTaskFromDb.getCurrentTime());
+        Assert.assertEquals(taskId, careCaseTaskFromDb.getTaskId());
+        Assert.assertEquals(dateEligible, careCaseTaskFromDb.getDateEligible());
+        Assert.assertEquals(dateExpires, careCaseTaskFromDb.getDateExpires());
+        Assert.assertEquals(clientCaseType, careCaseTaskFromDb.getClientCaseType());
+        Assert.assertEquals(clientElementTag, careCaseTaskFromDb.getClientElementTag());
+        Assert.assertEquals("task", careCaseTaskFromDb.getCaseType());
     }
+
+
 }

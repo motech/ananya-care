@@ -14,6 +14,9 @@ public abstract class Client extends MotechBaseDataObject{
     protected boolean isActive;
     private DateTime doc_create_time;
 
+    public Client() {
+        this.isActive = true;
+    }
 
     public String getCaseId() {
         return caseId;

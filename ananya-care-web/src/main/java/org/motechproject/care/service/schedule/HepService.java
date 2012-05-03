@@ -5,17 +5,16 @@ import org.motechproject.care.domain.Client;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HepService extends VaccinationService{
 
-    private final String scheduleName = ChildVaccinationSchedule.Hepatitis.getName();
-
     @Autowired
-    public HepService(ScheduleService schedulerService) {
-        super(schedulerService);
+    public HepService(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+        super(schedulerService, ChildVaccinationSchedule.Hepatitis.getName(), careCaseTaskService);
     }
 
     @Override

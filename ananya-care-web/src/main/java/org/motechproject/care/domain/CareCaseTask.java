@@ -34,8 +34,11 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private String clientElementTag;
 
+    public CareCaseTask() {
+
+    }
+
     public CareCaseTask(String milestoneName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId, String clientElementTag) {
-        this.caseType = caseType;
         this.milestoneName = milestoneName;
         this.ownerId = ownerId;
         this.caseId = caseId;

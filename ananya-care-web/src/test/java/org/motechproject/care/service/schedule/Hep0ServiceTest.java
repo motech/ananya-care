@@ -5,11 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -21,6 +24,9 @@ public class Hep0ServiceTest {
 
     @Mock
     private ScheduleService schedulerService;
+    @Mock
+    CareCaseTaskService careCaseTaskService;
+
     private String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
 
     private Hep0Service hep0Service;
@@ -28,7 +34,7 @@ public class Hep0ServiceTest {
 
     @Before
     public void setUp(){
-        hep0Service=new Hep0Service(schedulerService);
+        hep0Service=new Hep0Service(schedulerService, careCaseTaskService);
     }
 
     @Test
@@ -58,6 +64,14 @@ public class Hep0ServiceTest {
         child.setHep0Date(hep0Date);
         hep0Service.process(child);
         verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Hep0.toString(),hep0Date,ChildVaccinationSchedule.Hepatitis0.getName());
+    }
+
+    @Test
+    public void shouldUnenrollFromHep0Schedule(){
+        String caseId = "caseId";
+        hep0Service.close(new Mother(caseId));
+        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+
     }
 
 

@@ -40,11 +40,11 @@ public abstract class AlertVaccination {
 
     protected void postToCommCare(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
-        CareCaseTask careCasetask = createCaseTask(alertWindow, externalId, milestoneName, client, clientElementTag);
-        allCareCaseTasks.add(careCasetask);
+        CareCaseTask careCaseTask = createCaseTask(alertWindow, externalId, milestoneName, client, clientElementTag);
+        allCareCaseTasks.add(careCaseTask);
         logger.info(String.format("Notifying commcare for vaccination due with task_id: %s, client_id: %s, eligible_date: %s, expiry_date: %s ",
-                careCasetask.getTaskId(), careCasetask.getClientCaseId(), careCasetask.getDateEligible(), careCasetask.getDateExpires()));
-        commcareCaseGateway.submitCase(commcareUrl, careCasetask.toCaseTask());
+                careCaseTask.getTaskId(), careCaseTask.getClientCaseId(), careCaseTask.getDateEligible(), careCaseTask.getDateExpires()));
+        commcareCaseGateway.submitCase(commcareUrl, careCaseTask.toCaseTask());
     }
 
     private CareCaseTask createCaseTask(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {

@@ -5,6 +5,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,14 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TTService extends VaccinationService{
 
-    private final String scheduleName = MotherVaccinationSchedule.TT.getName();
-
     @Autowired
-    public TTService(ScheduleService schedulerService) {
-        super(schedulerService);
+    public TTService(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+        super(schedulerService, MotherVaccinationSchedule.TT.getName(), careCaseTaskService);
     }
-
-    public TTService(){}
 
     @Override
     public void process(Client client) {
