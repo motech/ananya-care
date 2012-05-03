@@ -15,6 +15,8 @@ import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 
+import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,6 +28,7 @@ public class ChildServiceTest {
     @Mock
     private ChildVaccinationProcessor childVaccinationProcessor;
     private ChildService childService;
+    private String caseId="caseId";
 
     @Before
     public void setUp(){
@@ -53,9 +56,8 @@ public class ChildServiceTest {
     @Test
     public void shouldNotSaveChildIfAgeMoreThanAYear() {
         String caseId = "caseId";
-        String motherId = "motherId";
         DateTime dob = new DateTime(2011, 4, 13, 0, 0);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withCaseId(caseId).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         childService.process(careCase);
         verify(allChildren,never()).add((Child) Matchers.any());
@@ -64,17 +66,13 @@ public class ChildServiceTest {
 
     @Test
     public void shouldUpdateChildIfAgeMoreThanAYear() {
-        String caseId = "caseId";
-        String motherId = "motherId";
         String oldName = "Aryan";
         String newBcgDate = "2012-05-04";
         String newName = "Vijay";
         DateTime docCreateTime = DateTime.now().minus(1);
-        DateTime dob = new DateTime(2011, 4, 12, 0, 0);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).withCaseName(newName).withBcgDate(newBcgDate).build();
-        Child child = new Child();
-        child.setCaseId(caseId);
-        Child childInDb = child;
+        DateTime dob = DateTime.now().plusMonths(5);
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withCaseId(caseId).withCaseName(newName).withBcgDate(newBcgDate).build();
+        Child childInDb = childWithCaseId(caseId);
         childInDb.setName(oldName);
         childInDb.setDocCreateTime(docCreateTime);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
@@ -91,4 +89,48 @@ public class ChildServiceTest {
         Assert.assertTrue(childUpdated.isActive());
         verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
     }
+
+    @Test
+    public void shouldSetChildCaseAsExpiredAndCloseSchedulesIfExists_WhenChildCaseIsExpired(){
+        Child childFromDb = childWithCaseId(caseId);
+        childFromDb.setExpired(false);
+        childFromDb.setClosedByCommcare(false);
+
+        when(allChildren.findByCaseId(caseId)).thenReturn(childFromDb);
+        boolean wasClosed = childService.expireCase(caseId);
+
+        assertTrue(wasClosed);
+
+        verify(allChildren, times(1)).update(childFromDb);
+        verify(childVaccinationProcessor).closeSchedules(childFromDb);
+
+        ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
+        verify(allChildren).update(captor.capture());
+        Child child = captor.getValue();
+        assertFalse(child.isActive());
+        assertTrue(child.isExpired());
+    }
+
+    @Test
+    public void shouldReturnTrueIfChildInactiveWhileExpiringChild(){
+        Child childFromDb = childWithCaseId(caseId);
+        childFromDb.setExpired(true);
+        when(allChildren.findByCaseId(caseId)).thenReturn(childFromDb);
+        boolean wasClosed = childService.expireCase(caseId);
+        assertTrue(wasClosed);
+    }
+
+    @Test
+    public void shouldReturnFalseIfChildCaseDoesNotExistsWhileExpiringCase(){
+        when(allChildren.findByCaseId(caseId)).thenReturn(null);
+        boolean wasClosed = childService.expireCase(caseId);
+        assertFalse(wasClosed);
+    }
+
+    private Child childWithCaseId(String caseId) {
+        Child child = new Child();
+        child.setCaseId(caseId);
+        return child;
+    }
+
 }

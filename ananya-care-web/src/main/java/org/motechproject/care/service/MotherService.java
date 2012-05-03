@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MotherService {
-
     private AllMothers allMothers;
     private MotherVaccinationProcessor motherVaccinationProcessor;
-
 
     @Autowired
     public MotherService(AllMothers allMothers, MotherVaccinationProcessor motherVaccinationProcessor) {
@@ -28,7 +26,6 @@ public class MotherService {
             processNew(mother);
         else if(motherFromDb.isActive())
             processExisting(motherFromDb, mother);
-
     }
     
     private void processNew(Mother mother) {
@@ -38,7 +35,6 @@ public class MotherService {
     }
     
     private void processExisting(Mother motherFromDb, Mother mother) {
-
         motherFromDb.setValuesFrom(mother);
         allMothers.update(motherFromDb);
 
@@ -47,7 +43,6 @@ public class MotherService {
         else
             motherVaccinationProcessor.closeSchedules(motherFromDb);
     }
-
 
     public boolean closeCase(String caseId) {
         Mother mother = allMothers.findByCaseId(caseId);
@@ -58,6 +53,20 @@ public class MotherService {
             return true;
 
         mother.setClosedByCommcare(true);
+        allMothers.update(mother);
+        motherVaccinationProcessor.closeSchedules(mother);
+        return true;
+    }
+
+    public boolean expireCase(String caseId) {
+        Mother mother = allMothers.findByCaseId(caseId);
+        if(mother == null)
+            return false;
+
+        if(!mother.isActive()) {
+            return true;
+        }
+        mother.setExpired(true);
         allMothers.update(mother);
         motherVaccinationProcessor.closeSchedules(mother);
         return true;

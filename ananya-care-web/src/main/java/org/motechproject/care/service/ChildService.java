@@ -43,6 +43,21 @@ public class ChildService {
         return childFromDb;
     }
 
+    public boolean expireCase(String caseId) {
+        Child child = allChildren.findByCaseId(caseId);
+        if(child == null)
+            return false;
+
+        if(!child.isActive()) {
+            return true;
+        }
+        child.setExpired(true);
+        allChildren.update(child);
+        childVaccinationProcessor.closeSchedules(child);
+        return true;
+    }
+
+
     private boolean isOlderThanAYear(Child child) {
         return !DateUtil.today().minusYears(1).isBefore(child.getDOB().toLocalDate());
     }

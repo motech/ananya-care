@@ -62,7 +62,7 @@ public abstract class Client extends MotechBaseDataObject{
 
     @JsonIgnore
     public boolean isActive() {
-        return !closedByCommcare;
+        return !closedByCommcare && !isExpired();
     }
 
     public DateTime getDocCreateTime() {

@@ -31,6 +31,17 @@ public class ChildVaccinationProcessorTest{
         Mockito.verify(bcgService).process(child);
         Mockito.verify(vitaService).process(child);
     }
+
+    @Test
+    public void shouldCloseAllSchedulesForAChild(){
+        ChildVaccinationProcessor processor = new ChildVaccinationProcessor(Arrays.<VaccinationService>asList(measlesService,bcgService, vitaService));
+        Child child = new Child();
+        processor.closeSchedules(child);
+        Mockito.verify(measlesService).close(child);
+        Mockito.verify(bcgService).close(child);
+        Mockito.verify(vitaService).close(child);
+    }
+
 }
 
 

@@ -22,5 +22,11 @@ public class ChildVaccinationProcessor {
     public List<VaccinationService> getVaccinationServices() {
         return vaccinationServices;
     }
+
+    public void closeSchedules(Child child) {
+        for(VaccinationService vaccineService : vaccinationServices)
+            vaccineService.close(child);
+    }
+
 }
 

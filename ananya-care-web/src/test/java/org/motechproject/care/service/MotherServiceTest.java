@@ -137,6 +137,45 @@ public class MotherServiceTest {
     }
 
     @Test
+    public void shouldSetMotherCaseAsExpiredAndCloseSchedulesIfExists_WhenMotherCaseIsExpired(){
+        Mother motherFromDb = motherWithCaseId(caseId);
+        motherFromDb.setExpired(false);
+        motherFromDb.setClosedByCommcare(false);
+        motherFromDb.setAdd(null);
+        motherFromDb.setAlive(true);
+
+        when(allMothers.findByCaseId(caseId)).thenReturn(motherFromDb);
+        boolean wasClosed = motherService.expireCase(caseId);
+
+        Assert.assertTrue(wasClosed);
+
+        verify(allMothers, times(1)).update(motherFromDb);
+        verify(motherVaccinationProcessor).closeSchedules(motherFromDb);
+
+        ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).update(captor.capture());
+        Mother mother = captor.getValue();
+        assertFalse(mother.isActive());
+        assertTrue(mother.isExpired());
+    }
+
+    @Test
+    public void shouldReturnTrueIfMotherInactiveWhileExpiringMother(){
+        Mother motherFromDb = motherWithCaseId(caseId);
+        motherFromDb.setExpired(true);
+        when(allMothers.findByCaseId(caseId)).thenReturn(motherFromDb);
+        boolean wasClosed = motherService.expireCase(caseId);
+        Assert.assertTrue(wasClosed);
+    }
+
+    @Test
+    public void shouldReturnFalseIfMotherCaseDoesNotExistsWhileExpiringCase(){
+        when(allMothers.findByCaseId(caseId)).thenReturn(null);
+        boolean wasClosed = motherService.expireCase(caseId);
+        Assert.assertFalse(wasClosed);
+    }
+
+    @Test
     public void shouldCloseMotherCaseIfMotherIsDead(){
         CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("no").withCaseId(caseId).build();
 
@@ -190,6 +229,7 @@ public class MotherServiceTest {
         mother.setClosedByCommcare(false);
         mother.setAdd(null);
         mother.setAlive(false);
+        mother.setExpired(false);
 
         when(allMothers.findByCaseId(caseId)).thenReturn(mother);
 
@@ -216,8 +256,6 @@ public class MotherServiceTest {
         verify(motherVaccinationProcessor, never()).closeSchedules(any(Mother.class));
     }
 
-
-    
     private Mother motherWithCaseId(String caseId) {
         Mother mother = new Mother();
         mother.setCaseId(caseId);

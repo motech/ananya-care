@@ -20,7 +20,9 @@ public class ClientExpiryAction implements Action{
 
     @Override
     public void invoke(MilestoneEvent event) {
-//        motherService.closeCase()
-        //To change body of implemented methods use File | Settings | File Templates.
+        String externalId = event.getExternalId();
+        boolean didExpireMother = motherService.expireCase(externalId);
+        if(!didExpireMother)
+            childService.expireCase(externalId);
     }
 }
