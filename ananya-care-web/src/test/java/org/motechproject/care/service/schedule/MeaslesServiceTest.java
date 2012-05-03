@@ -82,7 +82,11 @@ public class MeaslesServiceTest {
     @Test
     public void shouldUnenrollFromMeaslesSchedule(){
         String caseId = "caseId";
-        measlesService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        measlesService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

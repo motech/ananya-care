@@ -81,7 +81,11 @@ public class BcgServiceTest {
     @Test
     public void shouldUnenrollFromBcgSchedule(){
         String caseId = "caseId";
-        bcgService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        bcgService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

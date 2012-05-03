@@ -115,7 +115,11 @@ public class DptServiceTest {
     @Test
     public void shouldUnenrollFromDptSchedule(){
         String caseId = "caseId";
-        dptService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        dptService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

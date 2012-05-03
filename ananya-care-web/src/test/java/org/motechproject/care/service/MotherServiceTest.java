@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -51,15 +52,34 @@ public class MotherServiceTest {
         DateTime expectedEdd = new DateTime(2012, 1, 2, 0, 0);
         Assert.assertEquals(expectedEdd,motherInDb.getEdd());
         Assert.assertTrue(motherInDb.isActive());
+        Assert.assertTrue(motherInDb.isAlive());
         Assert.assertNull(motherInDb.getDoc_create_time());
         verify(motherVaccinationProcessor).enrollUpdateVaccines(motherInDb);
+    }
+
+    @Test
+    public void shouldSaveMotherAsInactiveIfItDoesNotExistAndSheIsDead() throws IOException {
+        careCase.setMother_alive("no");
+        when(allMothers.findByCaseId(caseId)).thenReturn(null);
+
+        motherService.process(careCase);
+
+        ArgumentCaptor<Mother> captor=ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).add(captor.capture());
+
+        Mother motherInDb  = captor.getValue();
+
+
+        Assert.assertFalse(motherInDb.isActive());
+        Assert.assertFalse(motherInDb.isAlive());
+        verify(motherVaccinationProcessor,never()).enrollUpdateVaccines(motherInDb);
     }
 
     @Test
     public void shouldUpdateMotherCaseIfItExists(){
         DateTime now = DateTime.now();
         DateTime docCreateTime = DateTime.now().minusDays(1);
-        Mother motherInDb = new Mother(caseId);
+        Mother motherInDb = motherWithCaseId(caseId);
         motherInDb.setEdd(now);
         motherInDb.setDoc_create_time(docCreateTime);
         motherInDb.setName("Seema");
@@ -80,10 +100,60 @@ public class MotherServiceTest {
         assertEquals(careCase.getCase_name(), motherToBeUpdated.getName());
         verify(motherVaccinationProcessor).enrollUpdateVaccines(motherToBeUpdated);
     }
-    
+
+    @Test
+    public void shouldNotSetAnInactiveMotherToActiveOnUpdate(){
+        DateTime now = DateTime.now();
+        DateTime docCreateTime = DateTime.now().minusDays(1);
+        Mother motherInDb = motherWithCaseId(caseId);
+        motherInDb.setEdd(now);
+        motherInDb.setDoc_create_time(docCreateTime);
+        motherInDb.setName("Seema");
+        motherInDb.setActive(false);
+
+        when(allMothers.findByCaseId(caseId)).thenReturn(motherInDb);
+
+        careCase.setMother_alive("yes");
+        motherService.process(careCase);
+
+        verify(allMothers, never()).add(motherInDb);
+        ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).update(captor.capture());
+
+        Mother motherToBeUpdated = captor.getValue();
+        Assert.assertFalse(motherToBeUpdated.isActive());
+        Assert.assertTrue(motherToBeUpdated.isAlive());
+        verify(motherVaccinationProcessor,never()).enrollUpdateVaccines(motherToBeUpdated);
+    }
+
+    @Test
+    public void shouldSetAnActiveMotherToInactiveIfSheIsDeadOnUpdate(){
+        DateTime now = DateTime.now();
+        DateTime docCreateTime = DateTime.now().minusDays(1);
+        Mother motherInDb = motherWithCaseId(caseId);
+        motherInDb.setEdd(now);
+        motherInDb.setDoc_create_time(docCreateTime);
+        motherInDb.setName("Seema");
+        assertTrue(motherInDb.isActive());
+
+        when(allMothers.findByCaseId(caseId)).thenReturn(motherInDb);
+
+        careCase.setMother_alive("no");
+        motherService.process(careCase);
+
+        verify(allMothers, never()).add(motherInDb);
+        ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).update(captor.capture());
+
+        Mother motherToBeUpdated = captor.getValue();
+        Assert.assertFalse(motherToBeUpdated.isActive());
+        Assert.assertFalse(motherToBeUpdated.isAlive());
+        verify(motherVaccinationProcessor,never()).enrollUpdateVaccines(motherToBeUpdated);
+    }
+
     @Test
     public void shouldSetMotherCaseAsInactiveAndCloseSchedulesIfExists_WhenMotherCaseIsClosed(){
-        Mother motherFromDb = new Mother(caseId);
+        Mother motherFromDb = motherWithCaseId(caseId);
         when(allMothers.findByCaseId(caseId)).thenReturn(motherFromDb);
         boolean wasClosed = motherService.closeCase(caseId);
 
@@ -107,7 +177,7 @@ public class MotherServiceTest {
     public void shouldCloseMotherCaseIfMotherIsDead(){
         CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("no").withCaseId(caseId).build();
 
-        Mother mother = new Mother(caseId);
+        Mother mother = motherWithCaseId(caseId);
         mother.setAlive(true);
         mother.setActive(true);
 
@@ -122,6 +192,12 @@ public class MotherServiceTest {
         Mother motherFromDb = captor.getValue();
         assertFalse(motherFromDb.isActive());
         assertFalse(motherFromDb.isAlive());
+    }
+    
+    private Mother motherWithCaseId(String caseId) {
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+        return mother;
     }
 
 

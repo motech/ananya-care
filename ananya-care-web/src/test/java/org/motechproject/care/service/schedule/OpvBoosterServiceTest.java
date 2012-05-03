@@ -118,7 +118,11 @@ public class OpvBoosterServiceTest {
     @Test
     public void shouldUnenrollFromOpvBoosterSchedule(){
         String caseId = "caseId";
-        opvBoosterService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        opvBoosterService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

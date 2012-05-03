@@ -72,7 +72,9 @@ public class ChildServiceTest {
         DateTime docCreateTime = DateTime.now().minus(1);
         DateTime dob = new DateTime(2011, 4, 12, 0, 0);
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).withCaseName(newName).withBcgDate(newBcgDate).build();
-        Child childInDb = new Child(caseId);
+        Child child = new Child();
+        child.setCaseId(caseId);
+        Child childInDb = child;
         childInDb.setName(oldName);
         childInDb.setDoc_create_time(docCreateTime);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
@@ -82,10 +84,43 @@ public class ChildServiceTest {
 
         verify(allChildren,never()).add((Child) Matchers.any());
         verify(allChildren).update(captor.capture());
-        Child child = captor.getValue();
-        Assert.assertEquals(newName,child.getName());
-        Assert.assertEquals(docCreateTime,child.getDoc_create_time());
-        Assert.assertEquals(DateTime.parse(newBcgDate),child.getBcgDate());
+        Child childUpdated = captor.getValue();
+        Assert.assertEquals(newName,childUpdated.getName());
+        Assert.assertEquals(docCreateTime,childUpdated.getDoc_create_time());
+        Assert.assertEquals(DateTime.parse(newBcgDate),childUpdated.getBcgDate());
+        Assert.assertTrue(childUpdated.isActive());
+        verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
+    }
+
+    @Test
+    public void shouldNotUpdateChildIsActiveIfDbHasInactive() {
+        String caseId = "caseId";
+        String motherId = "motherId";
+        String oldName = "Aryan";
+        String newBcgDate = "2012-05-04";
+        String newName = "Vijay";
+        DateTime docCreateTime = DateTime.now().minus(1);
+        DateTime dob = new DateTime(2011, 4, 12, 0, 0);
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withMotherCaseId(motherId).withCaseName(newName).withBcgDate(newBcgDate).build();
+
+        Child childInDb = new Child();
+        childInDb.setCaseId(caseId);
+        childInDb.setActive(false);
+        childInDb.setName(oldName);
+        childInDb.setDoc_create_time(docCreateTime);
+
+        ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
+
+        when(allChildren.findByCaseId(caseId)).thenReturn(childInDb);
+        childService.process(careCase);
+
+        verify(allChildren,never()).add((Child) Matchers.any());
+        verify(allChildren).update(captor.capture());
+        Child childUpdated = captor.getValue();
+        Assert.assertEquals(newName,childUpdated.getName());
+        Assert.assertEquals(docCreateTime,childUpdated.getDoc_create_time());
+        Assert.assertEquals(DateTime.parse(newBcgDate),childUpdated.getBcgDate());
+        Assert.assertFalse(childUpdated.isActive());
         verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
     }
 }

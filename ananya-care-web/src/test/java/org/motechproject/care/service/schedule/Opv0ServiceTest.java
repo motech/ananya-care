@@ -69,7 +69,11 @@ public class Opv0ServiceTest {
     @Test
     public void shouldUnenrollFromOpv0Schedule() {
         String caseId = "caseId";
-        opv0Service.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        opv0Service.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

@@ -80,7 +80,11 @@ public class VitaServiceTest {
     @Test
     public void shouldUnenrollFromVitaSchedule(){
         String caseId = "caseId";
-        vitaService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        vitaService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }

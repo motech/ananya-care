@@ -1,6 +1,5 @@
 package org.motechproject.care.service;
 
-import org.joda.time.DateTime;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CareCase;
@@ -31,13 +30,16 @@ public class ChildService {
 
     private Child createUpdate(Child child) {
         Child childFromDb = allChildren.findByCaseId(child.getCaseId());
-        if(childFromDb ==null){
+        if(childFromDb == null){
             if(isOlderThanAYear(child))
                 return null;
             allChildren.add(child);
             return child;
         }
+
+        child.setActive(childFromDb.isActive());
         childFromDb.setValuesFrom(child);
+
         allChildren.update(childFromDb);
         return childFromDb;
     }

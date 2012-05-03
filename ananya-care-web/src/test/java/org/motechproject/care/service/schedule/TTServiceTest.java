@@ -104,7 +104,11 @@ public class TTServiceTest {
     @Test
     public void shouldUnenrollFromTTSchedule(){
         String caseId = "caseId";
-        ttService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        ttService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }

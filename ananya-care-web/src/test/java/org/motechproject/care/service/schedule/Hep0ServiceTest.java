@@ -69,7 +69,11 @@ public class Hep0ServiceTest {
     @Test
     public void shouldUnenrollFromHep0Schedule(){
         String caseId = "caseId";
-        hep0Service.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        hep0Service.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

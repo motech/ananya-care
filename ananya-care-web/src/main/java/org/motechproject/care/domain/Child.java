@@ -34,9 +34,6 @@ public class Child extends Client {
     private String motherCaseId;
     public Child() {}
 
-    public Child(String caseId) {
-        this.caseId = caseId;
-    }
 
     public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
                  DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,

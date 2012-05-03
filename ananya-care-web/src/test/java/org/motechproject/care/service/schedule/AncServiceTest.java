@@ -104,7 +104,10 @@ public class AncServiceTest {
     @Test
     public void shouldUnenrollFromAncSchedule(){
         String caseId = "caseId";
-        ancService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+        ancService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }

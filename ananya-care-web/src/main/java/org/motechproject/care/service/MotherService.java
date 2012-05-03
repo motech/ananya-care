@@ -31,11 +31,16 @@ public class MotherService{
 
     private Mother createUpdate(Mother mother) {
         Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
+
         if(motherFromDb ==null){
-           allMothers.add(mother);
+            mother.setActive(mother.isAlive());
+            allMothers.add(mother);
             return mother;
         }
+
+        mother.setActive(motherFromDb.isActive() && mother.isAlive());
         motherFromDb.setValuesFrom(mother);
+
         allMothers.update(motherFromDb);
         return motherFromDb;
     }

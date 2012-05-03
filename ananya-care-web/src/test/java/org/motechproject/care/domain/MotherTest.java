@@ -10,37 +10,6 @@ public class MotherTest {
     public void shouldBeSetToIsActiveByDefault() {
         Mother mother = new Mother();
         Assert.assertTrue(mother.isActive());
-        Assert.assertTrue(mother.isAlive());
-    }
-
-    @Test
-    public void shouldBeSetToInActiveIfDead() {
-        Mother mother = new Mother("caseId", null,"flwid","name",null,null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,false);
-        Assert.assertFalse(mother.isActive());
-        Assert.assertFalse(mother.isAlive());
-    }
-
-    @Test
-    public void shouldBeSetToActiveIfAlive() {
-        Mother mother = new Mother("caseId", null,"flwid","name",null,null, DateTime.parse("2010-04-03"),null,null,false,null,null,null,null,null,true);
-        Assert.assertTrue(mother.isActive());
-        Assert.assertTrue(mother.isAlive());
-    }
-
-    @Test
-    public void shouldToggleIsActiveBasedOnIsAlive() {
-        Mother mother = new Mother();
-        Assert.assertTrue(mother.isActive());
-        Assert.assertTrue(mother.isAlive());
-        
-        mother.setAlive(false);
-        Assert.assertFalse(mother.isActive());
-        Assert.assertFalse(mother.isAlive());
-
-        mother.setAlive(true);
-        Assert.assertFalse(mother.isActive());
-        Assert.assertTrue(mother.isAlive());
-
     }
     
     @Test
@@ -66,7 +35,7 @@ public class MotherTest {
         Assert.assertEquals("arpan", motherFromDb.getName());
         Assert.assertEquals("groupid", motherFromDb.getGroupId());
         Assert.assertEquals(DateTime.parse("2010-04-03"), motherFromDb.getAdd());
-        Assert.assertFalse(motherFromDb.isActive());
+        Assert.assertTrue(motherFromDb.isActive());
 
     }
 }

@@ -88,7 +88,11 @@ public class TTBoosterServiceTest {
     @Test
     public void shouldUnenrollFromTTBoosterSchedule(){
         String caseId = "caseId";
-        ttBoosterService.close(new Mother(caseId));
+
+        Mother mother = new Mother();
+        mother.setCaseId(caseId);
+
+        ttBoosterService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
 
     }
