@@ -26,7 +26,7 @@ public class MotherService {
         
         if(motherFromDb == null)
             processNew(mother);
-        if(motherFromDb.isActive())
+        else if(motherFromDb.isActive())
             processExisting(motherFromDb, mother);
 
     }
