@@ -15,7 +15,7 @@ import java.util.Properties;
 @Component
 public class AlertMotherAction extends AlertClientAction implements Action{
     private AllMothers allMothers;
-    public static String clientElementTag = "mother_id";
+    public static final String clientElementTag = "mother_id";
 
     @Autowired
     public AlertMotherAction(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {

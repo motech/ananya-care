@@ -23,6 +23,7 @@ public class MotherService{
     public void process(CareCase careCase) {
         Mother mother = MotherMapper.map(careCase);
         Mother updatedMother = createUpdate(mother);
+
         if(updatedMother.isActive())
             motherVaccinationProcessor.enrollUpdateVaccines(updatedMother);
         else
@@ -43,8 +44,8 @@ public class MotherService{
         return motherFromDb;
     }
 
-    public boolean closeCase(String case_id) {
-        Mother mother = allMothers.findByCaseId(case_id);
+    public boolean closeCase(String caseId) {
+        Mother mother = allMothers.findByCaseId(caseId);
         if(mother==null)
             return false;
         mother.setClosedByCommcare(true);

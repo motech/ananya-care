@@ -15,7 +15,7 @@ import java.util.Properties;
 public class AlertChildAction extends AlertClientAction implements Action{
 
     private AllChildren allChildren;
-    public static String clientElementTag = "child_id";
+    public static final String clientElementTag = "child_id";
 
     @Autowired
     public AlertChildAction(AllChildren allChildren, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {

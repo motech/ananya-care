@@ -15,6 +15,8 @@ import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -81,6 +83,9 @@ public class MotherServiceTest {
         motherInDb.setEdd(now);
         motherInDb.setDocCreateTime(docCreateTime);
         motherInDb.setName("Seema");
+        motherInDb.setAlive(true);
+        motherInDb.setClosedByCommcare(false);
+        motherInDb.setAdd(null);
 
         when(allMothers.findByCaseId(caseId)).thenReturn(motherInDb);
 
@@ -100,8 +105,12 @@ public class MotherServiceTest {
     }
    
     @Test
-    public void shouldSetMotherCaseAsInactiveAndCloseSchedulesIfExists_WhenMotherCaseIsClosed(){
+    public void shouldSetMotherCaseAsClosedByCommcareAndCloseSchedulesIfExists_WhenMotherCaseIsClosed(){
         Mother motherFromDb = motherWithCaseId(caseId);
+        motherFromDb.setClosedByCommcare(false);
+        motherFromDb.setAdd(null);
+        motherFromDb.setAlive(true);
+
         when(allMothers.findByCaseId(caseId)).thenReturn(motherFromDb);
         boolean wasClosed = motherService.closeCase(caseId);
 
@@ -111,6 +120,7 @@ public class MotherServiceTest {
         verify(allMothers).update(captor.capture());
         Mother mother = captor.getValue();
         assertFalse(mother.isActive());
+        assertTrue(mother.isClosedByCommcare());
     }
 
     @Test
@@ -141,6 +151,28 @@ public class MotherServiceTest {
         Mother motherFromDb = captor.getValue();
         assertFalse(motherFromDb.isActive());
         assertFalse(motherFromDb.isAlive());
+    }
+
+    @Test
+    public void shouldCloseMotherCaseIfADDIsGiven(){
+        CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("yes").withCaseId(caseId).withAdd("2012-04-10").build();
+
+        Mother mother = motherWithCaseId(caseId);
+        mother.setClosedByCommcare(false);
+        mother.setAdd(null);
+        mother.setAlive(true);
+
+        when(allMothers.findByCaseId(caseId)).thenReturn(mother);
+
+        motherService.process(motherCase);
+
+        verify(motherVaccinationProcessor).closeSchedules(mother);
+
+        ArgumentCaptor<Mother> captor = ArgumentCaptor.forClass(Mother.class);
+        verify(allMothers).update(captor.capture());
+        Mother motherFromDb = captor.getValue();
+        assertFalse(motherFromDb.isActive());
+        assertNotNull(motherFromDb.getAdd());
     }
     
     private Mother motherWithCaseId(String caseId) {
