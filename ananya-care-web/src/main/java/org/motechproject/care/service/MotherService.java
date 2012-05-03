@@ -22,12 +22,12 @@ public class MotherService {
 
     public void process(CareCase careCase) {
         Mother mother = MotherMapper.map(careCase);
-        Mother existingMother = allMothers.findByCaseId(mother.getCaseId());
+        Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
         
-        if(existingMother == null)
+        if(motherFromDb == null)
             processNew(mother);
-        else
-            processExisting(existingMother, mother);
+        if(motherFromDb.isActive())
+            processExisting(motherFromDb, mother);
 
     }
     
@@ -37,18 +37,15 @@ public class MotherService {
             motherVaccinationProcessor.enrollUpdateVaccines(mother);
     }
     
-    private void processExisting(Mother existingMother, Mother newMother) {
-        if(!existingMother.isActive()) {
-            return;
-        }
+    private void processExisting(Mother motherFromDb, Mother mother) {
 
-        existingMother.setValuesFrom(newMother);
-        allMothers.update(existingMother);
+        motherFromDb.setValuesFrom(mother);
+        allMothers.update(motherFromDb);
 
-        if(existingMother.isActive())
-            motherVaccinationProcessor.enrollUpdateVaccines(existingMother);
+        if(motherFromDb.isActive())
+            motherVaccinationProcessor.enrollUpdateVaccines(motherFromDb);
         else
-            motherVaccinationProcessor.closeSchedules(existingMother);
+            motherVaccinationProcessor.closeSchedules(motherFromDb);
     }
 
 
@@ -57,9 +54,9 @@ public class MotherService {
         if(mother == null)
             return false;
 
-        if(!mother.isActive()) {
+        if(!mother.isActive())
             return true;
-        }
+
         mother.setClosedByCommcare(true);
         allMothers.update(mother);
         motherVaccinationProcessor.closeSchedules(mother);
