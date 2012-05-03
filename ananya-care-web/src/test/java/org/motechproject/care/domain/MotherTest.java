@@ -35,6 +35,14 @@ public class MotherTest {
         mother.setClosedByCommcare(true);
         Assert.assertFalse(mother.isActive());
     }
+
+    @Test
+    public void shouldBeSetToInActiveIfExpired() {
+        Mother mother = new Mother();
+        mother.setAlive(true);
+        mother.setExpired(true);
+        Assert.assertFalse(mother.isActive());
+    }
     
     @Test
     public void shouldNotCopyNullPropertiesFromAnotherMotherObject()  {

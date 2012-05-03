@@ -14,6 +14,7 @@ public abstract class Client extends MotechBaseDataObject{
     protected String groupId;
     private DateTime docCreateTime;
     private boolean closedByCommcare;
+    private boolean expired;
 
     public Client() {
     }
@@ -82,5 +83,13 @@ public abstract class Client extends MotechBaseDataObject{
 
     public void setClosedByCommcare(boolean closedByCommcare) {
         this.closedByCommcare = closedByCommcare;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

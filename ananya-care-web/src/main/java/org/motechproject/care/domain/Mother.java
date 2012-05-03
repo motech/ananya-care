@@ -47,7 +47,7 @@ public class Mother extends Client {
     @Override
     @JsonIgnore
     public boolean isActive() {
-        return !isClosedByCommcare() && isAlive && add == null;
+        return !isClosedByCommcare() && isAlive && add == null && !isExpired();
     }
 
     public DateTime getTt1Date() {
