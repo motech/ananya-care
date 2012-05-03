@@ -1,4 +1,4 @@
-package org.motechproject.care.service.schedule.listener;
+package org.motechproject.care.service.router.action;
 
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Child;
@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 import java.util.Properties;
 
 @Component
-public class AlertChildVaccination extends AlertVaccination{
+public class AlertChildAction extends AlertClientAction implements Action{
 
     private AllChildren allChildren;
     public static String clientElementTag = "child_id";
 
     @Autowired
-    public AlertChildVaccination(AllChildren allChildren, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
+    public AlertChildAction(AllChildren allChildren, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
         super(commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
         this.allChildren = allChildren;
     }
@@ -39,5 +39,4 @@ public class AlertChildVaccination extends AlertVaccination{
     private DateTime dateOf2ndYear(Child child) {
         return child.getDOB().plusYears(2);
     }
-
 }

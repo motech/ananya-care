@@ -2,15 +2,13 @@ package org.motechproject.care.schedule.vaccinations;
 
 import java.util.ArrayList;
 
-public enum MotherVaccinationSchedule {
-    TT("TT Vaccination"),
-    TTBooster("TT Booster"),
-    Anc("Anc Visit"),
-    Anc4("Anc4 Visit");
+public enum ExpirySchedule {
+    ChildCare("Child Care"),
+    MotherCare("Mother Care");
 
     private String vaccinationScheduleName;
 
-    MotherVaccinationSchedule(String vaccinationScheduleName) {
+    ExpirySchedule(String vaccinationScheduleName) {
         this.vaccinationScheduleName = vaccinationScheduleName;
     }
 
@@ -20,10 +18,9 @@ public enum MotherVaccinationSchedule {
 
     public static ArrayList<String> allVaccineNames() {
         ArrayList<String> vaccines = new ArrayList<String>();
-        for (MotherVaccinationSchedule b : MotherVaccinationSchedule.values()) {
+        for (ExpirySchedule b : ExpirySchedule.values()) {
             vaccines.add(b.getName());
         }
         return vaccines;
     }
 }
-

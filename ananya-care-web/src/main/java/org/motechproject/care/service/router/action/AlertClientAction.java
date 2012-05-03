@@ -1,4 +1,4 @@
-package org.motechproject.care.service.schedule.listener;
+package org.motechproject.care.service.router.action;
 
 import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
@@ -7,7 +7,6 @@ import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
-import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.motechproject.util.DateUtil;
@@ -15,22 +14,21 @@ import org.motechproject.util.DateUtil;
 import java.util.Properties;
 import java.util.UUID;
 
-public abstract class AlertVaccination {
+public abstract class AlertClientAction {
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
     private Properties ananyaCareProperties;
-    Logger logger = Logger.getLogger(AlertVaccination.class);
+    Logger logger = Logger.getLogger(AlertClientAction.class);
 
-    public AlertVaccination(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
+    public AlertClientAction(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
         this.commcareCaseGateway = commcareCaseGateway;
         this.allCareCaseTasks = allCareCaseTasks;
         this.ananyaCareProperties = ananyaCareProperties;
     }
 
-    public void invoke(MotechEvent event){
-        MilestoneEvent msEvent = new MilestoneEvent(event);
-        String externalId = msEvent.getExternalId();
-        MilestoneAlert milestoneAlert = msEvent.getMilestoneAlert();
+    public void invoke(MilestoneEvent event){
+        String externalId = event.getExternalId();
+        MilestoneAlert milestoneAlert = event.getMilestoneAlert();
         String milestoneName = milestoneAlert.getMilestoneName();
 
         process(new Window(milestoneAlert.getDueDateTime(), milestoneAlert.getLateDateTime()), externalId, milestoneName);

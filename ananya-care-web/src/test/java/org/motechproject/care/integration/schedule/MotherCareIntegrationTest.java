@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
-import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.service.MotherService;
 import org.motechproject.care.service.MotherVaccinationProcessor;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
@@ -56,7 +56,7 @@ public class MotherCareIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldVerifyMotherCareScheduleCreationWhenMotherIsRegistered() {
-        String motherCareScheduleName = MotherVaccinationSchedule.MotherCare.getName();
+        String motherCareScheduleName = ExpirySchedule.MotherCare.getName();
         LocalDate edd = DateUtil.today().plusMonths(4);
 
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).build();

@@ -1,4 +1,4 @@
-package org.motechproject.care.service.schedule.listener;
+package org.motechproject.care.service.router.action;
 
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Mother;
@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 import java.util.Properties;
 
 @Component
-public class AlertMotherVaccination extends AlertVaccination{
+public class AlertMotherAction extends AlertClientAction implements Action{
     private AllMothers allMothers;
     public static String clientElementTag = "mother_id";
 
     @Autowired
-    public AlertMotherVaccination(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
+    public AlertMotherAction(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
         super(commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
         this.allMothers = motherRepository;
     }

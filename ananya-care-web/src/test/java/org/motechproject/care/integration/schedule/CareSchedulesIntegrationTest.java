@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.care.utils.SpringIntegrationTest;
@@ -282,7 +283,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     @Test
     public void shouldProvideAnAlertWhenChilds2YearsAreComplete() throws Exception {
         LocalDate today = DateUtil.today();
-        schedule.enrollFor(ChildVaccinationSchedule.ChildCare.getName(), today, null);
+        schedule.enrollFor(ExpirySchedule.ChildCare.getName(), today, null);
 
         schedule.assertNoAlerts("Child Care", earliest);
         schedule.assertNoAlerts("Child Care", due);
@@ -294,7 +295,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     @Test
     public void shouldProvideAnAlertWhenMothersEddIsComplete() throws Exception {
         LocalDate today = DateUtil.today();
-        schedule.enrollFor(MotherVaccinationSchedule.MotherCare.getName(), today, null);
+        schedule.enrollFor(ExpirySchedule.MotherCare.getName(), today, null);
 
         schedule.assertNoAlerts("Mother Care", earliest);
         schedule.assertNoAlerts("Mother Care", due);

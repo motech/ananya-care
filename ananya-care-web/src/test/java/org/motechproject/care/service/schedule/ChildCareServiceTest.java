@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.schedule.service.ScheduleService;
-import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -21,7 +21,7 @@ public class ChildCareServiceTest {
     @Mock
     private ScheduleService schedulerService;
     ChildCareService childCareService;
-    private String scheduleName = ChildVaccinationSchedule.ChildCare.getName();
+    private String scheduleName = ExpirySchedule.ChildCare.getName();
 
 
     @Before

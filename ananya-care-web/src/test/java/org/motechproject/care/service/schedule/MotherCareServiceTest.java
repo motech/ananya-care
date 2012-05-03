@@ -9,7 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.ScheduleService;
-import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.care.service.util.PeriodUtil;
 
@@ -26,7 +26,7 @@ public class MotherCareServiceTest {
     CareCaseTaskService careCaseTaskService;
 
     MotherCareService motherCareService;
-    private String scheduleName = MotherVaccinationSchedule.MotherCare.getName();
+    private String scheduleName = ExpirySchedule.MotherCare.getName();
 
 
     @Before

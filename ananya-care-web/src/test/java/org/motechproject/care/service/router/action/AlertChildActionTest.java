@@ -1,4 +1,4 @@
-package org.motechproject.care.service.schedule.listener;
+package org.motechproject.care.service.router.action;
 
 import junit.framework.Assert;
 import org.joda.time.DateTime;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class AlertChildVaccinationTest {
+public class AlertChildActionTest {
 
     @Mock
     private CommcareCaseGateway commcareCaseGateway;
@@ -40,15 +40,14 @@ public class AlertChildVaccinationTest {
     @Mock
     private Properties ananyaCareProperties;
 
-    private AlertChildVaccination alertChildVaccination;
+    private AlertChildAction alertChildAction;
 
 
     @Before
     public void setUp() {
         initMocks(this);
-        this.alertChildVaccination = new AlertChildVaccination(allChildren, commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
+        this.alertChildAction = new AlertChildAction(allChildren, commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
     }
-
 
     @Test
     public void shouldSendChildVaccinationAlertToGateway() {
@@ -72,7 +71,7 @@ public class AlertChildVaccinationTest {
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("commcare.hq.url")).thenReturn(commCareUrl);
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
@@ -112,7 +111,7 @@ public class AlertChildVaccinationTest {
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("motech.user.id")).thenReturn(motechUserId);
 
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         ArgumentCaptor<CareCaseTask> captor = ArgumentCaptor.forClass(CareCaseTask.class);
         verify(allCareCaseTasks).add(captor.capture());
@@ -127,7 +126,7 @@ public class AlertChildVaccinationTest {
         assertEquals(groupId, task.getOwnerId());
         assertEquals(childCaseId,task.getClientCaseId());
         assertEquals(CaseType.Child.getType(),task.getClientCaseType());
-        assertEquals(AlertChildVaccination.clientElementTag,task.getClientElementTag());
+        assertEquals(AlertChildAction.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 
@@ -149,7 +148,7 @@ public class AlertChildVaccinationTest {
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
         verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
@@ -177,7 +176,7 @@ public class AlertChildVaccinationTest {
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         ArgumentCaptor<CaseTask> argumentCaptor = ArgumentCaptor.forClass(CaseTask.class);
         verify(commcareCaseGateway).submitCase(anyString(), argumentCaptor.capture());
@@ -205,7 +204,7 @@ public class AlertChildVaccinationTest {
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
@@ -229,7 +228,7 @@ public class AlertChildVaccinationTest {
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
@@ -253,7 +252,7 @@ public class AlertChildVaccinationTest {
         Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null);
         client.setClosedByCommcare(true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
-        alertChildVaccination.invoke(milestoneEvent.toMotechEvent());
+        alertChildAction.invoke(milestoneEvent);
 
         verify(commcareCaseGateway, never()).submitCase(anyString(), any(CaseTask.class));
     }
