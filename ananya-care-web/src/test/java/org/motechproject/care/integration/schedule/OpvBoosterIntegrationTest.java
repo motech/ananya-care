@@ -84,7 +84,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         LocalDate opv3Date = dob.plusMonths(15);
         LocalDate expectedReferenceDate = opv3Date.plusDays(180).minusWeeks(2);
         LocalDate expectedStartDueDate = opv3Date.plusDays(180);
-        LocalDate expectedStartLateDate = opv3Date.plusDays(180).plusMonths(8);
+        LocalDate expectedStartLateDate = opv3Date.plusMonths(8).plusDays(180);
 
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).withOPVBoosterDate(null).build();
         childService.process(careCase);
@@ -103,7 +103,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyAnc4ScheduleFulfillmentWhenAnc4VisitIsOver() {
+    public void shouldVerifyOPVBoosterScheduleFulfillmentWhenOPV4VisitIsOver() {
         LocalDate dob = DateUtil.today();
         LocalDate opv1Date = dob.plusWeeks(7);
         LocalDate opv2Date = dob.plusWeeks(11);
@@ -113,7 +113,6 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).withOPVBoosterDate(null).build();
         childService.process(careCase);
         markScheduleForUnEnrollment(caseId, scheduleName);
-        EnrollmentRecord enrollment;
         assertNull(getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE));
 
 
