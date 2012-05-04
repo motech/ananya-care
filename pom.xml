@@ -359,6 +359,7 @@
                                     <includes>
                                         <include>**/qa/*.java</include>
                                     </includes>
+
                                 </configuration>
                             </execution>
                         </executions>

@@ -1,4 +1,4 @@
-package org.motechproject.care.utils;
+package org.motechproject.care;
 
 import org.ektorp.CouchDbConnector;
 import org.junit.After;

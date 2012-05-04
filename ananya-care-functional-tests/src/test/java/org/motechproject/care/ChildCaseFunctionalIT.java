@@ -9,14 +9,13 @@ import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
-import org.motechproject.care.utils.CaseUtils;
-import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -29,7 +28,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
 
     @Before
     public void setUp(){
-        motherCaseId = CaseUtils.getUniqueCaseId();
+        motherCaseId = UUID.randomUUID().toString();
         dob = DateUtil.newDateTime(DateUtil.today());
     }
 
@@ -40,7 +39,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateChild() throws IOException {
-        String uniqueCaseId= CaseUtils.getUniqueCaseId();
+        String uniqueCaseId= UUID.randomUUID().toString();
 
         postChildXmlToUrl(uniqueCaseId, "sampleChildCase.xml");
         Child childFromDb = allChildren.findByCaseId(uniqueCaseId);
@@ -62,7 +61,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
 
     @Test
     public void shouldUpdateChild() throws IOException {
-        String uniqueCaseId= CaseUtils.getUniqueCaseId();
+        String uniqueCaseId= UUID.randomUUID().toString();
 
         postChildXmlToUrl(uniqueCaseId, "sampleChildCase.xml");
         postChildXmlToUrl(uniqueCaseId, "sampleUpdateChildCase.xml");

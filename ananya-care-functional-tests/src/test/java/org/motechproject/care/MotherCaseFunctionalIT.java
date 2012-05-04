@@ -8,14 +8,13 @@ import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
-import org.motechproject.care.utils.CaseUtils;
-import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class MotherCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
@@ -28,7 +27,7 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCreateMother() throws IOException {
-        String uniqueCaseId= CaseUtils.getUniqueCaseId();
+        String uniqueCaseId= UUID.randomUUID().toString();
 
         postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
         Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
@@ -47,7 +46,7 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
     @Test
     public void shouldUpdateMother() throws IOException {
-        String uniqueCaseId = CaseUtils.getUniqueCaseId();
+        String uniqueCaseId = UUID.randomUUID().toString();
 
         postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
 
@@ -67,7 +66,7 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
     @Test
     public void shouldCloseMother() throws IOException {
-        String uniqueCaseId = CaseUtils.getUniqueCaseId();
+        String uniqueCaseId = UUID.randomUUID().toString();
 
         postXmlToUrl(uniqueCaseId, "sampleMotherCase.xml");
 

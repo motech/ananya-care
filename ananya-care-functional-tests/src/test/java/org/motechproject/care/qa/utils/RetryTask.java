@@ -1,4 +1,4 @@
-package org.motechproject.care.utils;
+package org.motechproject.care.qa.utils;
 
 public abstract class RetryTask<T> {
 

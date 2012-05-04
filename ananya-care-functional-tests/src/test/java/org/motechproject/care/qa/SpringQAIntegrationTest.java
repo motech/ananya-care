@@ -5,7 +5,10 @@ import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.motechproject.care.repository.AllChildren;
+import org.motechproject.care.repository.AllMothers;
 import org.motechproject.commcarehq.domain.AlertDocCase;
+import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.quartz.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,15 @@ public abstract class SpringQAIntegrationTest {
 
     @Autowired
     protected ScheduleTrackingService trackingService;
+
+    @Autowired
+    protected AllMothers allMothers;
+
+    @Autowired
+    protected AllChildren allChildren;
+
+    @Autowired
+    protected AllAlertDocCases allAlertDocCases;
 
     protected ArrayList<BulkDeleteDocument> toDelete;
 

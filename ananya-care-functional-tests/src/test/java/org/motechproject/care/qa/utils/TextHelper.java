@@ -1,13 +1,11 @@
-package org.motechproject.care.utils;
-
-import org.apache.http.HttpResponse;
+package org.motechproject.care.qa.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class TextHelper {
-    public static String GetText(InputStream in) {
+    public static String getText(InputStream in) {
         String text = "";
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
@@ -29,12 +27,4 @@ public class TextHelper {
         return text;
     }
 
-    public static String GetText(HttpResponse response) {
-        String text = "";
-        try {
-            text = GetText(response.getEntity().getContent());
-        } catch (Exception ex) {
-        }
-        return text;
-    }
 }
