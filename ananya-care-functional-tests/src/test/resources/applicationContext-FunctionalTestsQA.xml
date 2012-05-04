@@ -18,6 +18,8 @@
 
     <context:component-scan base-package="org.motechproject.commcarehq"/>
 
+    <bean id="dbUtils" class="org.motechproject.care.qa.utils.DbUtils" />
+
     <bean id="ananyaCareDummyAppDbConnector" class="org.ektorp.impl.StdCouchDbConnector">
         <constructor-arg value="dummy-commcare-hq"/>
         <constructor-arg ref="ananyaCareDbInstance"/>
