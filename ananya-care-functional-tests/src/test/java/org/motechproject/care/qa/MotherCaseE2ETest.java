@@ -3,28 +3,30 @@ package org.motechproject.care.qa;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.qa.utils.CaseUtils;
+import org.motechproject.care.qa.utils.DbUtils;
 import org.motechproject.care.qa.utils.HttpUtils;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.util.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class MotherCaseE2EIT extends SpringQAIntegrationTest {
+public class MotherCaseE2ETest extends SpringQAIntegrationTest {
 
+    @Autowired
+    private DbUtils dbUtils;
 
    @Test
     public void shouldSendATT1AlertForAPregnantMother() throws IOException {
 
-       CaseUtils caseUtils = new CaseUtils();
 
-       final HashMap<String, String> caseAttributes = caseUtils.createAPregnantMotherCaseInCommCare();
+       final HashMap<String, String> caseAttributes = HttpUtils.createAPregnantMotherCaseInCommCare();
        String caseId = caseAttributes.get("caseId");
-       Mother mother=caseUtils.getMotherFromDb(caseId);
+       Mother mother= dbUtils.getMotherFromDb(caseId);
 
         Assert.assertNotNull(mother);
         markForDeletion(mother);
@@ -39,7 +41,7 @@ public class MotherCaseE2EIT extends SpringQAIntegrationTest {
         caseAttributes.put("edd", edd);
         HttpUtils.postXmlWithAttributes(caseAttributes, "/pregnantmother_register_with_edd.st");
 
-       AlertDocCase alertDocCase =caseUtils.getAlertDocFromDb(caseId,"tt_1");
+       AlertDocCase alertDocCase = dbUtils.getAlertDocFromDb(caseId,"tt_1");
 
        Assert.assertNotNull(alertDocCase);
        markAlertDocCaseForDeletion(alertDocCase);

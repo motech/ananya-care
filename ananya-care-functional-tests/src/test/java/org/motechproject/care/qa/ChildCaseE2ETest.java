@@ -5,7 +5,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.qa.utils.CaseUtils;
+import org.motechproject.care.qa.utils.DbUtils;
 import org.motechproject.care.qa.utils.HttpUtils;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ChildCaseE2EIT extends SpringQAIntegrationTest {
+public class ChildCaseE2ETest extends SpringQAIntegrationTest {
 
     @Autowired
     private AllMothers allMothers;
@@ -35,14 +35,16 @@ public class ChildCaseE2EIT extends SpringQAIntegrationTest {
     @Autowired
     private ScheduleTrackingService trackingService;
 
+    @Autowired
+    private DbUtils dbUtils;
+
     @Test
     public void shouldSendBCGAlertForANewBornChild() throws IOException {
-        CaseUtils caseUtils = new CaseUtils();
 
-        HashMap<String, String> caseAttributes = caseUtils.createAPregnantMotherCaseInCommCare();
+        HashMap<String, String> caseAttributes = HttpUtils.createAPregnantMotherCaseInCommCare();
         String motherCaseId = caseAttributes.get("caseId");
 
-        Mother mother = caseUtils.getMotherFromDb(motherCaseId);
+        Mother mother = dbUtils.getMotherFromDb(motherCaseId);
         Assert.assertNotNull(mother);
         markForDeletion(mother);
         markScheduleForUnEnrollment(motherCaseId, MilestoneType.TT1.toString());
@@ -61,7 +63,7 @@ public class ChildCaseE2EIT extends SpringQAIntegrationTest {
 
         HttpUtils.postXmlWithAttributes(childAttributes, "/newbornchild.st");
 
-        Child child = caseUtils.getChildFromDb(childCaseId);
+        Child child = dbUtils.getChildFromDb(childCaseId);
 
         Assert.assertNotNull(child);
         Assert.assertEquals(childName, child.getName());
@@ -71,7 +73,7 @@ public class ChildCaseE2EIT extends SpringQAIntegrationTest {
         markForDeletion(child);
         markScheduleForUnEnrollment(childCaseId, MilestoneType.Bcg.toString());
 
-        AlertDocCase alertDocCase = caseUtils.getAlertDocFromDb(childCaseId, "bcg");
+        AlertDocCase alertDocCase = dbUtils.getAlertDocFromDb(childCaseId, "bcg");
         Assert.assertNotNull(alertDocCase);
         markAlertDocCaseForDeletion(alertDocCase);
 

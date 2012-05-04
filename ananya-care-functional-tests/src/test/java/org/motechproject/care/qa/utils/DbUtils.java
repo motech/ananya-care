@@ -7,23 +7,25 @@ import org.motechproject.care.repository.AllMothers;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
-public class CaseUtils {
+@Component
+public class DbUtils {
 
-    @Autowired
     private AllChildren allChildren;
 
-    @Autowired
     private AllMothers allMothers;
 
-    @Autowired
     private AllAlertDocCases allAlertDocCases;
 
+    @Autowired
+    public DbUtils(AllChildren allChildren, AllMothers allMothers, AllAlertDocCases allAlertDocCases) {
+        this.allChildren = allChildren;
+        this.allMothers = allMothers;
+        this.allAlertDocCases = allAlertDocCases;
+    }
 
     public Child getChildFromDb(final String childCaseId) {
         RetryTask<Child> taskToFetchChild = new RetryTask<Child>() {
@@ -63,19 +65,7 @@ public class CaseUtils {
         return taskToFetchAlertDocCase.execute(300, 1000);
     }
 
-    public HashMap<String, String> createAPregnantMotherCaseInCommCare() throws IOException {
-        final String motherCaseId = UUID.randomUUID().toString();
-        String motherInstanceId = UUID.randomUUID().toString();
-        String motherName = "mother_test_gen" + Math.random();
 
-        HashMap<String, String> motherAttributes = new HashMap<String, String>();
-        motherAttributes.put("caseId", motherCaseId);
-        motherAttributes.put("instanceId", motherInstanceId);
-        motherAttributes.put("name", motherName);
-
-        HttpUtils.postXmlWithAttributes(motherAttributes, "/pregnantmother_new.st");
-        return motherAttributes;
-    }
 
 
 }

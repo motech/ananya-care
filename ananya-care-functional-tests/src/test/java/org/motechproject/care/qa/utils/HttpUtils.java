@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class HttpUtils {
 
@@ -48,6 +49,20 @@ public class HttpUtils {
         InputStream resourceAsStream = HttpUtils.class.getResourceAsStream(templateFilePath);
         String template = TextHelper.getText(resourceAsStream);
         return new StringTemplate(template);
+    }
+
+    public static HashMap<String, String> createAPregnantMotherCaseInCommCare() throws IOException {
+        final String motherCaseId = UUID.randomUUID().toString();
+        String motherInstanceId = UUID.randomUUID().toString();
+        String motherName = "mother_test_gen" + Math.random();
+
+        HashMap<String, String> motherAttributes = new HashMap<String, String>();
+        motherAttributes.put("caseId", motherCaseId);
+        motherAttributes.put("instanceId", motherInstanceId);
+        motherAttributes.put("name", motherName);
+
+        HttpUtils.postXmlWithAttributes(motherAttributes, "/pregnantmother_new.st");
+        return motherAttributes;
     }
 
 }
