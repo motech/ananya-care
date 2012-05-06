@@ -1,4 +1,4 @@
-package org.motechproject.care.qa.utils;
+package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
@@ -9,17 +9,17 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.motechproject.care.utils.StringTemplateHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class HttpUtils {
+public class CommCareWrapper {
 
     public static void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {
-        StringTemplate stringTemplate = getStringTemplate(templateFilePath);
+        StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate(templateFilePath);
         for(String attributeName: attributes.keySet()) {
             stringTemplate.setAttribute(attributeName, attributes.get(attributeName));
         }
@@ -45,12 +45,6 @@ public class HttpUtils {
     }
 
 
-    public static StringTemplate getStringTemplate(String templateFilePath) {
-        InputStream resourceAsStream = HttpUtils.class.getResourceAsStream(templateFilePath);
-        String template = TextHelper.getText(resourceAsStream);
-        return new StringTemplate(template);
-    }
-
     public static HashMap<String, String> createAPregnantMotherCaseInCommCare() throws IOException {
         final String motherCaseId = UUID.randomUUID().toString();
         String motherInstanceId = UUID.randomUUID().toString();
@@ -61,7 +55,7 @@ public class HttpUtils {
         motherAttributes.put("instanceId", motherInstanceId);
         motherAttributes.put("name", motherName);
 
-        HttpUtils.postXmlWithAttributes(motherAttributes, "/pregnantmother_new.st");
+        CommCareWrapper.postXmlWithAttributes(motherAttributes, "/commCareFormXmls/pregnantmother_new.st");
         return motherAttributes;
     }
 

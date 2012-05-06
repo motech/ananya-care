@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<case xmlns="http://commcarehq.org/case/transaction/v2" case_id="caseId" date_modified="2012-04-03" user_id="d823ea3d392a06f8b991e9e4933348bd">
+<case xmlns="http://commcarehq.org/case/transaction/v2" case_id="$caseId$" date_modified="2012-04-03" user_id="d823ea3d392a06f8b991e9e4933348bd">
   <create>
     <case_type>cc_bihar_newborn</case_type>
     <case_name>RAM</case_name>
@@ -7,11 +7,11 @@
   </create>
   <update>
     <gender>female</gender>
-      <dob>dobDate</dob>
+      <dob>$dobDate$</dob>
     <bcg_date>2012-12-04</bcg_date>
     <baby_measles>2012-12-05</baby_measles>
   </update>
   <index>
-    <mother_id case_type="cc_bihar_pregnancy">motherCaseId</mother_id>
+    <mother_id case_type="cc_bihar_pregnancy">$motherCaseId$</mother_id>
   </index>
 </case>

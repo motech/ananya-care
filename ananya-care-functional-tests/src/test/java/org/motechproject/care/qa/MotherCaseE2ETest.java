@@ -3,8 +3,7 @@ package org.motechproject.care.qa;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.qa.utils.DbUtils;
-import org.motechproject.care.qa.utils.HttpUtils;
+import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.commcarehq.domain.AlertDocCase;
@@ -24,7 +23,7 @@ public class MotherCaseE2ETest extends SpringQAIntegrationTest {
     public void shouldSendATT1AlertForAPregnantMother() throws IOException {
 
 
-       final HashMap<String, String> caseAttributes = HttpUtils.createAPregnantMotherCaseInCommCare();
+       final HashMap<String, String> caseAttributes = CommCareWrapper.createAPregnantMotherCaseInCommCare();
        String caseId = caseAttributes.get("caseId");
        Mother mother= dbUtils.getMotherFromDb(caseId);
 
@@ -39,7 +38,7 @@ public class MotherCaseE2ETest extends SpringQAIntegrationTest {
         String edd = DateUtil.now().plusMonths(1).toLocalDate().toString();
         caseAttributes.put("instanceId", instanceId);
         caseAttributes.put("edd", edd);
-        HttpUtils.postXmlWithAttributes(caseAttributes, "/pregnantmother_register_with_edd.st");
+        CommCareWrapper.postXmlWithAttributes(caseAttributes, "/commCareFormXmls/pregnantmother_register_with_edd.st");
 
        AlertDocCase alertDocCase = dbUtils.getAlertDocFromDb(caseId,"tt_1");
 

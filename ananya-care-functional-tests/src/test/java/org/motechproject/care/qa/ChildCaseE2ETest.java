@@ -5,8 +5,7 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.qa.utils.DbUtils;
-import org.motechproject.care.qa.utils.HttpUtils;
+import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
@@ -41,7 +40,7 @@ public class ChildCaseE2ETest extends SpringQAIntegrationTest {
     @Test
     public void shouldSendBCGAlertForANewBornChild() throws IOException {
 
-        HashMap<String, String> caseAttributes = HttpUtils.createAPregnantMotherCaseInCommCare();
+        HashMap<String, String> caseAttributes = CommCareWrapper.createAPregnantMotherCaseInCommCare();
         String motherCaseId = caseAttributes.get("caseId");
 
         Mother mother = dbUtils.getMotherFromDb(motherCaseId);
@@ -61,7 +60,7 @@ public class ChildCaseE2ETest extends SpringQAIntegrationTest {
         childAttributes.put("motherCaseId", motherCaseId);
         childAttributes.put("dob", dob.toString());
 
-        HttpUtils.postXmlWithAttributes(childAttributes, "/newbornchild.st");
+        CommCareWrapper.postXmlWithAttributes(childAttributes, "/commCareFormXmls/newbornchild.st");
 
         Child child = dbUtils.getChildFromDb(childCaseId);
 

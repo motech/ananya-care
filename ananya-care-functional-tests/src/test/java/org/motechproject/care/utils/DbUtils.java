@@ -1,4 +1,4 @@
-package org.motechproject.care.qa.utils;
+package org.motechproject.care.utils;
 
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;

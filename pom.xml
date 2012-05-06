@@ -320,22 +320,13 @@
                <plugins>
                    <plugin>
                        <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-failsafe-plugin</artifactId>
-                       <version>2.9</version>
-                       <executions>
-                           <execution>
-                               <goals>
-                                   <goal>integration-test</goal>
-                                   <goal>verify</goal>
-                               </goals>
-                               <configuration>
-                                   <argLine>-XX:MaxPermSize=1024M</argLine>
-                                   <excludes>
-                                       <exclude>**/qa/*.java</exclude>
-                                   </excludes>
-                               </configuration>
-                           </execution>
-                       </executions>
+                       <artifactId>maven-surefire-plugin</artifactId>
+                       <version>2.7.2</version>
+                       <configuration>
+                           <excludes>
+                               <exclude>**/qa/*.java</exclude>
+                           </excludes>
+                       </configuration>
                    </plugin>
                </plugins>
            </build>
@@ -372,6 +363,7 @@
                             <skipTests>true</skipTests>
                         </configuration>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>
