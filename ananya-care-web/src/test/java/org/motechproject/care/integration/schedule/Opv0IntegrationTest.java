@@ -80,7 +80,7 @@ public class Opv0IntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldVerifyOPV0ScheduleNotCreatedWhenChildIsOlderThan15Days() {
-        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(15));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(16));
 
         String motherCaseId = "motherCaseId";
 

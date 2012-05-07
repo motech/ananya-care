@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
@@ -28,7 +27,6 @@ import java.util.Date;
 import static org.motechproject.scheduletracking.api.domain.WindowName.*;
 import static org.motechproject.util.DateUtil.newDate;
 
-@Ignore
 public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     private static final int JANUARY = 1;
     private static final int FEBRUARY = 2;
@@ -112,7 +110,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
         schedule.assertNoAlerts("Bcg", earliest);
         schedule.assertAlertsStartWith("Bcg", due, dateWithYear(1, DECEMBER, 2011));
-        schedule.assertNoAlerts("Bcg", late);
+        schedule.assertAlertsStartWith("Bcg", late, dateWithYear(1, DECEMBER, 2012));
         schedule.assertNoAlerts("Bcg", max);
         visualization.outputTo("child-bcg.html", 2);
     }
@@ -168,7 +166,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
         schedule.assertNoAlerts("Hep 0", earliest);
         schedule.assertAlertsStartWith("Hep 0", due, today.toDate());
-        schedule.assertNoAlerts("Hep 0", late);
+        schedule.assertAlertsStartWith("Hep 0", late, today.plusDays(1).toDate());
         schedule.assertNoAlerts("Hep 0", max);
         visualization.outputTo("child-hepatitis0.html", 2);
     }
@@ -223,13 +221,13 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldProvideAlertsForOPV0VaccinationOnlyOnTheBabyDOB() throws Exception {
+    public void shouldProvideAlertsForOPV0VaccinationOnlyOnTheBabyDOBAndExpiryAlert() throws Exception {
         LocalDate today = DateUtil.today();
         schedule.enrollFor(ChildVaccinationSchedule.OPV0.getName(), today, null);
 
         schedule.assertNoAlerts("OPV 0", earliest);
         schedule.assertAlertsStartWith("OPV 0", due, today.toDate());
-        schedule.assertNoAlerts("OPV 0", late);
+        schedule.assertAlertsStartWith("OPV 0", late, today.plusDays(15).toDate());
         schedule.assertNoAlerts("OPV 0", max);
         visualization.outputTo("child-opv0.html", 2);
     }
@@ -303,6 +301,8 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("Mother Care", max);
         visualization.outputTo("mother-care.html", 2);
     }
+
+
 
 
     private Date date(int day, int month) {

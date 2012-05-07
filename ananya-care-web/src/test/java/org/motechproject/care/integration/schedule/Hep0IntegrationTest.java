@@ -79,22 +79,23 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
     }
 
     @Test
-    public void shouldVerifyHep0ScheduleNotCreatedWhenChildIsOlderThanADay() {
+    public void shouldVerifyHep0ScheduleIsNotActiveWhenChildIsOlderThanADay() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(1));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(2));
 
         String motherCaseId = "motherCaseId";
 
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId,  scheduleName);
+        markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(caseId)
                 .havingState(EnrollmentStatus.ACTIVE)
                 .havingSchedule(scheduleName);
 
-        assertTrue(trackingService.searchWithWindowDates(query).isEmpty());
+        List<EnrollmentRecord> enrollmentRecords = trackingService.searchWithWindowDates(query);
+        assertTrue(enrollmentRecords.isEmpty());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob, child.getDOB());

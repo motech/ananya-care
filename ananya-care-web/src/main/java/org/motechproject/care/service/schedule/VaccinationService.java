@@ -11,16 +11,13 @@ public abstract class VaccinationService {
     protected String scheduleName;
     private CareCaseTaskService careCaseTaskService;
 
-
     public VaccinationService(ScheduleService schedulerService, String scheduleName, CareCaseTaskService careCaseTaskService) {
         this.schedulerService = schedulerService;
         this.scheduleName = scheduleName;
         this.careCaseTaskService = careCaseTaskService;
     }
 
-
     public abstract  void process(Client client);
-
 
     public void close(Client client) {
         EnrollmentRecord enrollmentRecord = schedulerService.unenroll(client.getCaseId(), scheduleName);
@@ -30,7 +27,4 @@ public abstract class VaccinationService {
         String currentMilestoneName = enrollmentRecord.getCurrentMilestoneName();
         careCaseTaskService.close(client.getCaseId(), currentMilestoneName);
     }
-
-
-
 }

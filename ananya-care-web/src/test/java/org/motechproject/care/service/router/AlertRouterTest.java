@@ -7,11 +7,9 @@ import org.mockito.Mockito;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
-import org.motechproject.care.service.router.action.Action;
-import org.motechproject.care.service.router.action.AlertChildAction;
-import org.motechproject.care.service.router.action.AlertMotherAction;
-import org.motechproject.care.service.router.action.ClientExpiryAction;
+import org.motechproject.care.service.router.action.*;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
+import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 
 import static org.mockito.Matchers.any;
@@ -26,12 +24,26 @@ public class AlertRouterTest {
     private AlertMotherAction alertMotherAction;
     @Mock
     private ClientExpiryAction clientExpiryAction;
+    @Mock
+    private Hep0ExpiryAction hep0ExpiryAction;
+    @Mock
+    private Opv0ExpiryAction opv0ExpiryAction;
+    @Mock
+    private BcgExpiryAction bcgExpiryAction;
+
     AlertRouter alertRouter;
 
     @Before
     public void setUp(){
         initMocks(this);
-        alertRouter = new AlertRouter(alertChildAction, alertMotherAction, clientExpiryAction);
+        alertRouter = new AlertRouter(alertChildAction, alertMotherAction, clientExpiryAction, hep0ExpiryAction, opv0ExpiryAction, bcgExpiryAction);
+    }
+
+    @Test
+    public void shouldInvokeVaccinationExpiryActionIfEventIsForExpiredVaccination(){
+        verifyWasCalledFor(ChildVaccinationSchedule.Hepatitis0.getName(), hep0ExpiryAction, WindowName.late.name());
+        verifyWasCalledFor(ChildVaccinationSchedule.OPV0.getName(), opv0ExpiryAction, WindowName.late.name());
+        verifyWasCalledFor(ChildVaccinationSchedule.Bcg.getName(), bcgExpiryAction, WindowName.late.name());
     }
 
     @Test
@@ -62,12 +74,14 @@ public class AlertRouterTest {
     }
 
     private void verifyWasCalledFor(String scheduleName, Action alertClientAction) {
-        MilestoneEvent milestoneEvent = new MilestoneEvent(null, scheduleName, milestoneAlert, null, null);
-
+        verifyWasCalledFor(scheduleName, alertClientAction, null);
+    }
+    private void verifyWasCalledFor(String scheduleName, Action alertClientAction, String windowName) {
+        MilestoneEvent milestoneEvent = new MilestoneEvent(null, scheduleName, milestoneAlert, windowName, null);
         alertRouter.handle(milestoneEvent.toMotechEvent());
         Mockito.verify(alertClientAction).invoke(any(MilestoneEvent.class));
         initMocks(this);
-        alertRouter = new AlertRouter(alertChildAction, alertMotherAction, clientExpiryAction);
+        alertRouter = new AlertRouter(alertChildAction, alertMotherAction, clientExpiryAction, hep0ExpiryAction, opv0ExpiryAction, bcgExpiryAction);
     }
 
 }

@@ -3,12 +3,10 @@ package org.motechproject.care.service.router;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
-import org.motechproject.care.service.router.action.Action;
-import org.motechproject.care.service.router.action.AlertChildAction;
-import org.motechproject.care.service.router.action.AlertMotherAction;
-import org.motechproject.care.service.router.action.ClientExpiryAction;
+import org.motechproject.care.service.router.action.*;
 import org.motechproject.model.MotechEvent;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
+import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import org.motechproject.scheduletracking.api.events.constants.EventSubjects;
 import org.motechproject.server.event.annotations.MotechListener;
@@ -18,8 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.motechproject.care.service.router.Matcher.any;
-import static org.motechproject.care.service.router.Matcher.anyOf;
+import static org.motechproject.care.service.router.Matcher.*;
 
 @Component
 public class AlertRouter {
@@ -28,8 +25,11 @@ public class AlertRouter {
     @Autowired
     public AlertRouter(AlertChildAction alertChildAction
             , AlertMotherAction alertMotherAction
-            , ClientExpiryAction expiryAction) {
+            , ClientExpiryAction expiryAction, Hep0ExpiryAction hep0ExpiryAction, Opv0ExpiryAction opv0ExpiryAction, BcgExpiryAction bcgExpiryAction) {
         routes = new ArrayList<Route>();
+        routes.add(new Route(eq(ChildVaccinationSchedule.Hepatitis0.getName()), any(), eq(WindowName.late.name()), hep0ExpiryAction));
+        routes.add(new Route(eq(ChildVaccinationSchedule.OPV0.getName()), any(), eq(WindowName.late.name()), opv0ExpiryAction));
+        routes.add(new Route(eq(ChildVaccinationSchedule.Bcg.getName()), any(), eq(WindowName.late.name()), bcgExpiryAction));
         routes.add(new Route(childSchedules(), any(), any(), alertChildAction));
         routes.add(new Route(motherSchedules(), any(), any(), alertMotherAction));
         routes.add(new Route(expirySchedules(), any(), any(), expiryAction));

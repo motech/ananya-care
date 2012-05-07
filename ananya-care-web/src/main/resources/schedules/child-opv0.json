@@ -5,11 +5,19 @@
             "name": "OPV 0",
             "scheduleWindows": {
                 "earliest": ["0 Months"],
-                "due": ["15 Day"]
+                "due": ["15 Day"],
+                "late": ["16 Day"]
             },
             "alerts": [
                 {
                     "window": "due",
+                    "offset": ["0 Day"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                },
+                {
+                    "window": "late",
                     "offset": ["0 Day"],
                     "interval": ["1 Day"],
                     "count": "1",

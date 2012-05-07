@@ -37,8 +37,8 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
     private AllChildren allChildren;
     private String caseId;
 
-
     private ChildService childService;
+    private final String scheduleName = ChildVaccinationSchedule.Bcg.getName();
 
     @Before
     public void setUp(){
@@ -55,18 +55,17 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldVerifyBcgScheduleCreationWhenChildIsRegistered() {
-        String bcgScheduleName = ChildVaccinationSchedule.Bcg.getName();
         DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
         String motherCaseId = "motherCaseId";
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate(null).withMotherCaseId(motherCaseId).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, bcgScheduleName);
+        markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(caseId)
                 .havingState(EnrollmentStatus.ACTIVE)
-                .havingSchedule(bcgScheduleName);
+                .havingSchedule(scheduleName);
 
         EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
@@ -98,5 +97,4 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         assertEquals(dob, child.getDOB());
         assertEquals(bcgTaken, child.getBcgDate());
     }
-
 }
