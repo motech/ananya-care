@@ -11,7 +11,7 @@
         <date_last_visit>2012-04-03</date_last_visit>
         <date_next_bp>2012-04-03</date_next_bp>
         <date_next_reg>2012-04-03</date_next_reg>
-        <edd>2012-10-20</edd>
+        <edd></edd>
         <family_number>3</family_number>
         <family_planning_type>ppiud_at_delivery</family_planning_type>
         <hh_number>224</hh_number>

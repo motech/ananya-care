@@ -2,6 +2,8 @@ package org.motechproject.care.repository;
 
 import org.ektorp.ComplexKey;
 import org.ektorp.CouchDbConnector;
+import org.ektorp.ViewQuery;
+import org.ektorp.support.GenerateView;
 import org.ektorp.support.View;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.dao.MotechBaseRepository;
@@ -19,9 +21,19 @@ public class AllCareCaseTasks extends MotechBaseRepository<CareCaseTask> {
         super(CareCaseTask.class, dbCouchDbConnector);
     }
 
-    @View(name = "find_by_clientCaseId_and_milestoneName", map = "function(doc) {{emit([doc.clientCaseId, doc.milestoneName]);}}")
+    @View(name = "by_clientCaseId_and_milestoneName", map = "function(doc) {{emit([doc.clientCaseId, doc.milestoneName]);}}")
     public CareCaseTask findByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
-        List<CareCaseTask> careCaseTasks = queryView("find_by_clientCaseId_and_milestoneName", ComplexKey.of(clientCaseId, milestoneName));
+        List<CareCaseTask> careCaseTasks = queryView("by_clientCaseId_and_milestoneName", ComplexKey.of(clientCaseId, milestoneName));
         return careCaseTasks.isEmpty() ? null : careCaseTasks.get(0);
+    }
+
+    @GenerateView
+    public CareCaseTask findByCaseId(String caseId) {
+        ViewQuery find_by_caseId = createQuery("by_caseId").key(caseId).includeDocs(true);
+        List<CareCaseTask> careCaseTasks = db.queryView(find_by_caseId, CareCaseTask.class);
+        if (careCaseTasks == null || careCaseTasks.isEmpty()) {
+            return null;
+        }
+        return careCaseTasks.get(0);
     }
 }

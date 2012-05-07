@@ -1,14 +1,17 @@
-package org.motechproject.care;
+package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
 import org.joda.time.LocalDate;
-import org.junit.After;
 import org.junit.Test;
+import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.repository.AllCareCaseTasks;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.StringTemplateHelper;
+import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,35 +20,16 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.UUID;
 
-public class MotherCaseFunctionalIT extends SpringIntegrationTest {
+public class MotherCaseFunctionalTest extends SpringE2EIntegrationTest {
+
     @Autowired
-    private AllMothers allMothers;
-
-    @After
-    public void tearDown(){
-        allMothers.removeAll();
-    }
+    private DbUtils dbUtils;
+    
+    @Autowired
+    private AllCareCaseTasks allCareCaseTasks;
 
     @Test
-    public void shouldCreateMother() throws IOException {
-        String uniqueCaseId= UUID.randomUUID().toString();
-        createAMother(uniqueCaseId);
-
-        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
-
-        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", motherFromDb.getGroupId());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
-        Assert.assertEquals("NEERAJ",motherFromDb.getName());
-        Assert.assertEquals(null,motherFromDb.getEdd());
-        Assert.assertEquals(false,motherFromDb.isLastPregTt());
-        Assert.assertTrue(motherFromDb.isActive());
-
-        EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
-        Assert.assertNull(ttEnrollment);
-    }
-
-    @Test
-    public void shouldUpdateMother() throws IOException {
+    public void shouldCreateAlertsForTt1AndTt2AndCloseCase() throws IOException {
         String uniqueCaseId = UUID.randomUUID().toString();
 
         createAMother(uniqueCaseId);
@@ -60,7 +44,7 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
 
-        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45",motherFromDb.getGroupId());
+        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateUtil.newDateTime(edd), motherFromDb.getEdd());
@@ -69,27 +53,25 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
-    }
 
-    @Test
-    public void shouldCloseMother() throws IOException {
-        String uniqueCaseId = UUID.randomUUID().toString();
+        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
+        stringTemplate.setAttribute("caseId",uniqueCaseId);
+        LocalDate tt1Date = DateUtil.now().minusMonths(2).toLocalDate();
+        stringTemplate.setAttribute("edd", edd.toString());
+        stringTemplate.setAttribute("tt1Date", tt1Date.toString());
+        postXmlToMotechCare(stringTemplate.toString());
 
-        createAMother(uniqueCaseId);
+        AlertDocCase alertDocCase = dbUtils.getAlertDocCase(uniqueCaseId, MilestoneType.TT2.getTaskId());
+        Assert.assertNotNull(alertDocCase);
+        CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(uniqueCaseId, MilestoneType.TT2.getName());
+        Assert.assertNotNull(careCaseTask);
 
-        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
-
-        Assert.assertTrue(motherFromDb.isActive());
-
-
-        StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
+        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
         postXmlToMotechCare(stringTemplate.toString());
 
-        motherFromDb = allMothers.findByCaseId(uniqueCaseId);
-
-        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
-        Assert.assertFalse(motherFromDb.isActive());
+        alertDocCase = dbUtils.getAlertDocCase(alertDocCase.getCaseId(), true);
+        Assert.assertNotNull(alertDocCase);
     }
 
     private void createAMother(String uniqueCaseId) throws IOException {
@@ -98,7 +80,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
         postXmlToMotechCare(stringTemplate.toString());
     }
 
-    private void postXmlToMotechCare(String xmlBody) throws IOException {
+
+    protected void postXmlToMotechCare(String xmlBody) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.postForLocation(getAppServerUrl(), xmlBody);
     }

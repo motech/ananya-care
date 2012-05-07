@@ -41,7 +41,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
     public void shouldCreateChild() throws IOException {
         String uniqueCaseId= UUID.randomUUID().toString();
 
-        postChildXmlToLocalHost(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
+        postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
         Child childFromDb = allChildren.findByCaseId(uniqueCaseId);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
@@ -57,14 +57,15 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         Assert.assertEquals("Bcg", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName()).getCurrentMilestoneName());
         Assert.assertEquals("Vita", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName()).getCurrentMilestoneName());
         Assert.assertEquals("Measles", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Measles.getName()).getCurrentMilestoneName());
+
     }
 
     @Test
     public void shouldUpdateChild() throws IOException {
         String uniqueCaseId= UUID.randomUUID().toString();
 
-        postChildXmlToLocalHost(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
-        postChildXmlToLocalHost(uniqueCaseId, "/caseXmls/childUpdateCaseXml.st");
+        postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
+        postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childUpdateCaseXml.st");
         Child childFromDb = allChildren.findByCaseId(uniqueCaseId);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
@@ -84,13 +85,13 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         assertEquals("Vita", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName()).getCurrentMilestoneName());
     }
 
-    private void postChildXmlToLocalHost(String uniqueCaseId, String xmlFileName) throws IOException {
+    private void postChildXmlToMotechCare(String uniqueCaseId, String xmlFileName) throws IOException {
         RestTemplate restTemplate = new RestTemplate();
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate(xmlFileName);
         stringTemplate.setAttribute("caseId",uniqueCaseId);
         stringTemplate.setAttribute("dobDate",DateUtil.newDate(dob).toString());
         stringTemplate.setAttribute("motherCaseId",motherCaseId);
 
-        restTemplate.postForLocation(getAppServerHostUrl() + "/ananya-care/care/process", stringTemplate.toString());
+        restTemplate.postForLocation(getAppServerUrl(), stringTemplate.toString());
     }
 }

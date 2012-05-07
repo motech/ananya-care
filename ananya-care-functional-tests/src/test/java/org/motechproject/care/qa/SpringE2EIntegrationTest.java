@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-FunctionalTestsQA.xml")
-public abstract class SpringQAIntegrationTest {
+@ContextConfiguration("classpath*:applicationContext-FunctionalTestsE2E.xml")
+public abstract class SpringE2EIntegrationTest {
 
     @Qualifier("ananyaCareDbConnector")
     @Autowired
@@ -90,11 +90,15 @@ public abstract class SpringQAIntegrationTest {
         schedulesToDelete.add(new Pair(externalId, scheduleName));
     }
 
-    protected String getAppServerPort() {
+    private String getAppServerPort() {
         return ananyaCareProperties.getProperty("app.server.port");
     }
 
-    protected String getAppServerHostUrl() {
-        return "http://localhost:" + getAppServerPort();
+    private String getAppServerHost() {
+        return ananyaCareProperties.getProperty("app.server.host");
+    }
+
+    protected String getAppServerUrl() {
+        return "http://" + getAppServerHost() + ":" + getAppServerPort()+"/ananya-care/care/process";
     }
 }

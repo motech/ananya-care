@@ -16,23 +16,19 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class CommCareWrapper {
+public class E2EIntegrationTest extends SpringE2EIntegrationTest {
 
-    public static void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {
+    protected void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate(templateFilePath);
         for(String attributeName: attributes.keySet()) {
             stringTemplate.setAttribute(attributeName, attributes.get(attributeName));
         }
 
         String final_xml = stringTemplate.toString();
-
-        HttpResponse response = postToCommCare(final_xml);
-        StatusLine statusLine = response.getStatusLine();
-        Assert.assertEquals(201, statusLine.getStatusCode());
-        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
+        postToCommCare(final_xml);
     }
 
-    private static HttpResponse postToCommCare(String final_xml) throws IOException {
+    private void postToCommCare(String final_xml) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("https://www.commcarehq.org/a/ananya-care/receiver/");
 
@@ -41,11 +37,13 @@ public class CommCareWrapper {
         reqEntity.addPart("xml_submission_file", inputStreamBody);
         httpPost.setEntity(reqEntity);
 
-        return httpclient.execute(httpPost);
+        HttpResponse response = httpclient.execute(httpPost);
+        StatusLine statusLine = response.getStatusLine();
+        Assert.assertEquals(201, statusLine.getStatusCode());
+        Assert.assertEquals("CREATED",statusLine.getReasonPhrase());
     }
 
-
-    public static HashMap<String, String> createAPregnantMotherCaseInCommCare() throws IOException {
+    protected  HashMap<String, String> createAPregnantMotherCaseInCommCare() throws IOException {
         final String motherCaseId = UUID.randomUUID().toString();
         String motherInstanceId = UUID.randomUUID().toString();
         String motherName = "mother_test_gen" + Math.random();
@@ -55,8 +53,10 @@ public class CommCareWrapper {
         motherAttributes.put("instanceId", motherInstanceId);
         motherAttributes.put("name", motherName);
 
-        CommCareWrapper.postXmlWithAttributes(motherAttributes, "/commCareFormXmls/pregnantmother_new.st");
+        this.postXmlWithAttributes(motherAttributes, "/commCareFormXmls/pregnantmother_new.st");
         return motherAttributes;
     }
+
+
 
 }

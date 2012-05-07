@@ -64,11 +64,15 @@ public abstract class SpringIntegrationTest {
         schedulesToDelete.add(new Pair(externalId, scheduleName));
     }
 
-    protected String getAppServerPort() {
+    private String getAppServerPort() {
         return ananyaCareProperties.getProperty("app.server.port");
     }
 
-    protected String getAppServerHostUrl() {
-        return "http://localhost:" + getAppServerPort();
+    private String getAppServerHost() {
+        return ananyaCareProperties.getProperty("app.server.host");
+    }
+
+    protected String getAppServerUrl() {
+        return "http://" + getAppServerHost() + ":" + getAppServerPort()+"/ananya-care/care/process";
     }
 }

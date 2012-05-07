@@ -49,13 +49,32 @@ public class DbUtils {
         return taskToFetchMother.execute(120, 1000);
     }
 
-    public AlertDocCase getAlertDocFromDb(final String clientCaseId, final String taskName) {
+    public AlertDocCase getAlertDocCase(final String clientCaseId, final String taskName) {
         RetryTask<AlertDocCase> taskToFetchAlertDocCase = new RetryTask<AlertDocCase>() {
             @Override
             protected AlertDocCase perform() {
-                List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(clientCaseId);
+                List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByClientCaseId(clientCaseId);
                 for(AlertDocCase alertDocCase : alertDocCases) {
                     if(alertDocCase.getXmlDocument().contains("<task_id>"+taskName+"</task_id>")) {
+                        return alertDocCase;
+                    }
+                }
+                return null;
+            }
+        };
+        return taskToFetchAlertDocCase.execute(300, 1000);
+    }
+
+    public AlertDocCase getAlertDocCase(final String caseId, final boolean closeCase) {
+        RetryTask<AlertDocCase> taskToFetchAlertDocCase = new RetryTask<AlertDocCase>() {
+            @Override
+            protected AlertDocCase perform() {
+                List<AlertDocCase> alertDocCases = allAlertDocCases.findAllByCaseId(caseId);
+                for(AlertDocCase alertDocCase : alertDocCases) {
+                    if(!closeCase && !alertDocCase.getXmlDocument().contains("<close")) {
+                        return alertDocCase;
+                    }
+                    if(closeCase && alertDocCase.getXmlDocument().contains("<close")) {
                         return alertDocCase;
                     }
                 }

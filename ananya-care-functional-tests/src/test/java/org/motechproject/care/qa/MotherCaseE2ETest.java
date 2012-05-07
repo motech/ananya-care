@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class MotherCaseE2ETest extends SpringQAIntegrationTest {
+public class MotherCaseE2ETest extends E2EIntegrationTest {
 
     @Autowired
     private DbUtils dbUtils;
@@ -23,7 +23,7 @@ public class MotherCaseE2ETest extends SpringQAIntegrationTest {
     public void shouldSendATT1AlertForAPregnantMother() throws IOException {
 
 
-       final HashMap<String, String> caseAttributes = CommCareWrapper.createAPregnantMotherCaseInCommCare();
+       final HashMap<String, String> caseAttributes = createAPregnantMotherCaseInCommCare();
        String caseId = caseAttributes.get("caseId");
        Mother mother= dbUtils.getMotherFromDb(caseId);
 
@@ -38,9 +38,9 @@ public class MotherCaseE2ETest extends SpringQAIntegrationTest {
         String edd = DateUtil.now().plusMonths(1).toLocalDate().toString();
         caseAttributes.put("instanceId", instanceId);
         caseAttributes.put("edd", edd);
-        CommCareWrapper.postXmlWithAttributes(caseAttributes, "/commCareFormXmls/pregnantmother_register_with_edd.st");
+        postXmlWithAttributes(caseAttributes, "/commCareFormXmls/pregnantmother_register_with_edd.st");
 
-       AlertDocCase alertDocCase = dbUtils.getAlertDocFromDb(caseId,"tt_1");
+       AlertDocCase alertDocCase = dbUtils.getAlertDocCase(caseId, "tt_1");
 
        Assert.assertNotNull(alertDocCase);
        markAlertDocCaseForDeletion(alertDocCase);

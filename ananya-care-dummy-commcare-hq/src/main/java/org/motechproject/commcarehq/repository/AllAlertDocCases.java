@@ -2,7 +2,7 @@ package org.motechproject.commcarehq.repository;
 
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
-import org.ektorp.support.GenerateView;
+import org.ektorp.support.View;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +20,20 @@ public class AllAlertDocCases extends MotechBaseRepository<AlertDocCase> {
         super(AlertDocCase.class, dbCouchDbConnector);
     }
 
-    @GenerateView
-    public AlertDocCase findByCaseId(String caseId) {
-        List<AlertDocCase> alertDocCases = findAllByCaseId(caseId);
-        if (alertDocCases.isEmpty()) {
-            return null;
-        }
-        return alertDocCases.get(0);
-    }
-
+    @View(name = "by_caseId", map = "function(doc) {{emit(doc.caseId);}}")
     public List<AlertDocCase> findAllByCaseId(String caseId) {
         ViewQuery find_by_caseId = createQuery("by_caseId").key(caseId).includeDocs(true);
         List<AlertDocCase> alertDocCases = db.queryView(find_by_caseId, AlertDocCase.class);
+        if (alertDocCases == null) {
+            return new ArrayList<AlertDocCase>();
+        }
+        return alertDocCases;
+    }
+
+    @View(name = "by_clientCaseId", map = "function(doc) {{emit(doc.clientCaseId);}}")
+    public List<AlertDocCase> findAllByClientCaseId(String clientCaseId) {
+        ViewQuery find_by_clientCaseId = createQuery("by_clientCaseId").key(clientCaseId).includeDocs(true);
+        List<AlertDocCase> alertDocCases = db.queryView(find_by_clientCaseId, AlertDocCase.class);
         if (alertDocCases == null) {
             return new ArrayList<AlertDocCase>();
         }

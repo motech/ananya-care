@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ChildCaseE2ETest extends SpringQAIntegrationTest {
+public class ChildCaseE2ETest extends E2EIntegrationTest {
 
     @Autowired
     private AllMothers allMothers;
@@ -40,7 +40,7 @@ public class ChildCaseE2ETest extends SpringQAIntegrationTest {
     @Test
     public void shouldSendBCGAlertForANewBornChild() throws IOException {
 
-        HashMap<String, String> caseAttributes = CommCareWrapper.createAPregnantMotherCaseInCommCare();
+        HashMap<String, String> caseAttributes = createAPregnantMotherCaseInCommCare();
         String motherCaseId = caseAttributes.get("caseId");
 
         Mother mother = dbUtils.getMotherFromDb(motherCaseId);
@@ -60,7 +60,7 @@ public class ChildCaseE2ETest extends SpringQAIntegrationTest {
         childAttributes.put("motherCaseId", motherCaseId);
         childAttributes.put("dob", dob.toString());
 
-        CommCareWrapper.postXmlWithAttributes(childAttributes, "/commCareFormXmls/newbornchild.st");
+        postXmlWithAttributes(childAttributes, "/commCareFormXmls/newbornchild.st");
 
         Child child = dbUtils.getChildFromDb(childCaseId);
 
@@ -72,9 +72,10 @@ public class ChildCaseE2ETest extends SpringQAIntegrationTest {
         markForDeletion(child);
         markScheduleForUnEnrollment(childCaseId, MilestoneType.Bcg.toString());
 
-        AlertDocCase alertDocCase = dbUtils.getAlertDocFromDb(childCaseId, "bcg");
+        AlertDocCase alertDocCase = dbUtils.getAlertDocCase(childCaseId, "bcg");
         Assert.assertNotNull(alertDocCase);
         markAlertDocCaseForDeletion(alertDocCase);
+
 
     }
 
