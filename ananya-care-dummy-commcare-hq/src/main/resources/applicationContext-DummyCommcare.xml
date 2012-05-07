@@ -15,8 +15,7 @@
     <util:properties id="couchdbProperties" location="classpath:/couchdb.properties"/>
 
     <context:component-scan base-package="org.motechproject.commcarehq"/>
-    <context:component-scan base-package="org.motechproject.care.domain"/>
-    <context:component-scan base-package="org.motechproject.care.repository"/>
+    <context:component-scan base-package="org.motechproject.care"/>
 
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>

@@ -7,9 +7,11 @@ import org.motechproject.care.repository.AllMothers;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.commcarehq.repository.AllAlertDocCases;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class DbUtils {
 
     private AllChildren allChildren;
