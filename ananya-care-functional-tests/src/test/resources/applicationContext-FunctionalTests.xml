@@ -16,4 +16,5 @@
     <context:component-scan base-package="org.motechproject.commcarehq"/>
 
     <import resource="classpath:applicationContext-Web.xml"/>
+    <import resource="classpath:applicationContext-DummyCommcare.xml"/>
 </beans>
