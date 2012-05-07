@@ -6,7 +6,6 @@
         <owner_id>d823ea3d392a06f8b991e9e49394ce45</owner_id>
     </create>
     <update>
-        <add>2012-10-21</add>
         <age>25</age>
         <date_last_visit>2012-04-03</date_last_visit>
         <date_next_bp>2012-04-03</date_next_bp>
@@ -19,11 +18,10 @@
         <last_visit_type>reg</last_visit_type>
         <lmp>2012-01-20</lmp>
         <mobile_number>2254451212</mobile_number>
-        <mother_alive>no</mother_alive>
+        <mother_alive>yes</mother_alive>
         <mother_dob>1986-04-25</mother_dob>
         <mother_name>NEERAJ</mother_name>
         <num_boys>1</num_boys>
-        <tt_1_date>2012-01-02</tt_1_date>
         <last_preg_tt>no</last_preg_tt>
     </update>
 </case>

@@ -61,10 +61,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateTime.parse("2012-10-20"),motherFromDb.getEdd());
-        Assert.assertEquals(DateTime.parse("2012-10-21"),motherFromDb.getAdd());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
-        Assert.assertEquals(DateTime.parse("2012-01-02"),motherFromDb.getTt1Date());
-        Assert.assertFalse(motherFromDb.isActive());
+        Assert.assertTrue(motherFromDb.isActive());
     }
 
     @Test
