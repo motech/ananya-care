@@ -28,6 +28,8 @@ public class CareCaseTaskService {
         if(careCaseTask == null) {
             return;
         }
+        careCaseTask.setOpen(false);
+        allCareCaseTasks.update(careCaseTask);
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
         commcareCaseGateway.closeCase(commcareUrl, careCaseTask.toCaseTask());
     }

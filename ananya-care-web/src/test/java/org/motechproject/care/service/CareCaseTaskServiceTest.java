@@ -3,6 +3,7 @@ package org.motechproject.care.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.CareCaseTask;
@@ -12,6 +13,7 @@ import org.motechproject.casexml.gateway.CommcareCaseGateway;
 
 import java.util.Properties;
 
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -54,5 +56,21 @@ public class CareCaseTaskServiceTest {
         careCaseTaskService.close(clientCaseId, milestoneName);
 
         verify(commcareCaseGateway).closeCase(url, caseTask);
+    }
+
+    @Test
+    public void shouldUpdateTheCaseTaskStatusToClose() {
+        String clientCaseId = "clientCaseId";
+        String milestoneName = "milestoneName";
+        CareCaseTask careCaseTask = new CareCaseTask();
+        careCaseTask.setOpen(true);
+        when(allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName)).thenReturn(careCaseTask);
+
+        careCaseTaskService.close(clientCaseId, milestoneName);
+        ArgumentCaptor<CareCaseTask> captor = ArgumentCaptor.forClass(CareCaseTask.class);
+        verify(allCareCaseTasks).update(captor.capture());
+
+        CareCaseTask value = captor.getValue();
+        assertFalse(value.getOpen());
     }
 }

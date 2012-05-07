@@ -30,12 +30,13 @@ public class CareCaseTask extends MotechBaseDataObject{
     private String clientCaseType;
     @JsonProperty
     private String clientCaseId;
+    @JsonProperty
+    private Boolean isOpen = true;
 
     @JsonProperty
     private String clientElementTag;
 
     public CareCaseTask() {
-
     }
 
     public CareCaseTask(String milestoneName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId, String clientElementTag) {
@@ -117,5 +118,12 @@ public class CareCaseTask extends MotechBaseDataObject{
         return clientElementTag;
     }
 
+    public Boolean getOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
+    }
 }
 
