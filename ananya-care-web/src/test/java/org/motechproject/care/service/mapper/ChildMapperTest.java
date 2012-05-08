@@ -6,8 +6,7 @@ import org.motechproject.care.domain.Child;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.*;
 
 public class ChildMapperTest {
 
@@ -97,6 +96,24 @@ public class ChildMapperTest {
         assertNull(child.getOpv2Date());
         assertNull(child.getOpv3Date());
         assertNull(child.getOpvBoosterDate());
+    }
+
+    @Test
+    public void shouldInferChildAliveCorrectly(){
+        Child child = ChildMapper.map(new ChildCareCaseBuilder().withChildAlive("").build());
+        assertTrue(child.isAlive());
+
+        child =ChildMapper.map(new ChildCareCaseBuilder().withChildAlive(null).build());
+        assertTrue(child.isAlive());
+
+        child =ChildMapper.map(new ChildCareCaseBuilder().withChildAlive("yes").build());
+        assertTrue(child.isAlive());
+
+        child =ChildMapper.map(new ChildCareCaseBuilder().withChildAlive("random").build());
+        assertTrue(child.isAlive());
+
+        child =ChildMapper.map(new ChildCareCaseBuilder().withChildAlive("no").build());
+        assertFalse(child.isAlive());
     }
 
 

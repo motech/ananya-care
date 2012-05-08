@@ -19,13 +19,13 @@ public class Mother extends Client {
     private DateTime anc3Date;
     private DateTime anc4Date;
     private DateTime ttBoosterDate;
-    private boolean isAlive;
     private String caseType=CaseType.Mother.getType();
 
     public Mother() {
     }
 
     public Mother(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime edd, DateTime add, DateTime tt1Date, DateTime tt2Date, boolean lastPregTt, DateTime anc1Date, DateTime anc2Date, DateTime anc3Date, DateTime anc4Date, DateTime ttBoosterDate, boolean isAlive) {
+        super(isAlive);
         this.caseId = caseId;
         this.dateModified = dateModified;
         this.flwId = flwId;
@@ -41,13 +41,12 @@ public class Mother extends Client {
         this.anc3Date = anc3Date;
         this.anc4Date = anc4Date;
         this.ttBoosterDate = ttBoosterDate;
-        this.isAlive = isAlive;
     }
 
     @Override
     @JsonIgnore
     public boolean isActive() {
-        return !isClosedByCommcare() && isAlive && add == null && !isExpired();
+        return super.isActive() && add == null;
     }
 
     public DateTime getTt1Date() {
@@ -151,11 +150,4 @@ public class Mother extends Client {
     }
 
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
 }

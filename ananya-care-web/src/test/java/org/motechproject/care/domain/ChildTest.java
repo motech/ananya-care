@@ -8,13 +8,21 @@ public class ChildTest {
     @Test
     public void shouldBeSetToIsActiveByDefault() {
         Child child = new Child();
+        child.setAlive(true);
         Assert.assertTrue(child.isActive());
+    }
+
+    @Test
+    public void shouldBeSetToInActiveIfNotAlive() {
+        Child child = new Child();
+        child.setAlive(false);
+        Assert.assertFalse(child.isActive());
     }
 
     @Test
     public void shouldBeInactiveIfClosedByCommcare() {
         Child child = new Child();
-        child.setExpired(false);
+        child.setAlive(true);
         child.setClosedByCommcare(true);
         Assert.assertFalse(child.isActive());
     }
@@ -23,7 +31,6 @@ public class ChildTest {
     public void shouldBeInactiveIfExpired() {
         Child child = new Child();
         child.setExpired(true);
-        child.setClosedByCommcare(false);
         Assert.assertFalse(child.isActive());
     }
 }

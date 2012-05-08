@@ -15,8 +15,18 @@ public abstract class Client extends MotechBaseDataObject{
     private DateTime docCreateTime;
     private boolean closedByCommcare;
     private boolean expired;
+    protected boolean isAlive;
 
     public Client() {
+    }
+
+    public Client(boolean isAlive) {
+        this.isAlive = isAlive;
+    }
+
+    @JsonIgnore
+    public boolean isActive() {
+        return isAlive && !closedByCommcare && !expired;
     }
 
     public String getCaseId() {
@@ -60,11 +70,6 @@ public abstract class Client extends MotechBaseDataObject{
         this.groupId = groupId;
     }
 
-    @JsonIgnore
-    public boolean isActive() {
-        return !closedByCommcare && !isExpired();
-    }
-
     public DateTime getDocCreateTime() {
         return DateUtil.setTimeZone(docCreateTime);
     }
@@ -91,5 +96,13 @@ public abstract class Client extends MotechBaseDataObject{
 
     public void setExpired(boolean expired) {
         this.expired = expired;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
     }
 }

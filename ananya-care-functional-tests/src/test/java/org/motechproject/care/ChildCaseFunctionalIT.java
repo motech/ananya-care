@@ -3,7 +3,6 @@ package org.motechproject.care;
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
 import org.joda.time.DateTime;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
@@ -33,17 +32,14 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         dob = DateUtil.newDateTime(DateUtil.today());
     }
 
-    @After
-    public void tearDown(){
-        allChildren.removeAll();
-    }
-
     @Test
     public void shouldCreateChild() throws IOException {
         String uniqueCaseId= UUID.randomUUID().toString();
 
         postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
         Child childFromDb = allChildren.findByCaseId(uniqueCaseId);
+        Assert.assertNotNull(childFromDb);
+        markForDeletion(childFromDb);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());
@@ -70,6 +66,9 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childRegistrationCaseXml.st");
         postChildXmlToMotechCare(uniqueCaseId, "/caseXmls/childUpdateCaseXml.st");
         Child childFromDb = allChildren.findByCaseId(uniqueCaseId);
+
+        Assert.assertNotNull(childFromDb);
+        markForDeletion(childFromDb);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());

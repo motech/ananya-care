@@ -22,6 +22,7 @@ public class CareCase{
     private String tt_booster_date;
 
     private String mother_alive;
+    private String child_alive;
     /* Child */
 
     private String baby_measles;
@@ -57,11 +58,17 @@ public class CareCase{
         this.mother_alive = mother_alive;
     }
 
+    public String getChild_alive() {
+        return child_alive;
+    }
+
+    public void setChild_alive(String child_alive) {
+        this.child_alive = child_alive;
+    }
+
     public String getTt_1_date() {
         return tt_1_date;
     }
-
-
 
     public void setTt_1_date(String tt_1_date) {
         this.tt_1_date = tt_1_date;

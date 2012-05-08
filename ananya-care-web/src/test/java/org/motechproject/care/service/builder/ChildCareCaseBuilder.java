@@ -33,6 +33,8 @@ public class ChildCareCaseBuilder {
     private String opv3Date="2012-04-02";
     private String opvBoosterDate="2012-05-02";
 
+    private String child_alive = "yes";
+
     public CareCase build(){
         CareCase careCase = new CareCase();
         careCase.setCase_id(caseId);
@@ -59,6 +61,7 @@ public class ChildCareCaseBuilder {
         careCase.setOpv_2_date(opv2Date);
         careCase.setOpv_3_date(opv3Date);
         careCase.setOpv_booster_date(opvBoosterDate);
+        careCase.setChild_alive(child_alive);
         return careCase;
     }
 
@@ -177,6 +180,11 @@ public class ChildCareCaseBuilder {
 
     public ChildCareCaseBuilder withOPVBoosterDate(String opvBoosterDate) {
         this.opvBoosterDate = opvBoosterDate;
+        return this;
+    }
+
+    public ChildCareCaseBuilder withChildAlive(String child_alive){
+        this.child_alive = child_alive;
         return this;
     }
 }

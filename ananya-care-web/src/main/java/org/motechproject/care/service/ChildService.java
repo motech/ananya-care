@@ -23,24 +23,31 @@ public class ChildService {
 
     public void process(CareCase careCase) {
         Child child = ChildMapper.map(careCase);
-        Child savedChild = createUpdate(child);
-        if(savedChild != null)
-            childVaccinationProcessor.enrollUpdateVaccines(savedChild);
+        Child childFromDb = allChildren.findByCaseId(child.getCaseId());
+
+        if(childFromDb == null)
+            processNew(child);
+        else if(childFromDb.isActive())
+            processExisting(childFromDb, child);
     }
 
-    private Child createUpdate(Child child) {
-        Child childFromDb = allChildren.findByCaseId(child.getCaseId());
-        if(childFromDb == null){
-            if(isOlderThanAYear(child))
-                return null;
-            allChildren.add(child);
-            return child;
-        }
+    private void processNew(Child child) {
+        if(isOlderThanAYear(child))
+            return;
 
+        allChildren.add(child);
+        if(child.isActive())
+            childVaccinationProcessor.enrollUpdateVaccines(child);
+    }
+
+    private void processExisting(Child childFromDb, Child child) {
         childFromDb.setValuesFrom(child);
-
         allChildren.update(childFromDb);
-        return childFromDb;
+
+        if(childFromDb.isActive())
+            childVaccinationProcessor.enrollUpdateVaccines(childFromDb);
+        else
+            childVaccinationProcessor.closeSchedules(childFromDb);
     }
 
     public boolean expireCase(String caseId) {

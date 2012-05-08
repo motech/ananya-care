@@ -15,6 +15,8 @@ import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.service.builder.ChildCareCaseBuilder;
 
+import java.io.IOException;
+
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -51,6 +53,7 @@ public class ChildServiceTest {
         Assert.assertEquals(DateTime.parse("2012-02-01"), child.getMeaslesDate());
         Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
         verify(childVaccinationProcessor).enrollUpdateVaccines(child);
+        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
@@ -62,6 +65,7 @@ public class ChildServiceTest {
         childService.process(careCase);
         verify(allChildren,never()).add((Child) Matchers.any());
         verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
@@ -75,6 +79,7 @@ public class ChildServiceTest {
         Child childInDb = childWithCaseId(caseId);
         childInDb.setName(oldName);
         childInDb.setDocCreateTime(docCreateTime);
+        childInDb.setAlive(true);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
 
         when(allChildren.findByCaseId(caseId)).thenReturn(childInDb);
@@ -88,12 +93,36 @@ public class ChildServiceTest {
         Assert.assertEquals(DateTime.parse(newBcgDate),childUpdated.getBcgDate());
         Assert.assertTrue(childUpdated.isActive());
         verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
+        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+    }
+
+    @Test
+    public void shouldSaveChildAsInactiveIfItDoesNotExistAndIsDead() throws IOException {
+        String caseId = "caseId";
+        DateTime dobOfChild = DateTime.now().minusMonths(1);
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
+        careCase.setChild_alive("no");
+        when(allChildren.findByCaseId(caseId)).thenReturn(null);
+
+        childService.process(careCase);
+
+        ArgumentCaptor<Child> captor=ArgumentCaptor.forClass(Child.class);
+        verify(allChildren).add(captor.capture());
+
+        Child childInDb  = captor.getValue();
+
+
+        org.junit.Assert.assertFalse(childInDb.isActive());
+        org.junit.Assert.assertFalse(childInDb.isAlive());
+        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
     public void shouldSetChildCaseAsExpiredAndCloseSchedulesIfExists_WhenChildCaseIsExpired(){
         Child childFromDb = childWithCaseId(caseId);
         childFromDb.setExpired(false);
+        childFromDb.setAlive(true);
         childFromDb.setClosedByCommcare(false);
 
         when(allChildren.findByCaseId(caseId)).thenReturn(childFromDb);
@@ -102,6 +131,7 @@ public class ChildServiceTest {
         assertTrue(wasClosed);
 
         verify(allChildren, times(1)).update(childFromDb);
+        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
         verify(childVaccinationProcessor).closeSchedules(childFromDb);
 
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);

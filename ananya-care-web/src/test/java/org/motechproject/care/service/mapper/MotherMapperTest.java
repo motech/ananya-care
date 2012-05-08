@@ -72,6 +72,9 @@ public class MotherMapperTest {
         mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("yes").build());
         assertTrue(mother.isAlive());
 
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("random").build());
+        assertTrue(mother.isAlive());
+
         mother = MotherMapper.map(new MotherCareCaseBuilder().withMotherAlive("no").build());
         assertFalse(mother.isAlive());
     }
@@ -80,10 +83,16 @@ public class MotherMapperTest {
     public void shouldInferLastPregnancyCorrectly(){
         Mother mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("").build());
         assertFalse(mother.isLastPregTt());
+
         mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT(null).build());
         assertFalse(mother.isLastPregTt());
+
         mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("no").build());
         assertFalse(mother.isLastPregTt());
+
+        mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("random").build());
+        assertFalse(mother.isLastPregTt());
+
         mother = MotherMapper.map(new MotherCareCaseBuilder().withLastPregTT("yes").build());
         assertTrue(mother.isLastPregTt());
     }

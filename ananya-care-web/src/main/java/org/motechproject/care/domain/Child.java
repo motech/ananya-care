@@ -37,7 +37,8 @@ public class Child extends Client {
 
     public Child(String caseId, DateTime dateModified, String flwId, String name, String groupId, DateTime DOB, DateTime measlesDate, DateTime bcgDate, DateTime vitamin1Date, String motherCaseId,
                  DateTime hep0Date, DateTime hep1Date, DateTime hep2Date, DateTime hep3Date,
-                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date, DateTime opvBoosterDate) {
+                 DateTime dpt1Date, DateTime dpt2Date, DateTime dpt3Date, DateTime dptBoosterDate, DateTime opv0Date, DateTime opv1Date, DateTime opv2Date, DateTime opv3Date, DateTime opvBoosterDate, boolean isAlive) {
+        super(isAlive);
         this.motherCaseId = motherCaseId;
         this.caseId = caseId;
         this.dateModified = dateModified;

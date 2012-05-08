@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 public class AllChildrenTest extends SpringIntegrationTest {
 
@@ -40,7 +41,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
         DateTime opvBoosterDate = DateUtil.now().plusMonths(5);
         DateTime dob = DateUtil.now().minusDays(20);
         String motherCaseId = "MotherCaseId";
-        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate,opv0Date,opv1Date,opv2Date,opv3Date,opvBoosterDate);
+        Child child = new Child(caseId, DateUtil.now(),"flwID", "aragorn", "groupID", dob, measlesDate, bcgDate, vitamin1Date, motherCaseId, hep0Date, hep1Date, hep2Date, hep3Date,dpt1Date,dpt2Date,dpt3Date,dptBoosterDate,opv0Date,opv1Date,opv2Date,opv3Date,opvBoosterDate, true);
         allChildren.add(child);
 
         Child childFromDb = allChildren.findByCaseId(caseId);
@@ -70,6 +71,7 @@ public class AllChildrenTest extends SpringIntegrationTest {
         assertEquals(opvBoosterDate, childFromDb.getOpvBoosterDate());
         assertEquals(vitamin1Date, childFromDb.getVitamin1Date());
         assertEquals(motherCaseId, childFromDb.getMotherCaseId());
+        assertTrue(child.isAlive());
 
 
         DateTime create_time = childFromDb.getDocCreateTime();
