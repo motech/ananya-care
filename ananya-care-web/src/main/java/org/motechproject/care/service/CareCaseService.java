@@ -1,6 +1,5 @@
 package org.motechproject.care.service;
 
-import org.apache.velocity.app.VelocityEngine;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.casexml.service.CaseService;
@@ -19,8 +18,8 @@ public class CareCaseService extends CaseService<CareCase>{
     private ChildService childService;
 
     @Autowired
-    public CareCaseService(MotherService motherService, ChildService childService, VelocityEngine velocityEngine) {
-        super(CareCase.class, velocityEngine);
+    public CareCaseService(MotherService motherService, ChildService childService) {
+        super(CareCase.class);
         this.motherService = motherService;
         this.childService = childService;
     }
