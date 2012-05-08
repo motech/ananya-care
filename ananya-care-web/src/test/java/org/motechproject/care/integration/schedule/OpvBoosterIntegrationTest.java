@@ -31,9 +31,9 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
     private OpvBoosterService opvBoosterService;
-
     @Autowired
     private AllChildren allChilden;
+
     private String caseId;
     private ChildService childService;
     private String scheduleName = ChildVaccinationSchedule.OPVBooster.getName();
@@ -57,7 +57,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         LocalDate opv1Date = dob.plusWeeks(7);
         LocalDate opv2Date = dob.plusWeeks(11);
         LocalDate opv3Date = dob.plusWeeks(15);
-        LocalDate expectedReferenceDate = dob.plusMonths(16).minusWeeks(2);
+        LocalDate expectedReferenceDate = dob.plusMonths(16).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = dob.plusMonths(16);
 
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).withOPVBoosterDate(null).build();
@@ -65,7 +65,6 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentRecord enrollment;
         assertNull(getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE));
-
 
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(opv1Date.toString()).withOPV2Date(opv2Date.toString()).withOPV3Date(opv3Date.toString()).withOPVBoosterDate(null).build();
         childService.process(careCase);
@@ -82,7 +81,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         LocalDate opv1Date = dob.plusWeeks(7);
         LocalDate opv2Date = dob.plusWeeks(11);
         LocalDate opv3Date = dob.plusMonths(15);
-        LocalDate expectedReferenceDate = opv3Date.plusDays(180).minusWeeks(2);
+        LocalDate expectedReferenceDate = opv3Date.plusDays(180).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = opv3Date.plusDays(180);
         LocalDate expectedStartLateDate = opv3Date.plusMonths(8).plusDays(180);
 
@@ -91,7 +90,6 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentRecord enrollment;
         assertNull(getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE));
-
 
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(opv1Date.toString()).withOPV2Date(opv2Date.toString()).withOPV3Date(opv3Date.toString()).withOPVBoosterDate(null).build();
         childService.process(careCase);
@@ -114,7 +112,6 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
         markScheduleForUnEnrollment(caseId, scheduleName);
         assertNull(getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE));
-
 
         careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(opv1Date.toString()).withOPV2Date(opv2Date.toString()).withOPV3Date(opv3Date.toString()).withOPVBoosterDate(opvBoosterDate.toString()).build();
         childService.process(careCase);

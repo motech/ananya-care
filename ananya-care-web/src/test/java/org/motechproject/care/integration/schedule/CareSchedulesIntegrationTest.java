@@ -78,7 +78,10 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldProvideAlertsForTetanusToxoidVaccinationAtTheRightTimes() throws Exception {
-        schedule.withFulfillmentDates(date(25, JANUARY)).enrollFor("TT Vaccination", newDate(2012, 1, 1), null);
+        Date tt1TakenDate = date(25, JANUARY);
+        Date tt2AlertDate = DateUtil.newDate(tt1TakenDate).plusWeeks(4).plus(periodUtil.getScheduleOffset()).toDate();
+
+        schedule.withFulfillmentDates(tt1TakenDate).enrollFor("TT Vaccination", newDate(2012, 1, 1), null);
 
         schedule.assertNoAlerts("TT 1", earliest);
         schedule.assertAlertsStartWith("TT 1", due, date(1, JANUARY));
@@ -86,7 +89,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertNoAlerts("TT 1", max);
 
         schedule.assertNoAlerts("TT 2", earliest);
-        schedule.assertAlerts("TT 2", due, date(8, FEBRUARY));
+        schedule.assertAlerts("TT 2", due, tt2AlertDate);
         schedule.assertNoAlerts("TT 2", late);
         schedule.assertNoAlerts("TT 2", max);
 
@@ -95,10 +98,13 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldProvideAlertsForMeaslesVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(ChildVaccinationSchedule.Measles.getName(), newDate(2011, 12, 1), null);
+        LocalDate dob = newDate(2011, 12, 1);
+        LocalDate measlesAlertDate = dob.plusMonths(9).plus(periodUtil.getScheduleOffset());
+        
+        schedule.enrollFor(ChildVaccinationSchedule.Measles.getName(), dob, null);
 
         schedule.assertNoAlerts("Measles", earliest);
-        schedule.assertAlertsStartWith("Measles", due, date(18, AUGUST)); // (9-0.5) months after ref date
+        schedule.assertAlertsStartWith("Measles", due, measlesAlertDate.toDate());
         schedule.assertNoAlerts("Measles", late);
         schedule.assertNoAlerts("Measles", max);
         visualization.outputTo("child-measles.html", 2);
@@ -117,10 +123,13 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldProvideAlertsForVitaVaccinationAtTheRightTimes() throws Exception {
-        schedule.enrollFor(ChildVaccinationSchedule.Vita.getName(), newDate(2011, 12, 1), null);
+        LocalDate dob = newDate(2011, 12, 1);
+        LocalDate vitaAlertDate = dob.plusMonths(9).plus(periodUtil.getScheduleOffset());
+
+        schedule.enrollFor(ChildVaccinationSchedule.Vita.getName(), dob, null);
 
         schedule.assertNoAlerts("Vita", earliest);
-        schedule.assertAlertsStartWith("Vita", due, date(18, AUGUST)); // (9-0.5) months after ref date
+        schedule.assertAlertsStartWith("Vita", due, vitaAlertDate.toDate()); 
         schedule.assertNoAlerts("Vita", late);
         schedule.assertNoAlerts("Vita", max);
         visualization.outputTo("child-vita.html", 2);
@@ -128,20 +137,26 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldProvideAlertsForAncVisitsAtTheRightTimes() throws Exception {
-        schedule.withFulfillmentDates(date(25, JANUARY), date(11, MARCH), date(30, APRIL)).enrollFor(MotherVaccinationSchedule.Anc.getName(), newDate(2012, 1, 1), null);
+        LocalDate lmp = newDate(2012, 1, 1);
+        LocalDate anc1TakenDate = new LocalDate(date(25, JANUARY));
+        LocalDate anc2TakenDate = new LocalDate(date(11, MARCH));
+        LocalDate anc3TakenDate = new LocalDate(date(30, APRIL));
+        LocalDate anc2AlertDate = anc1TakenDate.plusDays(30).plus(periodUtil.getScheduleOffset());
+        LocalDate anc3AlertDate = anc2TakenDate.plusDays(30).plus(periodUtil.getScheduleOffset());
+        schedule.withFulfillmentDates(anc1TakenDate.toDate(), anc2TakenDate.toDate(), anc3TakenDate.toDate()).enrollFor(MotherVaccinationSchedule.Anc.getName(), lmp, null);
 
         schedule.assertNoAlerts("Anc 1", earliest);
-        schedule.assertAlertsStartWith("Anc 1", due, date(1, JANUARY));
+        schedule.assertAlertsStartWith("Anc 1", due, lmp.toDate());
         schedule.assertNoAlerts("Anc 1", late);
         schedule.assertNoAlerts("Anc 1", max);
 
         schedule.assertNoAlerts("Anc 2", earliest);
-        schedule.assertAlerts("Anc 2", due, date(10, FEBRUARY));
+        schedule.assertAlerts("Anc 2", due, anc2AlertDate.toDate());
         schedule.assertNoAlerts("Anc 2", late);
         schedule.assertNoAlerts("Anc 2", max);
 
         schedule.assertNoAlerts("Anc 3", earliest);
-        schedule.assertAlerts("Anc 3", due, date(27, MARCH));
+        schedule.assertAlerts("Anc 3", due, anc3AlertDate.toDate());
         schedule.assertNoAlerts("Anc 3", late);
         schedule.assertNoAlerts("Anc 3", max);
 

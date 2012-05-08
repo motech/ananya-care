@@ -33,8 +33,8 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
     @Autowired
     private Anc4Service anc4Service;
     @Autowired
-
     private AllMothers allMothers;
+
     private final String caseId = CaseUtils.getUniqueCaseId();
     private MotherService motherService;
     private String scheduleName = MotherVaccinationSchedule.Anc4.getName();
@@ -58,7 +58,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         LocalDate anc1Date = today.plusDays(10);
         LocalDate anc2Date = today.plusDays(50);
         LocalDate anc3Date = today.plusMonths(3);
-        LocalDate expectedReferenceDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).minusWeeks(2);
+        LocalDate expectedReferenceDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER);
 
         CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(null).withANC2(null).withANC3(null).withANC4(null).build();
@@ -66,7 +66,6 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentRecord enrollment;
         assertNull(getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE));
-
 
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(anc1Date.toString()).withANC2(anc2Date.toString()).withANC3(anc3Date.toString()).withANC4(null).build();
         motherService.process(careCase);
@@ -84,7 +83,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         LocalDate anc1Date = today.plusDays(10);
         LocalDate anc2Date = today.plusDays(50);
         LocalDate anc3Date = today.plusMonths(7);
-        LocalDate expectedReferenceDate = anc3Date.plusDays(30).minusWeeks(2);
+        LocalDate expectedReferenceDate = anc3Date.plusDays(30).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = anc3Date.plusDays(30);
         LocalDate expectedStartLateDate = anc3Date.plusDays(30).plusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER);
 
@@ -93,7 +92,6 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
         assertNull(enrollment);
-
 
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withANC1(anc1Date.toString()).withANC2(anc2Date.toString()).withANC3(anc3Date.toString()).withANC4(null).build();
         motherService.process(careCase);

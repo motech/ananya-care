@@ -8,15 +8,19 @@ import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.CareCaseTaskService;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class OpvBoosterService extends VaccinationService{
 
+    private PeriodUtil periodUtil;
+
     @Autowired
-    public OpvBoosterService(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+    public OpvBoosterService(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService, PeriodUtil periodUtil) {
         super(schedulerService, ChildVaccinationSchedule.OPVBooster.getName(), careCaseTaskService);
+        this.periodUtil = periodUtil;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class OpvBoosterService extends VaccinationService{
         if(child.getOpv3Date() != null && child.getDOB() != null){
             Window opvBoosterWindow = getOPVBoosterWindow(child.getOpv3Date(), child.getDOB());
             if(opvBoosterWindow.isValid()) {
-                DateTime referenceDate = opvBoosterWindow.getStart().minusWeeks(2);
+                DateTime referenceDate = opvBoosterWindow.getStart().plus(periodUtil.getScheduleOffset());
                 schedulerService.enroll(child.getCaseId(), referenceDate, scheduleName);
             }
         }

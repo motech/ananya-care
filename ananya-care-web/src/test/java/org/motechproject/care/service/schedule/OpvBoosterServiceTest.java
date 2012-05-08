@@ -1,6 +1,7 @@
 package org.motechproject.care.service.schedule;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,25 +14,30 @@ import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.CareCaseTaskService;
+import org.motechproject.care.service.util.PeriodUtil;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpvBoosterServiceTest {
     @Mock
     private ScheduleService schedulerService;
     @Mock
-    CareCaseTaskService careCaseTaskService;
+    private CareCaseTaskService careCaseTaskService;
+    @Mock
+    private PeriodUtil periodUtil;
 
-    OpvBoosterService opvBoosterService;
+    private OpvBoosterService opvBoosterService;
     private String scheduleName = ChildVaccinationSchedule.OPVBooster.getName();
-
+    private final Period periodOffset = Period.weeks(-2);
 
     @Before
     public void setUp(){
-        opvBoosterService = new OpvBoosterService(schedulerService, careCaseTaskService);
+        opvBoosterService = new OpvBoosterService(schedulerService, careCaseTaskService, periodUtil);
+        when(periodUtil.getScheduleOffset()).thenReturn(periodOffset);
     }
 
     @Test
@@ -45,7 +51,7 @@ public class OpvBoosterServiceTest {
         child.setCaseId(caseId);
 
         opvBoosterService.process(child);
-        Mockito.verify(schedulerService).enroll(caseId, opv3Taken.plusDays(180).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, opv3Taken.plusDays(180).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -59,7 +65,7 @@ public class OpvBoosterServiceTest {
         child.setCaseId(caseId);
 
         opvBoosterService.process(child);
-        Mockito.verify(schedulerService).enroll(caseId, dob.plusMonths(16).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, dob.plusMonths(16).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -73,7 +79,7 @@ public class OpvBoosterServiceTest {
         child.setCaseId(caseId);
 
         opvBoosterService.process(child);
-        Mockito.verify(schedulerService).enroll(caseId, opv3Taken.plusDays(180).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, opv3Taken.plusDays(180).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -118,13 +124,10 @@ public class OpvBoosterServiceTest {
     @Test
     public void shouldUnenrollFromOpvBoosterSchedule(){
         String caseId = "caseId";
-
         Mother mother = new Mother();
         mother.setCaseId(caseId);
 
         opvBoosterService.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
-
     }
-
 }

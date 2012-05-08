@@ -1,6 +1,7 @@
 package org.motechproject.care.service.schedule;
 
 import org.joda.time.DateTime;
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,21 +18,25 @@ import org.motechproject.care.service.util.PeriodUtil;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Anc4ServiceTest {
     @Mock
     private ScheduleService schedulerService;
     @Mock
-    CareCaseTaskService careCaseTaskService;
+    private CareCaseTaskService careCaseTaskService;
+    @Mock
+    private PeriodUtil periodUtil;
 
-    Anc4Service anc4Service;
+    private Anc4Service anc4Service;
     private String scheduleName = MotherVaccinationSchedule.Anc4.getName();
-
+    private final Period periodOffset = Period.weeks(-2);
 
     @Before
     public void setUp(){
-        anc4Service = new Anc4Service(schedulerService, careCaseTaskService);
+        anc4Service = new Anc4Service(schedulerService, careCaseTaskService, periodUtil);
+        when(periodUtil.getScheduleOffset()).thenReturn(periodOffset);
     }
 
     @Test
@@ -45,7 +50,7 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
 
         anc4Service.process(mother);
-        Mockito.verify(schedulerService).enroll(caseId, anc3Taken.plusDays(30).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, anc3Taken.plusDays(30).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -59,7 +64,7 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
 
         anc4Service.process(mother);
-        Mockito.verify(schedulerService).enroll(caseId, edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, edd.minusDays(PeriodUtil.DAYS_IN_3RD_TRIMESTER).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -73,7 +78,7 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
 
         anc4Service.process(mother);
-        Mockito.verify(schedulerService).enroll(caseId, anc3Taken.plusDays(30).minusWeeks(2), scheduleName);
+        Mockito.verify(schedulerService).enroll(caseId, anc3Taken.plusDays(30).plus(periodOffset), scheduleName);
     }
 
     @Test
@@ -112,9 +117,8 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
 
         anc4Service.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc4.toString(),  anc4Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc4.toString(), anc4Date, scheduleName);
     }
-
 
     @Test
     public void shouldUnenrollFromAnc4Schedule(){
@@ -123,7 +127,5 @@ public class Anc4ServiceTest {
         mother.setCaseId(caseId);
         anc4Service.close(mother);
         Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
-
     }
-
 }

@@ -4,6 +4,7 @@ import org.ektorp.CouchDbConnector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.model.MotechBaseDataObject;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
@@ -34,6 +35,9 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
 
     @Autowired
     protected ScheduleTrackingService trackingService;
+
+    @Autowired
+    protected PeriodUtil periodUtil;
 
     protected ArrayList<MotechBaseDataObject> toDelete;
     protected ArrayList<Pair> schedulesToDelete;
@@ -72,6 +76,7 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
     protected String getAppServerPort() {
         return ananyaCareProperties.getProperty("app.server.port");
     }
+
 
     protected String getAppServerHostUrl() {
         return "http://localhost:" + getAppServerPort();

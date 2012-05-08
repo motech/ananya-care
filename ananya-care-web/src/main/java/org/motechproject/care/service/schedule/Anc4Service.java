@@ -14,9 +14,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Anc4Service extends VaccinationService{
+
+    PeriodUtil periodUtil;
+
     @Autowired
-    public Anc4Service(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService) {
+    public Anc4Service(ScheduleService schedulerService, CareCaseTaskService careCaseTaskService, PeriodUtil periodUtil) {
         super(schedulerService, MotherVaccinationSchedule.Anc4.getName(), careCaseTaskService);
+        this.periodUtil = periodUtil;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class Anc4Service extends VaccinationService{
         if(mother.getAnc3Date() != null && mother.getEdd() != null){
             Window anc4Window = getAnc4Window(mother.getAnc3Date(), mother.getEdd());
             if(anc4Window.isValid()) {
-                DateTime referenceDate = anc4Window.getStart().minusWeeks(2);
+                DateTime referenceDate = anc4Window.getStart().plus(periodUtil.getScheduleOffset());
                 schedulerService.enroll(mother.getCaseId(), referenceDate, scheduleName);
             }
         }
