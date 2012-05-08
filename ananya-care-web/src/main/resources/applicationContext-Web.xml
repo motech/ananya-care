@@ -26,6 +26,7 @@
                 <ref bean="TTBoosterService"/>
                 <ref bean="ancService"/>
                 <ref bean="anc4Service"/>
+                <ref bean="motherCareService" />
             </list>
         </constructor-arg>
     </bean>
@@ -42,6 +43,7 @@
                 <ref bean="opv0Service"/>
                 <ref bean="opvService"/>
                 <ref bean="opvBoosterService"/>
+                <ref bean="childCareService" />
             </list>
         </constructor-arg>
     </bean>

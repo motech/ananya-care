@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
@@ -42,6 +43,12 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertNull(ttEnrollment);
+
+        EnrollmentRecord ancEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.Anc.getName());
+        Assert.assertNull(ancEnrollment);
+
+        EnrollmentRecord motherCareEnrollment = trackingService.getEnrollment(uniqueCaseId, ExpirySchedule.MotherCare.getName());
+        Assert.assertNull(motherCareEnrollment);
     }
 
     @Test
@@ -67,8 +74,18 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
         Assert.assertTrue(motherFromDb.isActive());
 
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.Anc.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, ExpirySchedule.MotherCare.getName());
+
         EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
+
+        EnrollmentRecord ancEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.Anc.getName());
+        Assert.assertEquals("Anc 1", ancEnrollment.getCurrentMilestoneName());
+
+        EnrollmentRecord motherCareEnrollment = trackingService.getEnrollment(uniqueCaseId, ExpirySchedule.MotherCare.getName());
+        Assert.assertEquals("Mother Care", motherCareEnrollment.getCurrentMilestoneName());
     }
 
     @Test

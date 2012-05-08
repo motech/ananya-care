@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
+import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +55,12 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName());
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Measles.getName());
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, ExpirySchedule.ChildCare.getName());
+
         Assert.assertEquals("Bcg", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName()).getCurrentMilestoneName());
         Assert.assertEquals("Vita", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName()).getCurrentMilestoneName());
         Assert.assertEquals("Measles", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Measles.getName()).getCurrentMilestoneName());
-
+        Assert.assertEquals("Child Care", trackingService.getEnrollment(uniqueCaseId, ExpirySchedule.ChildCare.getName()).getCurrentMilestoneName());
     }
 
     @Test
@@ -80,9 +83,12 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName());
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Measles.getName());
         markScheduleForUnEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, ExpirySchedule.ChildCare.getName());
+
         assertNull(trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Bcg.getName()));
         assertNull(trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Measles.getName()));
         assertEquals("Vita", trackingService.getEnrollment(uniqueCaseId, ChildVaccinationSchedule.Vita.getName()).getCurrentMilestoneName());
+        Assert.assertEquals("Child Care", trackingService.getEnrollment(uniqueCaseId, ExpirySchedule.ChildCare.getName()).getCurrentMilestoneName());
     }
 
     private void postChildXmlToMotechCare(String uniqueCaseId, String xmlFileName) throws IOException {
