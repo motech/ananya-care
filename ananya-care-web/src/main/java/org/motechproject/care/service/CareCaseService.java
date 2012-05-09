@@ -40,7 +40,9 @@ public class CareCaseService extends CaseService<CareCase>{
     @Override
     public void closeCase(CareCase careCase) throws CaseException{
         validateCloseCase(careCase);
-        motherService.closeCase(careCase.getCase_id());
+        boolean wasMotherClosed = motherService.closeCase(careCase.getCase_id());
+        if(!wasMotherClosed)
+            childService.closeCase(careCase.getCase_id());
     }
 
     private void validateCreateCase(CareCase careCase) throws CaseException {

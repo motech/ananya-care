@@ -17,7 +17,9 @@ import org.springframework.http.HttpEntity;
 import java.io.File;
 import java.io.IOException;
 
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -160,5 +162,29 @@ public class CareCaseServiceTest  {
             Assert.assertEquals("Case Id is a mandatory field.", ex.getMessage());
             Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, ex.getHttpStatusCode());
         }
+    }
+
+    @Test
+    public void shouldCloseCaseForMotherWhenCommcareCloseIsReceivedForMother() throws IOException {
+        CareCase careCase = new CareCase();
+        String caseId = "caseId";
+        careCase.setCase_id(caseId);
+        when(motherService.closeCase(caseId)).thenReturn(true);
+        careCaseService.closeCase(careCase);
+
+        verify(motherService).closeCase(caseId);
+        verify(childService, never()).closeCase(caseId);
+    }
+
+    @Test
+    public void shouldCloseCaseForChildWhenCommcareCloseIsReceivedForChild() throws IOException {
+        CareCase careCase = new CareCase();
+        String caseId = "caseId";
+        careCase.setCase_id(caseId);
+        when(motherService.closeCase(caseId)).thenReturn(false);
+        careCaseService.closeCase(careCase);
+
+        verify(motherService).closeCase(caseId);
+        verify(childService).closeCase(caseId);
     }
 }

@@ -10,6 +10,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
@@ -139,6 +140,35 @@ public class ChildServiceTest {
         Child child = captor.getValue();
         assertFalse(child.isActive());
         assertTrue(child.isExpired());
+    }
+    
+    @Test
+    public void shouldSetChildCaseAsClosedByCommcareAndCloseSchedulesIfExists_WhenChildCaseIsClosed(){
+        Child childFromDb = childWithCaseId(caseId);
+        childFromDb.setClosedByCommcare(false);
+        childFromDb.setAlive(true);
+
+        when(allChildren.findByCaseId(caseId)).thenReturn(childFromDb);
+        boolean wasClosed = childService.closeCase(caseId);
+
+        org.junit.Assert.assertTrue(wasClosed);
+
+        verify(allChildren, times(1)).update(childFromDb);
+        verify(childVaccinationProcessor).closeSchedules(childFromDb);
+
+        ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
+        verify(allChildren).update(captor.capture());
+        Child child = captor.getValue();
+        assertFalse(child.isActive());
+        assertTrue(child.isClosedByCommcare());
+    }
+
+    @Test
+    public void shouldReturnFalseIfMotherCaseDoesNotExists(){
+        when(allChildren.findByCaseId(caseId)).thenReturn(null);
+        boolean wasClosed = childService.closeCase(caseId);
+
+        org.junit.Assert.assertFalse(wasClosed);
     }
 
     @Test

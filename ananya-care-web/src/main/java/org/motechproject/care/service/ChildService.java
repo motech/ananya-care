@@ -1,6 +1,7 @@
 package org.motechproject.care.service;
 
 import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.service.mapper.ChildMapper;
@@ -50,6 +51,21 @@ public class ChildService {
             childVaccinationProcessor.closeSchedules(childFromDb);
     }
 
+    public boolean closeCase(String caseId) {
+        Child child = allChildren.findByCaseId(caseId);
+        if(child == null)
+            return false;
+
+        if(!child.isActive())
+            return true;
+
+        child.setClosedByCommcare(true);
+        allChildren.update(child);
+        childVaccinationProcessor.closeSchedules(child);
+        return true;
+    }
+
+
     public boolean expireCase(String caseId) {
         Child child = allChildren.findByCaseId(caseId);
         if(child == null)
@@ -63,7 +79,6 @@ public class ChildService {
         childVaccinationProcessor.closeSchedules(child);
         return true;
     }
-
 
     private boolean isOlderThanAYear(Child child) {
         return !DateUtil.today().minusYears(1).isBefore(child.getDOB().toLocalDate());
