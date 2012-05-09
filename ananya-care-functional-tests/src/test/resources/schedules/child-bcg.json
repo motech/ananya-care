@@ -1,0 +1,29 @@
+{
+    "name": "Bcg Vaccination",
+    "milestones": [
+        {
+            "name": "Bcg",
+            "scheduleWindows": {
+                "earliest": ["0 Months"],
+                "due": ["12 Months"],
+                "late": ["12 Months", "1 Day"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                },
+                {
+                    "window": "late",
+                    "offset": ["0 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}

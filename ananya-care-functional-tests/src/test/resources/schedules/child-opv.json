@@ -1,0 +1,53 @@
+{
+    "name": "OPV Vaccination",
+    "milestones": [
+        {
+            "name": "OPV 1",
+            "scheduleWindows": {
+                "earliest": ["6 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "OPV 2",
+            "scheduleWindows": {
+                "earliest": ["4 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        },
+        {
+            "name": "OPV 3",
+            "scheduleWindows": {
+                "earliest": ["4 Weeks"],
+                "due": ["24 Months"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["-2 Weeks"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "name": "Hepatitis0 Vaccination",
+    "milestones": [
+        {
+            "name": "Hep 0",
+            "scheduleWindows": {
+                "earliest": ["0 Months"],
+                "due": ["1 Day"],
+                "late": ["2 Day"]
+            },
+            "alerts": [
+                {
+                    "window": "due",
+                    "offset": ["0 Day"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                },
+                {
+                    "window": "late",
+                    "offset": ["0 Day"],
+                    "interval": ["1 Day"],
+                    "count": "1",
+                    "floating":"true"
+                }
+            ]
+        }
+    ]
+}
