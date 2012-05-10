@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext-FunctionalTests.xml")
+@ContextConfiguration("classpath:applicationContext-FunctionalTests.xml")
 public abstract class SpringIntegrationTest {
 
     @Qualifier("ananyaCareDbConnector")

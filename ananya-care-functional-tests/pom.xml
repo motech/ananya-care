@@ -51,6 +51,11 @@
 
     <build>
         <finalName>ananya-care-functional-tests-${release.version}</finalName>
+        <resources>
+            <resource>
+                <directory>../ananya-care-web/src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
