@@ -17,6 +17,7 @@
     <util:properties id="ananyaCareProperties" location="classpath:/ananyaCareQA.properties"/>
 
     <context:component-scan base-package="org.motechproject.commcarehq"/>
+    <context:component-scan base-package="org.motechproject.care.qa"/>
 
 
     <bean id="ananyaCareDummyAppDbConnector" class="org.ektorp.impl.StdCouchDbConnector">

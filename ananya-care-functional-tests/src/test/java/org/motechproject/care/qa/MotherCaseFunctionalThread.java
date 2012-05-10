@@ -3,33 +3,36 @@ package org.motechproject.care.qa;
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
 import org.joda.time.LocalDate;
-import org.junit.Test;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.DbUtils;
+import org.motechproject.care.utils.E2EIntegrationTestUtil;
 import org.motechproject.care.utils.StringTemplateHelper;
+import org.motechproject.care.utils.TestCaseThread;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.util.DateUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.util.UUID;
 
-public class MotherCaseFunctionalTest extends SpringE2EIntegrationTest {
+public class MotherCaseFunctionalThread extends TestCaseThread {
 
-    @Autowired
+
+    private E2EIntegrationTestUtil e2EIntegrationTestUtil;
     private DbUtils dbUtils;
-    
-    @Autowired
-    private AllCareCaseTasks allCareCaseTasks;
 
-    @Test
-    public void shouldCreateAlertsForTt1AndTt2AndCloseCase() throws IOException {
+
+    public MotherCaseFunctionalThread(E2EIntegrationTestUtil e2EIntegrationTestUtil, DbUtils dbUtils) {
+        this.e2EIntegrationTestUtil = e2EIntegrationTestUtil;
+        this.dbUtils = dbUtils;
+    }
+
+    //shouldCreateAlertsForTt1AndTt2AndCloseCase
+    @Override
+    protected void test() {
         String uniqueCaseId = UUID.randomUUID().toString();
 
         createAMother(uniqueCaseId);
@@ -40,9 +43,9 @@ public class MotherCaseFunctionalTest extends SpringE2EIntegrationTest {
         stringTemplate.setAttribute("edd", edd.toString());
         postXmlToMotechCare(stringTemplate.toString());
 
-        Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
+        Mother motherFromDb = dbUtils.getMotherWithRetry(uniqueCaseId);
 
-        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        dbUtils.markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", motherFromDb.getGroupId());
         Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
@@ -51,7 +54,7 @@ public class MotherCaseFunctionalTest extends SpringE2EIntegrationTest {
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
         Assert.assertTrue(motherFromDb.isActive());
 
-        EnrollmentRecord ttEnrollment = trackingService.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        EnrollmentRecord ttEnrollment = dbUtils.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
 
         stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
@@ -61,28 +64,27 @@ public class MotherCaseFunctionalTest extends SpringE2EIntegrationTest {
         stringTemplate.setAttribute("tt1Date", tt1Date.toString());
         postXmlToMotechCare(stringTemplate.toString());
 
-        AlertDocCase alertDocCase = dbUtils.getAlertDocCase(uniqueCaseId, MilestoneType.TT2.getTaskId());
+        AlertDocCase alertDocCase = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
         Assert.assertNotNull(alertDocCase);
-        CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(uniqueCaseId, MilestoneType.TT2.getName());
+        CareCaseTask careCaseTask = dbUtils.getCareCaseTask(uniqueCaseId, MilestoneType.TT2.getName());
         Assert.assertNotNull(careCaseTask);
 
         stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
         postXmlToMotechCare(stringTemplate.toString());
 
-        alertDocCase = dbUtils.getAlertDocCase(alertDocCase.getCaseId(), true);
+        alertDocCase = dbUtils.getAlertDocCaseWithRetry(alertDocCase.getCaseId(), true);
         Assert.assertNotNull(alertDocCase);
     }
 
-    private void createAMother(String uniqueCaseId) throws IOException {
+    private void createAMother(String uniqueCaseId) {
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherNewCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
         postXmlToMotechCare(stringTemplate.toString());
     }
 
-
-    protected void postXmlToMotechCare(String xmlBody) throws IOException {
+    protected void postXmlToMotechCare(String xmlBody) {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForLocation(getAppServerUrl(), xmlBody);
+        restTemplate.postForLocation(e2EIntegrationTestUtil.getAppServerUrl(), xmlBody);
     }
 }

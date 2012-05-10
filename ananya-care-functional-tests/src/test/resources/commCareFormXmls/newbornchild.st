@@ -5,11 +5,11 @@
 <n0:timeStart>$dob$T12:44:36.013Z</n0:timeStart>
 <n0:timeEnd>$dob$T12:48:06.019Z</n0:timeEnd>
 <n0:username>care</n0:username>
-<n0:userID>d823ea3d392a06f8b991e9e4933348bd</n0:userID>
+<n0:userID>$userId$</n0:userID>
 <n0:instanceID>$instanceId$</n0:instanceID>
 <cc:appVersion>v1.4.0dev (b0a68b-908411-unvers-2.1.0-Nokia/S40-generic) #12 b:2012-Apr-02 r:2012-Apr-03</cc:appVersion>
 </n0:meta>
-<n1:case case_id="$motherCaseId$" date_modified="$dob$" user_id="d823ea3d392a06f8b991e9e4933348bd" xmlns:n1="http://commcarehq.org/case/transaction/v2">
+<n1:case case_id="$motherCaseId$" date_modified="$dob$" user_id="$userId$" xmlns:n1="http://commcarehq.org/case/transaction/v2">
 <n1:update>
 <n1:mobile_number>111111</n1:mobile_number>
 <n1:mother_dob>2000-02-02</n1:mother_dob>
@@ -41,10 +41,10 @@
 <num_children>1</num_children>
 <child_dob>$dob$</child_dob>
 <child_info>
-<n2:case case_id="$caseId$" date_modified="$dob$" user_id="d823ea3d392a06f8b991e9e4933348bd" xmlns:n2="http://commcarehq.org/case/transaction/v2">
+<n2:case case_id="$caseId$" date_modified="$dob$" user_id="$userId$" xmlns:n2="http://commcarehq.org/case/transaction/v2">
 <n2:create>
 <n2:case_type>cc_bihar_newborn</n2:case_type>
-<n2:owner_id>d823ea3d392a06f8b991e9e49394ce45</n2:owner_id>
+<n2:owner_id>$ownerId$</n2:owner_id>
 <n2:case_name>$name$</n2:case_name>
 </n2:create>
 <n2:update>

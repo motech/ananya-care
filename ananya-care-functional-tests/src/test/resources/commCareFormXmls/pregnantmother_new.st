@@ -5,14 +5,14 @@
 <n0:timeStart>2012-04-19T11:17:50.522Z</n0:timeStart>
 <n0:timeEnd>2012-04-19T11:18:47.148Z</n0:timeEnd>
 <n0:username>care</n0:username>
-<n0:userID>d823ea3d392a06f8b991e9e4933348bd</n0:userID>
+<n0:userID>$userId$</n0:userID>
 <n0:instanceID>$instanceId$</n0:instanceID>
 <cc:appVersion>v1.4.0dev (b0a68b-908411-unvers-2.1.0-Nokia/S40-generic) #12 b:2012-Apr-02 r:2012-Apr-03</cc:appVersion>
 </n0:meta>
-<n1:case case_id="$caseId$" date_modified="2012-04-19" user_id="d823ea3d392a06f8b991e9e4933348bd" xmlns:n1="http://commcarehq.org/case/transaction/v2">
+<n1:case case_id="$caseId$" date_modified="2012-04-19" user_id="$userId$" xmlns:n1="http://commcarehq.org/case/transaction/v2">
 <n1:create>
 <n1:case_type>cc_bihar_pregnancy</n1:case_type>
-<n1:owner_id>d823ea3d392a06f8b991e9e49394ce45</n1:owner_id>
+<n1:owner_id>$ownerId$</n1:owner_id>
 <n1:case_name>$name$</n1:case_name>
 </n1:create>
 <n1:update>
