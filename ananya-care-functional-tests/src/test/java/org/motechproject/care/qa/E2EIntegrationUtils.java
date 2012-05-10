@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class E2EIntegrationTest extends SpringE2EIntegrationTest {
+public class E2EIntegrationUtils extends SpringE2EIntegrationTest {
 
     protected void postXmlWithAttributes(HashMap<String, String> attributes, String templateFilePath) throws IOException {
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate(templateFilePath);

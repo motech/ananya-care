@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ChildCaseE2ETest extends E2EIntegrationTest {
+public class ChildCaseE2ETest extends E2EIntegrationUtils {
 
     @Autowired
     private AllMothers allMothers;
