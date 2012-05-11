@@ -40,10 +40,20 @@
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>1.8.5</version>
+        </dependency>
     </dependencies>
 
     <build>
         <finalName>ananya-care-dummy-commcare-hq-${release.version}</finalName>
+        <testResources>
+            <testResource>
+                <directory>../ananya-care-web/src/main/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

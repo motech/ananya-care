@@ -16,6 +16,9 @@
     <context:component-scan base-package="org.motechproject.care.domain"/>
     <context:component-scan base-package="org.motechproject.care.repository"/>
 
+    <import resource="classpath:applicationPlatformServerAPI.xml"/>
+    <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
+
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
