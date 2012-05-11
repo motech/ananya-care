@@ -28,7 +28,5 @@ public class DptService extends VaccinationService{
             schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPT2.toString(),child.getDpt2Date(),scheduleName);
         if(child.getDpt3Date()!=null)
             schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPT3.toString(),child.getDpt3Date(),scheduleName);
-        if(child.getDptBoosterDate()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPTBooster.toString(),child.getDptBoosterDate(),scheduleName);
     }
 }

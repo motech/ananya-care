@@ -92,18 +92,6 @@ public class DptServiceTest {
     }
 
     @Test
-    public void shouldFulfillDptBoosterIfDptBoosterDatePresentInChild(){
-        DateTime dptBoosterDate = new DateTime();
-        String caseId = "caseId";
-        Child child = new Child();
-        child.setDptBoosterDate(dptBoosterDate);
-        child.setCaseId(caseId);
-
-        dptService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPTBooster.toString(),  dptBoosterDate, scheduleName);
-    }
-
-    @Test
     public void shouldNotFulfillAnyDptIfNoneOfTheTakenDatesArePresentInChild(){
         Child child = new Child();
         child.setCaseId("caseId");
