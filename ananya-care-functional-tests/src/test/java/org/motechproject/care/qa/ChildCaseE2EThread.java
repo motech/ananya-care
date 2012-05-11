@@ -2,6 +2,9 @@ package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.joda.time.LocalDate;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.utils.DbUtils;
@@ -15,14 +18,12 @@ import org.motechproject.util.DateUtil;
 import java.util.HashMap;
 import java.util.UUID;
 
-
-public class ChildCaseE2EThread extends TestCaseThread {
+public class ChildCaseE2EThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;
     private DbUtils dbUtils;
     private final String userId;
     private final String ownerId;
-
 
     public ChildCaseE2EThread(E2EIntegrationTestUtil e2EIntegrationTestUtil, DbUtils dbUtils, String userId, String ownerId) {
         this.e2EIntegrationTestUtil = e2EIntegrationTestUtil;
@@ -31,19 +32,18 @@ public class ChildCaseE2EThread extends TestCaseThread {
         this.ownerId = ownerId;
     }
 
-    @Override
-    protected void after() {
+    @After
+    public void after() {
         dbUtils.after();
-        super.after();
     }
 
-    @Override
-    protected void before() {
-        super.before();
+    @Before
+    public void before() {
         dbUtils.before();
     }
 
-    protected void test() {
+    @Test
+    public void shouldSendBCGAlertForANewBornChild() {
         HashMap<String, String> caseAttributes = e2EIntegrationTestUtil.createAPregnantMotherCaseInCommCare(userId, ownerId);
         String motherCaseId = caseAttributes.get("caseId");
 
@@ -73,7 +73,7 @@ public class ChildCaseE2EThread extends TestCaseThread {
 
         Assert.assertNotNull(child);
         Assert.assertEquals(childName, child.getName());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", child.getFlwId());
+        Assert.assertEquals(userId, child.getFlwId());
         Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
         Assert.assertEquals(DateUtil.newDateTime(dob), child.getDOB());
         dbUtils.markForDeletion(child);

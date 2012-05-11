@@ -9,37 +9,48 @@ public class TestCaseThreadRunner {
 
     private ArrayList<TestCaseThread> instances = new ArrayList<TestCaseThread>();
 
-    protected void runTest(TestCaseThread testCaseThread) {
-        instances.add(testCaseThread);
+    protected void runTest(Object obj) {
+        TestCaseThread testCaseThread = new TestCaseThread(obj);
         testCaseThread.setDaemon(true);
+        instances.add(testCaseThread);
         testCaseThread.start();
-
     }
 
+
     protected void verify() {
-        for(TestCaseThread testCaseThread : instances) {
-            if(testCaseThread.isAlive()) {
-                try {
-                    Thread.sleep(1000);
-                } catch(InterruptedException ex) {
-                    //Do nothing
+        while(true) {
+            boolean anyThreadAlive = false;
+            for(TestCaseThread testCaseThread : instances) {
+                if(testCaseThread.isAlive()) {
+                    anyThreadAlive = true;
+                    break;
                 }
-                this.verify();
-                return;
+            }
+            if(!anyThreadAlive) {
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch(InterruptedException ex) {
+                //Do nothing
             }
         }
 
-        int failedTestsCounter = 0;
+
+        int failedTests = 0;
+        int totalTests = 0;
+
         for(TestCaseThread testCaseThread : instances) {
-            if(testCaseThread.hasError()) {
-                failedTestsCounter++;
-                Throwable ex = testCaseThread.getError();
-                System.err.println("Test failed. Test Class: " + testCaseThread.getClass().getCanonicalName());
-                ex.printStackTrace();
+            for(TestResult testResult: testCaseThread.getTestResults()) {
+                totalTests++;
+                testResult.print();
+                if(testResult.hasError()) {
+                    failedTests++;
+                }
             }
         }
 
-
-        Assert.assertTrue(failedTestsCounter + " test(s) failed out of " + instances.size(), failedTestsCounter == 0);
+        Assert.assertTrue(failedTests + " out of " + totalTests + " failed.", failedTests == 0);
+        System.out.println(totalTests + " out of " + totalTests + " passed.");
     }
 }

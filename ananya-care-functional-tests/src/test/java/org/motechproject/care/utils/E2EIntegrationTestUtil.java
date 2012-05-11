@@ -35,7 +35,6 @@ import java.util.UUID;
 @Component
 public class E2EIntegrationTestUtil {
 
-
     @Qualifier("ananyaCareProperties")
     @Autowired
     private Properties ananyaCareProperties;
@@ -57,13 +56,11 @@ public class E2EIntegrationTestUtil {
         for(String attributeName: attributes.keySet()) {
             stringTemplate.setAttribute(attributeName, attributes.get(attributeName));
         }
-
         String final_xml = stringTemplate.toString();
         postToCommCare(final_xml);
     }
 
     public void postToCommCare(String final_xml) {
-
         Assert.assertFalse("All attributes are not replaced in the xml", final_xml.contains("$"));
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost("https://www.commcarehq.org/a/ananya-care/receiver/");
@@ -98,7 +95,4 @@ public class E2EIntegrationTestUtil {
         this.postXmlWithAttributes(motherAttributes, "/commCareFormXmls/pregnantmother_new.st");
         return motherAttributes;
     }
-
-
-
 }

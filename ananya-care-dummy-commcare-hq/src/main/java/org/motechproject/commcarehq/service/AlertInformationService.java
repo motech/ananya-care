@@ -25,7 +25,7 @@ public class AlertInformationService {
     private AllEnrollments allEnrollments;
 
     @Autowired
-    public AlertInformationService(EnrollmentAlertService enrollmentAlertService,AllEnrollments allEnrollments) {
+    public AlertInformationService(EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments) {
         this.enrollmentAlertService = enrollmentAlertService;
         this.allEnrollments = allEnrollments;
     }

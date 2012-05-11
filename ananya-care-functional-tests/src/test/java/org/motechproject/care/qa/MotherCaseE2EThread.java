@@ -1,6 +1,9 @@
 package org.motechproject.care.qa;
 
 import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.request.CaseType;
@@ -13,7 +16,7 @@ import org.motechproject.util.DateUtil;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class MotherCaseE2EThread extends TestCaseThread {
+public class MotherCaseE2EThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;
     private DbUtils dbUtils;
@@ -28,19 +31,18 @@ public class MotherCaseE2EThread extends TestCaseThread {
         this.ownerId = ownerId;
     }
 
-    @Override
-    protected void after() {
+    @After
+    public void after() {
         dbUtils.after();
-        super.after();
     }
 
-    @Override
-    protected void before() {
-        super.before();
+    @Before
+    public void before() {
         dbUtils.before();
     }
 
-    protected void test() {
+    @Test
+    public void shouldSendATT1AlertForAPregnantMother() {
         final HashMap<String, String> caseAttributes = e2EIntegrationTestUtil.createAPregnantMotherCaseInCommCare(userId, ownerId);
         String caseId = caseAttributes.get("caseId");
         Mother mother = dbUtils.getMotherWithRetry(caseId);
@@ -49,7 +51,7 @@ public class MotherCaseE2EThread extends TestCaseThread {
         dbUtils.markForDeletion(mother);
         dbUtils.markScheduleForUnEnrollment(caseId, MilestoneType.TT1.toString());
         Assert.assertEquals(caseAttributes.get("name"), mother.getName());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", mother.getFlwId());
+        Assert.assertEquals(userId, mother.getFlwId());
         Assert.assertEquals(CaseType.Mother.getType(), mother.getCaseType());
 
         String instanceId = UUID.randomUUID().toString();

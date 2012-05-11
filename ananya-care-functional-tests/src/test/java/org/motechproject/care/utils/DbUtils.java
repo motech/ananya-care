@@ -104,7 +104,6 @@ public class DbUtils {
         RetryTask<Mother> taskToFetchMother = new RetryTask<Mother>() {
             @Override
             protected Mother perform() {
-                System.out.println("fetching mother " + motherCaseId);
                 return allMothers.findByCaseId(motherCaseId);
             }
         };

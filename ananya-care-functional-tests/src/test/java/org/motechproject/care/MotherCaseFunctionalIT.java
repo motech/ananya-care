@@ -59,6 +59,9 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
+        stringTemplate.setAttribute("userId","d823ea3d392a06f8b991e9e4933348bd");
+        stringTemplate.setAttribute("ownerId","d823ea3d392a06f8b991e9e49394ce45");
+
         LocalDate edd = DateUtil.now().plusMonths(1).toLocalDate();
         stringTemplate.setAttribute("edd", edd.toString());
         postXmlToMotechCare(stringTemplate.toString());
@@ -97,7 +100,6 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
         Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
         Assert.assertTrue(motherFromDb.isActive());
-
 
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);

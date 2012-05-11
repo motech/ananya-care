@@ -1,43 +1,75 @@
 package org.motechproject.care.utils;
 
-public abstract class TestCaseThread extends Thread {
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-    private Throwable error;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
-    protected void before() {
+public class TestCaseThread extends Thread {
 
+    private Object test;
+
+    private List<Method> testMethods = new ArrayList<Method>();
+    private List<Method> beforeMethods = new ArrayList<Method>();
+    private List<Method> afterMethods = new ArrayList<Method>();
+
+    private List<TestResult> testResults = new ArrayList<TestResult>();
+
+    public TestCaseThread(Object test) {
+        this.test = test;
+        init(test);
     }
 
-    protected void after() {
+    private void init(Object test) {
+        for (Method m : test.getClass().getMethods()) {
+            if (m.isAnnotationPresent(Test.class)) {
+                m.setAccessible(true);
+                testMethods.add(m);
+                continue;
+            }
 
-    }
+            if (m.isAnnotationPresent(Before.class)) {
+                m.setAccessible(true);
+                beforeMethods.add(m);
+                continue;
+            }
 
-    public Throwable getError() {
-        return this.error;
-    }
-
-    public boolean hasError() {
-        return this.error != null;
-    }
-
-    public void run() {
-        try {
-            doRun();
-        } catch (Throwable ex) {
-            this.error = ex;
+            if (m.isAnnotationPresent(After.class)) {
+                m.setAccessible(true);
+                afterMethods.add(m);
+            }
         }
     }
 
-    private void doRun() throws Throwable {
-        before();
+    public void run() {
+        for(Method testMethod: testMethods) {
+            try {
+                doRun(testMethod);
+                testResults.add(new TestResult(test.getClass(), testMethod));
+            } catch (Throwable ex) {
+                testResults.add(new TestResult(test.getClass(), testMethod, ex));
+            }
+        }
+    }
+
+    private void doRun(Method testMethod) throws Throwable {
+        for(Method beforeMethod: beforeMethods) {
+            beforeMethod.invoke(test);
+        }
+
         Throwable error = null;
         try {
-            test();
+            testMethod.invoke(test);
         } catch(Throwable ex) {
             error = ex;
         } finally {
             try {
-                after();
+                for(Method afterMethod: afterMethods) {
+                    afterMethod.invoke(test);
+                }
             } catch (Throwable ex) {
                 if(error == null) {
                     error = ex;
@@ -51,5 +83,10 @@ public abstract class TestCaseThread extends Thread {
 
     }
 
-    protected abstract void test();
+    public List<TestResult> getTestResults() {
+        return testResults;
+    }
 }
+
+
+
