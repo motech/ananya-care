@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.model.Time;
+import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class ScheduleService {
@@ -25,15 +27,15 @@ public class ScheduleService {
     }
 
     public void enroll(String caseId, DateTime referenceDate, String scheduleName) {
-        if (isNotEnrolled(caseId,scheduleName)){
+        if (isNotEnrolled(caseId, scheduleName)) {
             logger.info(String.format("Enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
-            trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate(),scheduleName));
+            trackingService.enroll(enrollmentRequestFor(caseId, referenceDate.toLocalDate(), scheduleName));
         }
     }
 
     public EnrollmentRecord unenroll(String caseId, String scheduleName) {
-        EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, scheduleName);
-        if(enrollment == null) {
+        EnrollmentRecord enrollment = getActiveOrDefaultedEnrollment(caseId, scheduleName);
+        if (enrollment == null) {
             return null;
         }
         logger.info(String.format("Un-enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
@@ -43,8 +45,26 @@ public class ScheduleService {
     }
 
     public void fulfillMileStone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {
-        if(isCurrentMilestone(caseId, milestoneName,scheduleName))
-            fulfillCurrentMilestone(caseId,vaccinationTakenDate,scheduleName);
+        if (isCurrentMilestone(caseId, milestoneName, scheduleName))
+            fulfillCurrentMilestone(caseId, vaccinationTakenDate, scheduleName);
+    }
+
+    private EnrollmentRecord getActiveOrDefaultedEnrollment(String externalId, String scheduleName) {
+        EnrollmentsQuery activeEnrollmentsQuery = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingSchedule(scheduleName).havingState(EnrollmentStatus.ACTIVE);
+        EnrollmentsQuery defaultedEnrollmentsQuery = new EnrollmentsQuery()
+                .havingExternalId(externalId)
+                .havingSchedule(scheduleName).havingState(EnrollmentStatus.DEFAULTED);
+
+        List<EnrollmentRecord> enrollmentRecords = trackingService.search(activeEnrollmentsQuery);
+        if (enrollmentRecords.size() == 1)
+            return enrollmentRecords.get(0);
+        enrollmentRecords= trackingService.search(defaultedEnrollmentsQuery);
+        if (enrollmentRecords.size() == 1)
+            return enrollmentRecords.get(0);
+
+        return null;
     }
 
     private boolean isNotEnrolled(String externalId, String scheduleName) {
@@ -52,14 +72,14 @@ public class ScheduleService {
                 .havingExternalId(externalId)
                 .havingSchedule(scheduleName);
 
-        if(trackingService.search(query).size() == 1)
+        if (trackingService.search(query).size() == 1)
             return false;
         return true;
     }
 
     private boolean isCurrentMilestone(String caseId, String milestoneName, String scheduleName) {
         EnrollmentRecord enrollment = trackingService.getEnrollment(caseId, scheduleName);
-        if(enrollment == null) return false;
+        if (enrollment == null) return false;
         return enrollment.getCurrentMilestoneName().equals(milestoneName);
     }
 
@@ -67,7 +87,7 @@ public class ScheduleService {
         LocalDate fulfillmentDate = fulfillmentDateTime.toLocalDate();
         Time fulfillmentTime = DateUtil.time(fulfillmentDateTime);
         logger.info(String.format("Fulfilling current milestone for external id : %s , schedule : %s", caseId, scheduleName));
-        trackingService.fulfillCurrentMilestone(caseId, scheduleName,fulfillmentDate, fulfillmentTime );
+        trackingService.fulfillCurrentMilestone(caseId, scheduleName, fulfillmentDate, fulfillmentTime);
     }
 
     private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate, String scheduleName) {

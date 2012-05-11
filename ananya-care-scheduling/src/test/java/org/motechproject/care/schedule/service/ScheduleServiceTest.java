@@ -18,6 +18,7 @@ import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -101,10 +102,33 @@ public class ScheduleServiceTest {
     }
     
     @Test
-    public void shouldUnenrollFromScheduleIfEnrolled(){
+    public void shouldUnenrollFromScheduleIfActiveEnrollment(){
         String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(""));
+        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "", null, null, null, null, null, null, null);
+
+        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(Arrays.asList(enrollmentRecord));
         schedulerService.unenroll(caseId, scheduleName);
+
+        verify(trackingService, times(1)).search(any(EnrollmentsQuery.class));
+
+        ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
+        verify(trackingService).unenroll(eq(caseId), captor.capture());
+        List scheduleNames = captor.getValue();
+        assertEquals(1, scheduleNames.size());
+        assertEquals(scheduleName,scheduleNames.get(0));
+    }
+
+    @Test
+    public void shouldUnenrollFromScheduleIfDefaultedEnrollment(){
+        String caseId = "caseId";
+        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "", null, null, null, null, null, null, null);
+
+        when(trackingService.search(any(EnrollmentsQuery.class)))
+                .thenReturn(new ArrayList<EnrollmentRecord>()).thenReturn(Arrays.asList(enrollmentRecord));
+        schedulerService.unenroll(caseId, scheduleName);
+
+        verify(trackingService, times(2)).search(any(EnrollmentsQuery.class));
+
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(trackingService).unenroll(eq(caseId), captor.capture());
         List scheduleNames = captor.getValue();
