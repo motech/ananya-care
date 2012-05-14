@@ -21,7 +21,7 @@ public class TestResult {
         return error != null;
     }
 
-    public void print() {
+    public void printResult() {
         System.out.println("Test " + clazz.getCanonicalName() + "." + method.getName() + ":" + (hasError() ? " Failed" : " Passed"));
         if(hasError()) {
             System.err.println("Test Failed: " + clazz.getCanonicalName() + "." + method.getName());

@@ -3,8 +3,6 @@ package org.motechproject.care.qa;
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
 import org.joda.time.LocalDate;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.CareCaseTask;
@@ -12,38 +10,25 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.DbUtils;
-import org.motechproject.care.utils.E2EIntegrationTestUtil;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.util.DateUtil;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Properties;
 import java.util.UUID;
 
-@Ignore("This test should be run by E2ETest class which would run this test in parallel thread")
-public class MotherCaseFunctionalThread {
+@Ignore("This test should be run by E2ETestsRunner class which would run this test in parallel thread")
+public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
 
-    private E2EIntegrationTestUtil e2EIntegrationTestUtil;
-    private DbUtils dbUtils;
     private final String userId;
     private final String ownerId;
 
-    public MotherCaseFunctionalThread(E2EIntegrationTestUtil e2EIntegrationTestUtil, DbUtils dbUtils, String userId, String ownerId) {
-        this.e2EIntegrationTestUtil = e2EIntegrationTestUtil;
-        this.dbUtils = dbUtils;
+    public MotherCaseFunctionalThread(Properties ananyaCareProperties, DbUtils dbUtils, String userId, String ownerId) {
+        super(ananyaCareProperties, dbUtils);
         this.userId = userId;
         this.ownerId = ownerId;
-    }
-
-    @After
-    public void after() {
-        dbUtils.after();
-    }
-
-    @Before
-    public void before() {
-        dbUtils.before();
     }
 
     @Test
@@ -62,7 +47,7 @@ public class MotherCaseFunctionalThread {
 
         Mother motherFromDb = dbUtils.getMotherWithRetry(uniqueCaseId);
 
-        dbUtils.markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
 
         Assert.assertEquals(ownerId, motherFromDb.getGroupId());
         Assert.assertEquals(userId,motherFromDb.getFlwId());
@@ -107,7 +92,7 @@ public class MotherCaseFunctionalThread {
         while(true) {
             counter--;
             try {
-                restTemplate.postForLocation(e2EIntegrationTestUtil.getAppServerUrl(), xmlBody);
+                restTemplate.postForLocation(getAppServerUrl(), xmlBody);
                 break;
             } catch (RuntimeException ex) {
                 if(counter == 1) {

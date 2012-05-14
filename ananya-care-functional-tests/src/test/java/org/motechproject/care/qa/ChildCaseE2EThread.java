@@ -2,8 +2,6 @@ package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.joda.time.LocalDate;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
@@ -11,48 +9,35 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.utils.DbUtils;
-import org.motechproject.care.utils.E2EIntegrationTestUtil;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.util.DateUtil;
 
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.UUID;
 
-@Ignore("This test should be run by E2ETest class which would run this test in parallel thread")
-public class ChildCaseE2EThread {
+@Ignore("This test should be run by E2ETestsRunner class which would run this test in parallel thread")
+public class ChildCaseE2EThread extends E2EIntegrationTest {
 
-    private E2EIntegrationTestUtil e2EIntegrationTestUtil;
-    private DbUtils dbUtils;
     private final String userId;
     private final String ownerId;
 
-    public ChildCaseE2EThread(E2EIntegrationTestUtil e2EIntegrationTestUtil, DbUtils dbUtils, String userId, String ownerId) {
-        this.e2EIntegrationTestUtil = e2EIntegrationTestUtil;
-        this.dbUtils = dbUtils;
+    public ChildCaseE2EThread(Properties ananyaCareProperties, DbUtils dbUtils, String userId, String ownerId) {
+        super(ananyaCareProperties, dbUtils);
         this.userId = userId;
         this.ownerId = ownerId;
     }
 
-    @After
-    public void after() {
-        dbUtils.after();
-    }
-
-    @Before
-    public void before() {
-        dbUtils.before();
-    }
-
     @Test
     public void shouldSendBCGAlertForANewBornChild() {
-        HashMap<String, String> caseAttributes = e2EIntegrationTestUtil.createAPregnantMotherCaseInCommCare(userId, ownerId);
+        HashMap<String, String> caseAttributes = createAPregnantMotherCaseInCommCare(userId, ownerId);
         String motherCaseId = caseAttributes.get("caseId");
 
 
         Mother mother = dbUtils.getMotherWithRetry(motherCaseId);
         Assert.assertNotNull(mother);
-        dbUtils.markForDeletion(mother);
-        dbUtils.markScheduleForUnEnrollment(motherCaseId, MilestoneType.TT1.toString());
+        markClientForDeletion(mother);
+        markScheduleForUnEnrollment(motherCaseId, MilestoneType.TT1.toString());
 
         final String childCaseId = UUID.randomUUID().toString();
         String childInstanceId = UUID.randomUUID().toString();
@@ -68,7 +53,7 @@ public class ChildCaseE2EThread {
         childAttributes.put("motherCaseId", motherCaseId);
         childAttributes.put("dob", dob.toString());
 
-        e2EIntegrationTestUtil.postXmlWithAttributes(childAttributes, "/commCareFormXmls/newbornchild.st");
+        postXmlWithAttributes(childAttributes, "/commCareFormXmls/newbornchild.st");
 
         Child child = dbUtils.getChildWithRetry(childCaseId);
 
@@ -77,11 +62,11 @@ public class ChildCaseE2EThread {
         Assert.assertEquals(userId, child.getFlwId());
         Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
         Assert.assertEquals(DateUtil.newDateTime(dob), child.getDOB());
-        dbUtils.markForDeletion(child);
-        dbUtils.markScheduleForUnEnrollment(childCaseId, MilestoneType.Bcg.toString());
+        markClientForDeletion(child);
+        markScheduleForUnEnrollment(childCaseId, MilestoneType.Bcg.toString());
 
         AlertDocCase alertDocCase = dbUtils.getAlertDocCaseWithRetry(childCaseId, "bcg");
         Assert.assertNotNull(alertDocCase);
-        dbUtils.markAlertDocCaseForDeletion(alertDocCase);
+        markAlertDocCaseForDeletion(alertDocCase);
     }
 }

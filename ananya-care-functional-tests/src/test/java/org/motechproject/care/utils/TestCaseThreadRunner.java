@@ -7,20 +7,29 @@ import java.util.ArrayList;
 
 public class TestCaseThreadRunner {
 
-    private ArrayList<TestCaseThread> instances = new ArrayList<TestCaseThread>();
+    private ArrayList<TestCaseThread> testInstances = new ArrayList<TestCaseThread>();
 
-    protected void runTest(Object obj) {
+    protected void addTest(Object obj) {
         TestCaseThread testCaseThread = new TestCaseThread(obj);
         testCaseThread.setDaemon(true);
-        instances.add(testCaseThread);
-        testCaseThread.start();
+        testInstances.add(testCaseThread);
     }
 
+    protected void run() {
+        startTests();
+        verify();
+    }
 
-    protected void verify() {
+    private void startTests() {
+        for(Thread thread: testInstances) {
+            thread.start();
+        }
+    }
+
+    private void verify() {
         while(true) {
             boolean anyThreadAlive = false;
-            for(TestCaseThread testCaseThread : instances) {
+            for(TestCaseThread testCaseThread : testInstances) {
                 if(testCaseThread.isAlive()) {
                     anyThreadAlive = true;
                     break;
@@ -35,15 +44,17 @@ public class TestCaseThreadRunner {
                 //Do nothing
             }
         }
+        printResult();
+    }
 
-
+    private void printResult() {
         int failedTests = 0;
         int totalTests = 0;
 
-        for(TestCaseThread testCaseThread : instances) {
+        for(TestCaseThread testCaseThread : testInstances) {
             for(TestResult testResult: testCaseThread.getTestResults()) {
                 totalTests++;
-                testResult.print();
+                testResult.printResult();
                 if(testResult.hasError()) {
                     failedTests++;
                 }

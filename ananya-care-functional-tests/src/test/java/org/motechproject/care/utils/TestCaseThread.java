@@ -26,25 +26,43 @@ public class TestCaseThread extends Thread {
 
     private void init(Object test) {
         for (Method m : test.getClass().getMethods()) {
-            if (m.isAnnotationPresent(Test.class)) {
-                if(!m.isAnnotationPresent(Ignore.class)) {
-                    m.setAccessible(true);
-                    testMethods.add(m);
-                }
-                continue;
-            }
-
-            if (m.isAnnotationPresent(Before.class)) {
-                m.setAccessible(true);
-                beforeMethods.add(m);
-                continue;
-            }
-
-            if (m.isAnnotationPresent(After.class)) {
-                m.setAccessible(true);
-                afterMethods.add(m);
-            }
+            readMethodAnnotations(m);
         }
+    }
+
+    private void readMethodAnnotations(Method m) {
+        if(addToTestMethods(m)) return;
+        if(addToBeforeMethods(m)) return;
+        if(addToAfterMethods(m)) return;
+    }
+
+    private boolean addToTestMethods(Method m) {
+        if (!m.isAnnotationPresent(Test.class)) {
+            return false;
+        }
+        if(!m.isAnnotationPresent(Ignore.class)) {
+            m.setAccessible(true);
+            testMethods.add(m);
+        }
+        return true;
+    }
+
+    private boolean addToBeforeMethods(Method m) {
+        if (!m.isAnnotationPresent(Before.class)) {
+            return false;
+        }
+        m.setAccessible(true);
+        beforeMethods.add(m);
+        return true;
+    }
+
+    private boolean addToAfterMethods(Method m) {
+        if (!m.isAnnotationPresent(After.class)) {
+            return false;
+        }
+        m.setAccessible(true);
+        afterMethods.add(m);
+        return true;
     }
 
     public void run() {
@@ -79,11 +97,9 @@ public class TestCaseThread extends Thread {
                 }
             }
         }
-
         if(error != null) {
             throw error;
         }
-
     }
 
     public List<TestResult> getTestResults() {

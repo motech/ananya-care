@@ -4,21 +4,24 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.care.utils.DbUtils;
-import org.motechproject.care.utils.E2EIntegrationTestUtil;
 import org.motechproject.care.utils.TestCaseThreadRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath*:applicationContext-FunctionalTestsE2E.xml")
-public class E2ETest extends TestCaseThreadRunner {
+public class E2ETestsRunner extends TestCaseThreadRunner {
 
+    @Qualifier("ananyaCareProperties")
     @Autowired
-    private E2EIntegrationTestUtil e2EIntegrationTestUtil;
+    private Properties ananyaCareProperties;
+
     @Autowired
     private DbUtils dbUtils;
 
@@ -26,10 +29,10 @@ public class E2ETest extends TestCaseThreadRunner {
     public void e2eTest() {
         String userId = "d823ea3d392a06f8b991e9e4933348bd";
         String ownerId = "d823ea3d392a06f8b991e9e49394ce45";
-        this.runTest(new ChildCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-        this.runTest(new MotherCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-        this.runTest(new MotherCaseFunctionalThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-        this.verify();
+        this.addTest(new ChildCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
+        this.addTest(new MotherCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
+        this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId));
+        this.run();
     }
 
     @Test
@@ -50,11 +53,11 @@ public class E2ETest extends TestCaseThreadRunner {
 
         for(String userId: userIds) {
             for(int i=0; i<10; i++) {
-                this.runTest(new MotherCaseFunctionalThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-                this.runTest(new ChildCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-                this.runTest(new MotherCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
+                this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId));
+                this.addTest(new ChildCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
+                this.addTest(new MotherCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
             }
         }
-        this.verify();
+        this.run();
     }
 }
