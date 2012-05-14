@@ -29,19 +29,23 @@ public class MotherService {
     }
     
     private void processNew(Mother mother) {
-        allMothers.add(mother);
-        if(mother.isActive())
+        if(mother.isActive()) {
             motherVaccinationProcessor.enrollUpdateVaccines(mother);
+        }
+        allMothers.add(mother);
     }
     
     private void processExisting(Mother motherFromDb, Mother mother) {
         motherFromDb.setValuesFrom(mother);
-        allMothers.update(motherFromDb);
 
-        if(motherFromDb.isActive())
+        if(motherFromDb.isActive()) {
             motherVaccinationProcessor.enrollUpdateVaccines(motherFromDb);
-        else
+        }
+        else {
             motherVaccinationProcessor.closeSchedules(motherFromDb);
+        }
+
+        allMothers.update(motherFromDb);
     }
 
     public boolean closeCase(String caseId) {
@@ -53,8 +57,8 @@ public class MotherService {
             return true;
 
         mother.setClosedByCommcare(true);
-        allMothers.update(mother);
         motherVaccinationProcessor.closeSchedules(mother);
+        allMothers.update(mother);
         return true;
     }
 
@@ -67,8 +71,8 @@ public class MotherService {
             return true;
         }
         mother.setExpired(true);
-        allMothers.update(mother);
         motherVaccinationProcessor.closeSchedules(mother);
+        allMothers.update(mother);
         return true;
     }
 }
