@@ -16,7 +16,7 @@ import org.motechproject.util.DateUtil;
 import java.util.HashMap;
 import java.util.UUID;
 
-@Ignore
+@Ignore("This test should be run by E2ETest class which would run this test in parallel thread")
 public class MotherCaseE2EThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;

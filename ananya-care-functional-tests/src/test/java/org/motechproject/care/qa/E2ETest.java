@@ -23,7 +23,7 @@ public class E2ETest extends TestCaseThreadRunner {
     private DbUtils dbUtils;
 
     @Test
-    public void test() {
+    public void e2eTest() {
         String userId = "d823ea3d392a06f8b991e9e4933348bd";
         String ownerId = "d823ea3d392a06f8b991e9e49394ce45";
         this.runTest(new ChildCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));

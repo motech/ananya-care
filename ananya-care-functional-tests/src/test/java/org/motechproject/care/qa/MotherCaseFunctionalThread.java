@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
-@Ignore
+@Ignore("This test should be run by E2ETest class which would run this test in parallel thread")
 public class MotherCaseFunctionalThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;
