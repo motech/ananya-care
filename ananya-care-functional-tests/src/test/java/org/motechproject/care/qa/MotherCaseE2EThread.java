@@ -3,19 +3,20 @@ package org.motechproject.care.qa;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.MilestoneType;
+import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.E2EIntegrationTestUtil;
-import org.motechproject.care.utils.TestCaseThread;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.util.DateUtil;
 
 import java.util.HashMap;
 import java.util.UUID;
 
+@Ignore
 public class MotherCaseE2EThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;

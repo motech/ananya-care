@@ -5,6 +5,7 @@ import org.antlr.stringtemplate.StringTemplate;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
@@ -13,7 +14,6 @@ import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.E2EIntegrationTestUtil;
 import org.motechproject.care.utils.StringTemplateHelper;
-import org.motechproject.care.utils.TestCaseThread;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.util.DateUtil;
@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
+@Ignore
 public class MotherCaseFunctionalThread {
 
     private E2EIntegrationTestUtil e2EIntegrationTestUtil;

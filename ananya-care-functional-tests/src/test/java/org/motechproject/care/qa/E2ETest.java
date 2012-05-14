@@ -49,10 +49,10 @@ public class E2ETest extends TestCaseThreadRunner {
         String ownerId = "2e2908b643875806156e49ac6b2e4abd";
 
         for(String userId: userIds) {
-            for(int i=0; i<1; i++) {
+            for(int i=0; i<10; i++) {
                 this.runTest(new MotherCaseFunctionalThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-//                this.runTest(new ChildCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
-//                this.runTest(new MotherCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
+                this.runTest(new ChildCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
+                this.runTest(new MotherCaseE2EThread(e2EIntegrationTestUtil, dbUtils, userId, ownerId));
             }
         }
         this.verify();

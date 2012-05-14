@@ -2,6 +2,7 @@ package org.motechproject.care.utils;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
@@ -26,8 +27,10 @@ public class TestCaseThread extends Thread {
     private void init(Object test) {
         for (Method m : test.getClass().getMethods()) {
             if (m.isAnnotationPresent(Test.class)) {
-                m.setAccessible(true);
-                testMethods.add(m);
+                if(!m.isAnnotationPresent(Ignore.class)) {
+                    m.setAccessible(true);
+                    testMethods.add(m);
+                }
                 continue;
             }
 
