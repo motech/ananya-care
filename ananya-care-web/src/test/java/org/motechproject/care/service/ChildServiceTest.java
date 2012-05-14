@@ -10,7 +10,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
@@ -58,13 +57,24 @@ public class ChildServiceTest {
     }
 
     @Test
-    public void shouldNotSaveChildIfAgeMoreThanAYear() {
+    public void shouldSaveChildIfAgeMoreThanAYearButShouldNotEnrollForAnySchedules() {
         String caseId = "caseId";
         DateTime dob = new DateTime(2011, 4, 13, 0, 0);
         CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withCaseId(caseId).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         childService.process(careCase);
-        verify(allChildren,never()).add((Child) Matchers.any());
+        verify(allChildren).add((Child) Matchers.any());
+        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+    }
+
+    @Test
+    public void shouldNotEnrollForAnySchedulesIfDOBIsNull() {
+        String caseId = "caseId";
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(null).withCaseType(CaseType.Child.getType()).withCaseId(caseId).build();
+        when(allChildren.findByCaseId(caseId)).thenReturn(null);
+        childService.process(careCase);
+        verify(allChildren).add((Child) Matchers.any());
         verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
         verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
     }

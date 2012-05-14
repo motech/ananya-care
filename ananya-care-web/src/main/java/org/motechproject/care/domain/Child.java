@@ -1,5 +1,6 @@
 package org.motechproject.care.domain;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.care.request.CaseType;
@@ -227,4 +228,14 @@ public class Child extends Client {
     public void setOpvBoosterDate(DateTime opvBoosterDate) {
         this.opvBoosterDate = opvBoosterDate;
     }
+
+    @JsonIgnore
+    public boolean shouldEnrollForSchedules(){
+        return getDOB()!=null && !isOlderThanAYear() && isActive();
+    }
+    @JsonIgnore
+    public boolean isOlderThanAYear() {
+        return !DateUtil.today().minusYears(1).isBefore(getDOB().toLocalDate());
+    }
+
 }

@@ -1,11 +1,9 @@
 package org.motechproject.care.service;
 
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.service.mapper.ChildMapper;
-import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +31,11 @@ public class ChildService {
     }
 
     private void processNew(Child child) {
-        if(isOlderThanAYear(child))
-            return;
-
-        if(child.isActive()) {
+        if(child.shouldEnrollForSchedules())
             childVaccinationProcessor.enrollUpdateVaccines(child);
-        }
+
         allChildren.add(child);
+
     }
 
     private void processExisting(Child childFromDb, Child child) {
@@ -83,7 +79,4 @@ public class ChildService {
         return true;
     }
 
-    private boolean isOlderThanAYear(Child child) {
-        return !DateUtil.today().minusYears(1).isBefore(child.getDOB().toLocalDate());
-    }
 }
