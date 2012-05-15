@@ -41,7 +41,7 @@ public class ChildServiceTest {
     public void shouldSaveChildIfDoesNotExist_AgeLessThanAYear() {
         String caseId = "caseId";
         DateTime dobOfChild = DateTime.now().minusMonths(1);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
         childService.process(careCase);
@@ -111,7 +111,7 @@ public class ChildServiceTest {
     public void shouldSaveChildAsInactiveIfItDoesNotExistAndIsDead() throws IOException {
         String caseId = "caseId";
         DateTime dobOfChild = DateTime.now().minusMonths(1);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withBabyMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
         careCase.setChild_alive("no");
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
 

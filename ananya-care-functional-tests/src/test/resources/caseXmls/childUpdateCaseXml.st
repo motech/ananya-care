@@ -9,7 +9,7 @@
     <gender>female</gender>
       <dob>$dobDate$</dob>
     <bcg_date>2012-12-04</bcg_date>
-    <baby_measles>2012-12-05</baby_measles>
+    <measles_date>2012-12-05</measles_date>
   </update>
   <index>
     <mother_id case_type="cc_bihar_pregnancy">$motherCaseId$</mother_id>

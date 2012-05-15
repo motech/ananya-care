@@ -41,7 +41,7 @@ public class ChildMapperTest {
 
     @Test
     public void shouldMapToAChildObjectWithEmptyFields(){
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId("").withCaseName("").withCaseType("").withDateModified("").withUserId("").withGroupId("").withBcgDate("").withBabyMeaslesDate("").withVitamin1Date("")
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId("").withCaseName("").withCaseType("").withDateModified("").withUserId("").withGroupId("").withBcgDate("").withMeaslesDate("").withVitamin1Date("")
                 .withHep0Date("").withHep1Date("").withHep2Date("").withHep3Date("")
                 .withDpt1Date("").withDpt2Date("").withDpt3Date("").withDptBoosterDate("").withOPV0Date("").withOPV1Date("").withOPV2Date("").withOPV3Date("").withOPVBoosterDate("").build();
         Child child = ChildMapper.map(careCase);
@@ -70,7 +70,7 @@ public class ChildMapperTest {
 
     @Test
     public void shouldMapToAMotherObjectWithNullFields(){
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(null).withCaseName(null).withCaseType(null).withBcgDate(null).withBabyMeaslesDate(null).withDateModified(null).withUserId(null).withGroupId(null).withVitamin1Date(null)
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(null).withCaseName(null).withCaseType(null).withBcgDate(null).withMeaslesDate(null).withDateModified(null).withUserId(null).withGroupId(null).withVitamin1Date(null)
                 .withHep0Date(null).withHep1Date(null).withHep2Date(null).withHep3Date(null)
                 .withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).withDptBoosterDate(null).withOPV0Date(null).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).withOPVBoosterDate(null).build();
 
