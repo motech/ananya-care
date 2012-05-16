@@ -48,22 +48,6 @@
                     "floating":"true"
                 }
             ]
-        },
-        {
-            "name": "DPT Booster",
-            "scheduleWindows": {
-                "earliest": ["180 Days"],
-                "due": ["24 Months"]
-            },
-            "alerts": [
-                {
-                    "window": "due",
-                    "offset": ["-2 Weeks"],
-                    "interval": ["1 Day"],
-                    "count": "1",
-                    "floating":"true"
-                }
-            ]
         }
     ]
 }
