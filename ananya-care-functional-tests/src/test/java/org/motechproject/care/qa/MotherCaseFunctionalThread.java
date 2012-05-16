@@ -31,17 +31,20 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         this.ownerId = ownerId;
     }
 
+
     @Test
     public void shouldCreateAlertsForTt1AndTt2AndCloseCase() {
         String uniqueCaseId = UUID.randomUUID().toString();
 
         createAMother(uniqueCaseId);
 
-        StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddCaseXml.st");
+        LocalDate edd = DateUtil.now().plusMonths(1).toLocalDate();
+        StringTemplate stringTemplate;
+        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
         stringTemplate.setAttribute("userId",userId);
         stringTemplate.setAttribute("ownerId",ownerId);
-        LocalDate edd = DateUtil.now().plusMonths(1).toLocalDate();
+
         stringTemplate.setAttribute("edd", edd.toString());
         postXmlToMotechCare(stringTemplate.toString());
 

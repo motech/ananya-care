@@ -21,7 +21,7 @@ public class AllCareCaseTasks extends MotechBaseRepository<CareCaseTask> {
         super(CareCaseTask.class, dbCouchDbConnector);
     }
 
-    @View(name = "by_clientCaseId_and_milestoneName", map = "function(doc) {{emit([doc.clientCaseId, doc.milestoneName]);}}")
+    @View(name = "by_clientCaseId_and_milestoneName", map = "function(doc) {if(doc.type == 'CareCaseTask') {emit([doc.clientCaseId, doc.milestoneName]);}}")
     public CareCaseTask findByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
         List<CareCaseTask> careCaseTasks = queryView("by_clientCaseId_and_milestoneName", ComplexKey.of(clientCaseId, milestoneName));
         return careCaseTasks.isEmpty() ? null : careCaseTasks.get(0);
