@@ -2,6 +2,7 @@ package org.motechproject.care.integration.schedule;
 
 import org.joda.time.LocalDate;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.repository.AllChildren;
@@ -112,10 +113,6 @@ public class DptIntegrationTest extends SpringIntegrationTest {
                 .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(null).build();
         childService.process(careCase);
 
-        markScheduleForUnEnrollment(caseId, dptScheduleName);
-        EnrollmentRecord enrollment = getEnrollmentRecord(dptScheduleName, caseId, EnrollmentStatus.ACTIVE);
-        assertEquals(MilestoneType.DPTBooster.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dpt3Date.plusDays(180)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(dpt3Date.plusMonths(24)), enrollment.getStartOfLateWindow());
+        Assert.assertNull(trackingService.getEnrollment(caseId, dptScheduleName));
     }
 }

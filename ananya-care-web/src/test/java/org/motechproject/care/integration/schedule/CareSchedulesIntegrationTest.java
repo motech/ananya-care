@@ -256,13 +256,19 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
         schedule.assertAlerts("DPT 3", due, dpt3AlertDate.toDate());
         schedule.assertNoAlerts("DPT 3", late);
         schedule.assertNoAlerts("DPT 3", max);
-        
-        schedule.assertNoAlerts("DPT Booster", earliest);
-        schedule.assertAlerts("DPT Booster", due, date(21, SEPTEMBER));
-        schedule.assertNoAlerts("DPT Booster", late);
-        schedule.assertNoAlerts("DPT Booster", max);
 
         visualization.outputTo("child-dpt.html", 2);
+    }
+
+    @Test
+    public void shouldProvideAlertsForDPTBoosterVisitsAtTheRightTimes() throws Exception {
+        schedule.enrollFor(ChildVaccinationSchedule.DPTBooster.getName(), newDate(2012, 2, 1), null);
+
+        schedule.assertNoAlerts("DPT Booster", earliest);
+        schedule.assertAlerts("DPT Booster", due, date(1, FEBRUARY));
+        schedule.assertNoAlerts("DPT Booster", late);
+        schedule.assertNoAlerts("DPT Booster", max);
+        visualization.outputTo("child-dptbooster.html", 2);
     }
 
     @Test
