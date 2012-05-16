@@ -16,7 +16,6 @@
     <context:component-scan base-package="org.motechproject.care.domain"/>
     <context:component-scan base-package="org.motechproject.care.repository"/>
 
-
     <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
         <constructor-arg>
             <bean id="httpClient" class="org.ektorp.spring.HttpClientFactoryBean"/>
