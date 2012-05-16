@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/alerts/**")
+@RequestMapping("/diagnostics/**")
 public class AlertInformationService {
 
     private EnrollmentAlertService enrollmentAlertService;
@@ -39,7 +39,7 @@ public class AlertInformationService {
         stringTemplate = new StringTemplate(IOUtils.toString(resourceAsStream));
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value="/alerts",method = RequestMethod.GET)
     public void captureAlertsFor(@RequestParam("externalId") String externalId, HttpServletResponse response) throws IOException {
 
         stringTemplate.reset();
