@@ -372,6 +372,11 @@
             <artifactId>org.ektorp.spring</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>
