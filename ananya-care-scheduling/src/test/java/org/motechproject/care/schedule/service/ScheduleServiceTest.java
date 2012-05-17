@@ -34,12 +34,12 @@ public class ScheduleServiceTest {
     private final String scheduleName = ChildVaccinationSchedule.Measles.getName();
 
     @Before
-    public void setUp(){
+    public void setUp() {
         schedulerService = new ScheduleService(trackingService);
     }
 
     @Test
-    public void shouldEnrollChildIfNotEnrolledForMeaslesAlready(){
+    public void shouldEnrollChildIfNotEnrolledForMeaslesAlready() {
         DateTime dob = new DateTime(2011, 6, 10, 0, 0);
         String caseId = "caseId";
         DateTime now = DateTime.now();
@@ -75,7 +75,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shouldNotTryToFulfillIfScheduleNotEnrolledOrEnrollmentComplete(){
+    public void shouldNotTryToFulfillIfScheduleNotEnrolledOrEnrollmentComplete() {
         String caseId = "caseId";
         when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
         schedulerService.fulfillMileStone(caseId, MilestoneType.Measles.toString(), new DateTime(2011, 6, 10, 10, 11), scheduleName);
@@ -83,7 +83,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shouldEnrollMotherForMeaslesVaccinationWithPreferredAlertTimeSetFewMinutesInAdvance(){
+    public void shouldEnrollMotherForMeaslesVaccinationWithPreferredAlertTimeSetFewMinutesInAdvance() {
         DateTime dob = new DateTime(2012, 10, 10, 0, 0);
         String caseId = "caseId";
 
@@ -100,50 +100,43 @@ public class ScheduleServiceTest {
         assertTrue(preferredAlertDateTime.isAfter(DateUtil.now().plusMinutes(1))); // Assuming that schedule creation time will take atmost 1 min
         assertTrue(preferredAlertDateTime.isBefore(DateUtil.now().plusMinutes(5)));
     }
-    
+
     @Test
-    public void shouldUnenrollFromScheduleIfActiveEnrollment(){
+    public void shouldUnenrollFromScheduleIfEnrolledAndShouldReturnTheLatestUnenrolledRecord() {
         String caseId = "caseId";
-        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "", null, null, null, null, null, null, null);
+        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "myMilestone", null, null, null, null, null, null, null);
 
-        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(Arrays.asList(enrollmentRecord));
-        schedulerService.unenroll(caseId, scheduleName);
+        when(trackingService.getEnrollment(caseId,scheduleName)).thenReturn(enrollmentRecord);
+        EnrollmentRecord record = schedulerService.unenroll(caseId, scheduleName);
 
-        verify(trackingService, times(1)).search(any(EnrollmentsQuery.class));
 
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(trackingService).unenroll(eq(caseId), captor.capture());
         List scheduleNames = captor.getValue();
         assertEquals(1, scheduleNames.size());
-        assertEquals(scheduleName,scheduleNames.get(0));
+        assertEquals(scheduleName, scheduleNames.get(0));
+        assertEquals(enrollmentRecord,record);
+
     }
 
     @Test
-    public void shouldUnenrollFromScheduleIfDefaultedEnrollment(){
+    public void shouldUnenrollFromScheduleIfEnrolledAndShouldReturnTheAnyEnrollmentRecord() {
         String caseId = "caseId";
-        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "", null, null, null, null, null, null, null);
+        EnrollmentRecord oldDefaultedEnrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "myMilestone", null, null, null, null, null, null, null);
 
-        when(trackingService.search(any(EnrollmentsQuery.class)))
-                .thenReturn(new ArrayList<EnrollmentRecord>()).thenReturn(Arrays.asList(enrollmentRecord));
-        schedulerService.unenroll(caseId, scheduleName);
+        when(trackingService.getEnrollment(caseId,scheduleName)).thenReturn(null);
+        when(trackingService.search(Matchers.<EnrollmentsQuery>any())).thenReturn(Arrays.asList(oldDefaultedEnrollmentRecord));
+        EnrollmentRecord record = schedulerService.unenroll(caseId, scheduleName);
 
-        verify(trackingService, times(2)).search(any(EnrollmentsQuery.class));
 
         ArgumentCaptor<List> captor = ArgumentCaptor.forClass(List.class);
         verify(trackingService).unenroll(eq(caseId), captor.capture());
         List scheduleNames = captor.getValue();
         assertEquals(1, scheduleNames.size());
-        assertEquals(scheduleName,scheduleNames.get(0));
-    }
+        assertEquals(scheduleName, scheduleNames.get(0));
+        assertEquals(oldDefaultedEnrollmentRecord,record);
 
-    @Test
-    public void shouldNotUnenrollFromScheduleIfNotEnrolled(){
-        String caseId = "caseId";
-        when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
-        schedulerService.unenroll(caseId, scheduleName);
-        verify(trackingService, never()).unenroll(anyString(), any(List.class));
     }
-
 
     private EnrollmentRecord dummyEnrollmentRecord(String currentMilestoneName) {
         return new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null);

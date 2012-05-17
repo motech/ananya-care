@@ -4,7 +4,6 @@ import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.motechproject.model.Time;
-import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
@@ -34,14 +33,14 @@ public class ScheduleService {
     }
 
     public EnrollmentRecord unenroll(String caseId, String scheduleName) {
-        EnrollmentRecord enrollment = getActiveOrDefaultedEnrollment(caseId, scheduleName);
-        if (enrollment == null) {
-            return null;
-        }
-        logger.info(String.format("Un-enrolling client for external id : %s , schedule : %s", caseId, scheduleName));
+        EnrollmentRecord activeEnrollment = trackingService.getEnrollment(caseId, scheduleName);
         trackingService.unenroll(caseId, Arrays.asList(scheduleName));
+        logger.info(String.format("Un-enrolled client for external id : %s , schedule : %s", caseId, scheduleName));
 
-        return enrollment;
+        if (activeEnrollment != null)
+            return activeEnrollment;
+        return getAnEnrollmentFor(caseId, scheduleName);
+
     }
 
     public void fulfillMileStone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {
@@ -49,21 +48,14 @@ public class ScheduleService {
             fulfillCurrentMilestone(caseId, vaccinationTakenDate, scheduleName);
     }
 
-    private EnrollmentRecord getActiveOrDefaultedEnrollment(String externalId, String scheduleName) {
-        EnrollmentsQuery activeEnrollmentsQuery = new EnrollmentsQuery()
+    private EnrollmentRecord getAnEnrollmentFor(String externalId, String scheduleName) {
+        EnrollmentsQuery enrollmentsQuery = new EnrollmentsQuery()
                 .havingExternalId(externalId)
-                .havingSchedule(scheduleName).havingState(EnrollmentStatus.ACTIVE);
-        EnrollmentsQuery defaultedEnrollmentsQuery = new EnrollmentsQuery()
-                .havingExternalId(externalId)
-                .havingSchedule(scheduleName).havingState(EnrollmentStatus.DEFAULTED);
+                .havingSchedule(scheduleName);
 
-        List<EnrollmentRecord> enrollmentRecords = trackingService.search(activeEnrollmentsQuery);
-        if (enrollmentRecords.size() == 1)
+        List<EnrollmentRecord> enrollmentRecords = trackingService.search(enrollmentsQuery);
+        if (enrollmentRecords.size() >= 1)
             return enrollmentRecords.get(0);
-        enrollmentRecords= trackingService.search(defaultedEnrollmentsQuery);
-        if (enrollmentRecords.size() == 1)
-            return enrollmentRecords.get(0);
-
         return null;
     }
 
@@ -72,7 +64,7 @@ public class ScheduleService {
                 .havingExternalId(externalId)
                 .havingSchedule(scheduleName);
 
-        if (trackingService.search(query).size() == 1)
+        if (trackingService.search(query).size() >= 1)
             return false;
         return true;
     }
