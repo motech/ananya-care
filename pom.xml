@@ -227,7 +227,6 @@
                                 <autocommit>true</autocommit>
                                 <sqlCommand>drop database ${postgres.db}</sqlCommand>
                                 <!-- ignore error when database is not available -->
-                                <onError>continue</onError>
                             </configuration>
                         </execution>
                         <execution>
