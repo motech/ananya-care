@@ -227,6 +227,7 @@
                                 <autocommit>true</autocommit>
                                 <sqlCommand>drop database ${postgres.db}</sqlCommand>
                                 <!-- ignore error when database is not available -->
+                                <onError>continue</onError>
                             </configuration>
                         </execution>
                         <execution>
@@ -371,11 +372,6 @@
             <groupId>org.ektorp</groupId>
             <artifactId>org.ektorp.spring</artifactId>
             <version>1.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
         </dependency>
     </dependencies>
     <profiles>
