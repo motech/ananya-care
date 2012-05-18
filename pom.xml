@@ -255,7 +255,7 @@
                                 <goal>execute</goal>
                             </goals>
                             <configuration>
-                                <url>jdbc:postgresql://${postgres.server}:${postgres.port}:${postgres.db}</url>
+                                <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
                                 <username>${postgres.user}</username>
                                 <password>${postgres.password}</password>
                                 <autocommit>true</autocommit>
