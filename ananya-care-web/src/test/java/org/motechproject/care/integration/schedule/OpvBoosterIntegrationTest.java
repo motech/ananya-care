@@ -83,7 +83,7 @@ public class OpvBoosterIntegrationTest extends SpringIntegrationTest {
         LocalDate opv3Date = dob.plusMonths(15);
         LocalDate expectedReferenceDate = opv3Date.plusDays(180).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = opv3Date.plusDays(180);
-        LocalDate expectedStartLateDate = opv3Date.plusMonths(8).plusDays(180);
+        LocalDate expectedStartLateDate = expectedStartDueDate.plusMonths(8);
 
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withOPV1Date(null).withOPV2Date(null).withOPV3Date(null).withOPVBoosterDate(null).build();
         childService.process(careCase);
