@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
@@ -222,7 +223,7 @@ public class MotherServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateAlreadyInactiveMother(){
+    public void shouldUpdateIrrespectiveOfWhetherMotherIsAlreadyInactiveOrNotButSHouldNotScheduleVaccinations(){
         CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("yes").withCaseId(caseId).withAdd("2012-04-10").build();
 
         Mother mother = motherWithCaseId(caseId);
@@ -235,25 +236,30 @@ public class MotherServiceTest {
 
         motherService.process(motherCase);
 
-        verify(allMothers, never()).update(any(Mother.class));
-        verify(motherVaccinationProcessor, never()).closeSchedules(any(Mother.class));
+        verify(allMothers).update(any(Mother.class));
+        verify(motherVaccinationProcessor).closeSchedules(any(Mother.class));
     }
+    
+    @Test(expected = RuntimeException.class)
+    public void testToCheckThatClientIsAlwaysSavedFirstBeforeSchedulingHerForVaccinations(){
 
-    @Test
-    public void shouldNotCloseAlreadyInactiveMother(){
+        CareCase motherCase = new MotherCareCaseBuilder().withMotherAlive("yes").withCaseId(caseId).withAdd("2012-04-10").build();
+
         Mother mother = motherWithCaseId(caseId);
-        mother.setClosedByCommcare(true);
+        mother.setClosedByCommcare(false);
         mother.setAdd(null);
         mother.setAlive(true);
+        mother.setExpired(false);
+        mother.setName("Hannah Montana");
 
         when(allMothers.findByCaseId(caseId)).thenReturn(mother);
+        doThrow(new RuntimeException()).when(allMothers).update(Matchers.<Mother>any());
 
-        boolean wasClosed = motherService.closeCase(caseId);
-        
-        assertTrue(wasClosed);
+        motherService.process(motherCase);
 
-        verify(allMothers, never()).update(any(Mother.class));
-        verify(motherVaccinationProcessor, never()).closeSchedules(any(Mother.class));
+        verify(allMothers).update(any(Mother.class));
+        verify(motherVaccinationProcessor,never()).enrollUpdateVaccines(Matchers.<Mother>any());
+
     }
 
     private Mother motherWithCaseId(String caseId) {

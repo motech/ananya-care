@@ -25,7 +25,7 @@ public class CareCaseTaskService {
 
     public void close(String clientCaseId, String milestoneName) {
         CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName);
-        if(careCaseTask == null) {
+        if(careCaseTask == null|| !careCaseTask.getOpen()) {
             return;
         }
         careCaseTask.setOpen(false);

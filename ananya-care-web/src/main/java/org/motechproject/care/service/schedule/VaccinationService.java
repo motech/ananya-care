@@ -21,9 +21,8 @@ public abstract class VaccinationService {
 
     public void close(Client client) {
         EnrollmentRecord enrollmentRecord = schedulerService.unenroll(client.getCaseId(), scheduleName);
-        if(enrollmentRecord == null) {
+        if(enrollmentRecord == null)
             return;
-        }
         String currentMilestoneName = enrollmentRecord.getCurrentMilestoneName();
         careCaseTaskService.close(client.getCaseId(), currentMilestoneName);
     }

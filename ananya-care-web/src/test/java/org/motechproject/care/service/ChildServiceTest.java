@@ -197,6 +197,25 @@ public class ChildServiceTest {
         assertFalse(wasClosed);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void testToCheckThatClientIsAlwaysSavedFirstBeforeSchedulingHerForVaccinations(){
+
+        Child childFromDb = childWithCaseId(caseId);
+        childFromDb.setClosedByCommcare(false);
+        childFromDb.setAlive(true);
+
+        when(allChildren.findByCaseId(caseId)).thenReturn(childFromDb);
+
+        doThrow(new RuntimeException()).when(allChildren).update(Matchers.<Child>any());
+
+        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).build();
+        childService.process(careCase);
+
+        verify(allChildren).update(any(Child.class));
+        verify(childVaccinationProcessor,never()).enrollUpdateVaccines(Matchers.<Child>any());
+
+    }
+
     private Child childWithCaseId(String caseId) {
         Child child = new Child();
         child.setCaseId(caseId);

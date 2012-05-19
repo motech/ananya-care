@@ -31,15 +31,17 @@ public class ChildService {
     }
 
     private void processNew(Child child) {
-        if(child.shouldEnrollForSchedules())
-            childVaccinationProcessor.enrollUpdateVaccines(child);
-
         allChildren.add(child);
+        if(child.shouldEnrollForSchedules()) {
+            childVaccinationProcessor.enrollUpdateVaccines(child);
+        }
+
 
     }
 
     private void processExisting(Child childFromDb, Child child) {
         childFromDb.setValuesFrom(child);
+        allChildren.update(childFromDb);
 
         if(childFromDb.isActive()) {
             childVaccinationProcessor.enrollUpdateVaccines(childFromDb);
@@ -47,7 +49,6 @@ public class ChildService {
         else {
             childVaccinationProcessor.closeSchedules(childFromDb);
         }
-        allChildren.update(childFromDb);
     }
 
     public boolean closeCase(String caseId) {
@@ -55,12 +56,9 @@ public class ChildService {
         if(child == null)
             return false;
 
-        if(!child.isActive())
-            return true;
-
         child.setClosedByCommcare(true);
-        childVaccinationProcessor.closeSchedules(child);
         allChildren.update(child);
+        childVaccinationProcessor.closeSchedules(child);
         return true;
     }
 
@@ -74,8 +72,8 @@ public class ChildService {
             return true;
         }
         child.setExpired(true);
-        childVaccinationProcessor.closeSchedules(child);
         allChildren.update(child);
+        childVaccinationProcessor.closeSchedules(child);
         return true;
     }
 

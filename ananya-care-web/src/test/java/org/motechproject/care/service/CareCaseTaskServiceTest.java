@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.CareCaseTask;
@@ -42,10 +43,12 @@ public class CareCaseTaskServiceTest {
     }
 
     @Test
-    public void shouldCloseACaseIfCareTaskExistsForIt(){
+    public void shouldSendCloseUpdatesIfCareTaskExistsForItAndItIsOpen(){
         String clientCaseId = "clientCaseId";
         String milestoneName = "milestoneName";
         CareCaseTask careCaseTask = mock(CareCaseTask.class);
+        when(careCaseTask.getOpen()).thenReturn(true);
+
         CaseTask caseTask = new CaseTask();
         String url = "someurl";
         
@@ -56,6 +59,20 @@ public class CareCaseTaskServiceTest {
         careCaseTaskService.close(clientCaseId, milestoneName);
 
         verify(commcareCaseGateway).closeCase(url, caseTask);
+    }
+
+    @Test
+    public void shouldNotSendCloseUpdatesIfCareTaskExistsForItAndItIsAlreadyClosed(){
+        String clientCaseId = "clientCaseId";
+        String milestoneName = "milestoneName";
+        CareCaseTask careCaseTask = mock(CareCaseTask.class);
+        when(careCaseTask.getOpen()).thenReturn(false);
+
+        when(allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName)).thenReturn(careCaseTask);
+
+        careCaseTaskService.close(clientCaseId, milestoneName);
+        verify(allCareCaseTasks,never()).update(Matchers.<CareCaseTask>any());
+        verify(commcareCaseGateway, never()).closeCase(Matchers.<String>any(), Matchers.<CaseTask>any());
     }
 
     @Test
