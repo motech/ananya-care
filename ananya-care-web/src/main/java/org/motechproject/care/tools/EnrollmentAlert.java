@@ -1,19 +1,15 @@
 package org.motechproject.care.tools;
 
-import org.joda.time.DateTime;
 import org.motechproject.model.Time;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
-import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 
 public class EnrollmentAlert {
     private Enrollment enrollment;
-    private DateTime dueWindowAlertTimings;
-    private boolean showAlertWarning;
+    private String dueWindowAlertTimings;
 
-    public EnrollmentAlert(Enrollment enrollment, DateTime dueWindowAlertTimings) {
+    public EnrollmentAlert(Enrollment enrollment, String dueWindowAlertTimings) {
         this.enrollment = enrollment;
         this.dueWindowAlertTimings = dueWindowAlertTimings;
-        this.showAlertWarning = shouldAlertHaveBeenRaisedTodayAtAPassedPreferredAlertTime();
     }
 
 
@@ -35,15 +31,7 @@ public class EnrollmentAlert {
     }
 
     public String getDueWindowAlertTimings() {
-        return dueWindowAlertTimings != null ? dueWindowAlertTimings.toString() : "";
-    }
-
-    public boolean getShowAlertWarning() {
-        return showAlertWarning;
-    }
-
-    private boolean shouldAlertHaveBeenRaisedTodayAtAPassedPreferredAlertTime() {
-        return enrollment.getStatus() == EnrollmentStatus.ACTIVE && dueWindowAlertTimings.isBeforeNow() && dueWindowAlertTimings.plusDays(1).isAfterNow();
+        return dueWindowAlertTimings;
     }
 
 }
