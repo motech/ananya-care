@@ -15,7 +15,6 @@ import java.util.Properties;
 @Component
 public class AlertMotherAction extends AlertClientAction implements Action{
     private AllMothers allMothers;
-    public static final String clientElementTag = "mother_id";
 
     @Autowired
     public AlertMotherAction(AllMothers motherRepository, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, @Qualifier("ananyaCareProperties") Properties ananyaCareProperties) {
@@ -33,7 +32,7 @@ public class AlertMotherAction extends AlertClientAction implements Action{
         if(!alertWindow.isValid()) {
             return;
         }
-        postToCommCare(alertWindow, externalId, milestoneName, mother,clientElementTag);
+        postToCommCare(alertWindow, externalId, milestoneName, mother);
     }
 }
 

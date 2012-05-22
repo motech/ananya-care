@@ -41,39 +41,7 @@ public class AlertDocCase extends MotechBaseDataObject {
         return caseId;
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
-    }
-
     public String getXmlDocument() {
         return xmlDocument;
-    }
-
-    public void setXmlDocument(String xmlDocument) {
-        this.xmlDocument = xmlDocument;
-    }
-
-    public DateTime getSubmittedAt() {
-        return submittedAt;
-    }
-
-    public void setSubmittedAt(DateTime submittedAt) {
-        this.submittedAt = submittedAt;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getClientCaseId() {
-        return clientCaseId;
-    }
-
-    public void setClientCaseId(String clientCaseId) {
-        this.clientCaseId = clientCaseId;
     }
 }

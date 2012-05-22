@@ -126,7 +126,6 @@ public class AlertChildActionTest {
         assertEquals(groupId, task.getOwnerId());
         assertEquals(childCaseId,task.getClientCaseId());
         assertEquals(CaseType.Child.getType(),task.getClientCaseType());
-        assertEquals(AlertChildAction.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 

@@ -3,6 +3,7 @@ package org.motechproject.commcarehq.service;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Client;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
@@ -36,16 +37,14 @@ public class AlertDocCaseFactory {
     private Client getClient(Document document) {
         Element documentElement = document.getDocumentElement();
         
-        NodeList caseList = documentElement.getElementsByTagName("mother_id");
+        NodeList caseList = documentElement.getElementsByTagName("person_id");
         if(caseList.getLength() != 0) {
-            return allMothers.findByCaseId(caseList.item(0).getTextContent());
+            String caseId = caseList.item(0).getTextContent();
+            Mother mother = allMothers.findByCaseId(caseId);
+            if(mother != null) return mother;
+            return allChildren.findByCaseId(caseId);
         }
-        
-        caseList =  documentElement.getElementsByTagName("child_id");
-        if(caseList.getLength() != 0) {
-            return allChildren.findByCaseId(caseList.item(0).getTextContent());
-        }
-        
+
         if(document.getElementsByTagName("close").getLength() == 0) {
             throw new MalformedXmlException(); 
         }

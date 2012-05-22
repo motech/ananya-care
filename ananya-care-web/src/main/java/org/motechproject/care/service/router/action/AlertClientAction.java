@@ -18,6 +18,7 @@ public abstract class AlertClientAction {
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
     private Properties ananyaCareProperties;
+    public static final String personElementTag = "person_id";
     Logger logger = Logger.getLogger(AlertClientAction.class);
 
     public AlertClientAction(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
@@ -36,20 +37,20 @@ public abstract class AlertClientAction {
 
     public abstract void process(Window alertWindow, String externalId, String milestoneName);
 
-    protected void postToCommCare(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
+    protected void postToCommCare(Window alertWindow, String externalId, String milestoneName, Client client) {
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
-        CareCaseTask careCaseTask = createCaseTask(alertWindow, externalId, milestoneName, client, clientElementTag);
+        CareCaseTask careCaseTask = createCaseTask(alertWindow, externalId, milestoneName, client);
         allCareCaseTasks.add(careCaseTask);
         logger.info(String.format("Notifying commcare for vaccination due with task_id: %s, client_id: %s, eligible_date: %s, expiry_date: %s ",
                 careCaseTask.getTaskId(), careCaseTask.getClientCaseId(), careCaseTask.getDateEligible(), careCaseTask.getDateExpires()));
         commcareCaseGateway.submitCase(commcareUrl, careCaseTask.toCaseTask());
     }
 
-    private CareCaseTask createCaseTask(Window alertWindow, String externalId, String milestoneName, Client client, String clientElementTag) {
+    private CareCaseTask createCaseTask(Window alertWindow, String externalId, String milestoneName, Client client) {
         String motechUserId = ananyaCareProperties.getProperty("motech.user.id");
         String currentTime = DateUtil.now().toString();
         String taskId = MilestoneType.forType(milestoneName).getTaskId();
         String caseId = UUID.randomUUID().toString();
-        return new CareCaseTask(milestoneName, client.getGroupId(), caseId, motechUserId, currentTime, taskId, alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), client.getCaseType(), externalId, clientElementTag);
+        return new CareCaseTask(milestoneName, client.getGroupId(), caseId, motechUserId, currentTime, taskId, alertWindow.getStart().toString("yyyy-MM-dd"), alertWindow.getEnd().toString("yyyy-MM-dd"), client.getCaseType(), externalId);
     }
 }

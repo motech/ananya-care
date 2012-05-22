@@ -15,7 +15,6 @@ import java.util.Properties;
 public class AlertChildAction extends AlertClientAction implements Action{
 
     private AllChildren allChildren;
-    public static final String clientElementTag = "child_id";
 
     @Autowired
     public AlertChildAction(AllChildren allChildren, CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {
@@ -33,7 +32,7 @@ public class AlertChildAction extends AlertClientAction implements Action{
         if(!alertWindow.isValid()) {
             return;
         }
-        postToCommCare(alertWindow, externalId, milestoneName, child, clientElementTag);
+        postToCommCare(alertWindow, externalId, milestoneName, child);
     }
 
     private DateTime dateOf2ndYear(Child child) {

@@ -122,7 +122,6 @@ public class AlertMotherActionTest {
         assertEquals("tt_1", task.getTaskId());
         assertEquals(motherCaseId,task.getClientCaseId());
         assertEquals(CaseType.Mother.getType(),task.getClientCaseType());
-        assertEquals(AlertMotherAction.clientElementTag,task.getClientElementTag());
         assertEquals(motechUserId,task.getMotechUserId());
     }
 

@@ -25,9 +25,8 @@ public class AllCareCaseTasksTest extends SpringIntegrationTest {
         String dateEligible = DateUtil.today().toString();
         String dateExpires = DateUtil.today().plusDays(4).toString();
         String clientCaseType = "mother_case_type";
-        String clientElementTag = "mother_id";
-        
-        CareCaseTask careCaseTask = new CareCaseTask(milestoneName, ownerId, caseId, motechUserId, currentTime, taskId, dateEligible, dateExpires, clientCaseType, clientCaseId, clientElementTag);
+
+        CareCaseTask careCaseTask = new CareCaseTask(milestoneName, ownerId, caseId, motechUserId, currentTime, taskId, dateEligible, dateExpires, clientCaseType, clientCaseId);
         allCareCaseTasks.add(careCaseTask);
         
         CareCaseTask careCaseTaskFromDb = allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName);
@@ -44,7 +43,6 @@ public class AllCareCaseTasksTest extends SpringIntegrationTest {
         Assert.assertEquals(dateEligible, careCaseTaskFromDb.getDateEligible());
         Assert.assertEquals(dateExpires, careCaseTaskFromDb.getDateExpires());
         Assert.assertEquals(clientCaseType, careCaseTaskFromDb.getClientCaseType());
-        Assert.assertEquals(clientElementTag, careCaseTaskFromDb.getClientElementTag());
         Assert.assertEquals("task", careCaseTaskFromDb.getCaseType());
     }
 

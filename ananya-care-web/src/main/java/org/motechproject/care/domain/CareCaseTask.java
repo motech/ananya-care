@@ -33,13 +33,10 @@ public class CareCaseTask extends MotechBaseDataObject{
     @JsonProperty
     private Boolean isOpen = true;
 
-    @JsonProperty
-    private String clientElementTag;
-
     public CareCaseTask() {
     }
 
-    public CareCaseTask(String milestoneName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId, String clientElementTag) {
+    public CareCaseTask(String milestoneName, String ownerId, String caseId, String motechUserId, String currentTime, String taskId, String dateEligible, String dateExpires, String clientCaseType, String clientCaseId) {
         this.milestoneName = milestoneName;
         this.ownerId = ownerId;
         this.caseId = caseId;
@@ -50,7 +47,6 @@ public class CareCaseTask extends MotechBaseDataObject{
         this.dateExpires = dateExpires;
         this.clientCaseType = clientCaseType;
         this.clientCaseId = clientCaseId;
-        this.clientElementTag = clientElementTag;
     }
 
     public CaseTask toCaseTask() {
@@ -66,7 +62,6 @@ public class CareCaseTask extends MotechBaseDataObject{
         caseTask.setDateExpires(dateExpires);
         caseTask.setClientCaseType(clientCaseType);
         caseTask.setClientCaseId(clientCaseId);
-        caseTask.setClientElementTag(clientElementTag);
         return caseTask;
     }
 
@@ -112,10 +107,6 @@ public class CareCaseTask extends MotechBaseDataObject{
 
     public String getClientCaseId() {
         return clientCaseId;
-    }
-
-    public String getClientElementTag() {
-        return clientElementTag;
     }
 
     public Boolean getOpen() {
