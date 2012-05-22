@@ -42,7 +42,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         markForDeletion(childFromDb);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());
+        Assert.assertEquals("e819879aaf53a3787e0fd88993ac105d", childFromDb.getFlwId());
         Assert.assertEquals("RAM",childFromDb.getName());
         Assert.assertEquals(dob, childFromDb.getDOB());
         Assert.assertEquals(motherCaseId, childFromDb.getMotherCaseId());
@@ -71,7 +71,7 @@ public class ChildCaseFunctionalIT extends SpringIntegrationTest {
         markForDeletion(childFromDb);
 
         Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", childFromDb.getGroupId());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd", childFromDb.getFlwId());
+        Assert.assertEquals("e819879aaf53a3787e0fd88993ac105d", childFromDb.getFlwId());
         Assert.assertEquals("RAM",childFromDb.getName());
         Assert.assertEquals(dob, childFromDb.getDOB());
         Assert.assertEquals(motherCaseId, childFromDb.getMotherCaseId());

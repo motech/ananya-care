@@ -4,7 +4,7 @@
 <n0:deviceID>T5Y0ATKMW970QJ63YHF1V1QW1</n0:deviceID>
 <n0:timeStart>2012-04-19T11:53:35.806Z</n0:timeStart>
 <n0:timeEnd>2012-04-19T11:58:35.429Z</n0:timeEnd>
-<n0:username>care</n0:username>
+<n0:username>motech</n0:username>
 <n0:userID>$userId$</n0:userID>
 <n0:instanceID>$instanceId$</n0:instanceID>
 <cc:appVersion>v1.4.0dev (b0a68b-908411-unvers-2.1.0-Nokia/S40-generic) #12 b:2012-Apr-02 r:2012-Apr-03</cc:appVersion>

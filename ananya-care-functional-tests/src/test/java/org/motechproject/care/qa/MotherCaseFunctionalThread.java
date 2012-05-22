@@ -2,38 +2,52 @@ package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Mother;
+import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.tools.QuartzWrapper;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.util.DateUtil;
+import org.quartz.SchedulerException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
 
 @Ignore("This test should be run by E2ETestsRunner class which would run this test in parallel thread")
 public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
 
     private final String userId;
     private final String ownerId;
+    private QuartzWrapper quartzWrapper;
+    private AllCareCaseTasks allCareCaseTasks;
 
-    public MotherCaseFunctionalThread(Properties ananyaCareProperties, DbUtils dbUtils, String userId, String ownerId) {
+    public MotherCaseFunctionalThread(Properties ananyaCareProperties, DbUtils dbUtils, String userId, String ownerId, QuartzWrapper quartzWrapper, AllCareCaseTasks allCareCaseTasks) {
         super(ananyaCareProperties, dbUtils);
         this.userId = userId;
         this.ownerId = ownerId;
+        this.quartzWrapper = quartzWrapper;
+        this.allCareCaseTasks = allCareCaseTasks;
     }
 
 
     @Test
-    public void shouldCreateAlertsForTt1AndTt2AndCloseCase() {
+    public void shouldCreateAlertsForTt1AndTt2AndCloseCase() throws Exception {
         String uniqueCaseId = UUID.randomUUID().toString();
 
         createAMother(uniqueCaseId);
@@ -42,31 +56,6 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         postAndVerifyTt1AlertIsRaised(uniqueCaseId, edd);
         postAndVerifyTt2AlertIsRaised(uniqueCaseId, edd);
         postAndVerifyCloseAlertIsRaised(uniqueCaseId);
-    }
-
-    private void postAndVerifyCloseAlertIsRaised(String uniqueCaseId) {
-        AlertDocCase alertForTT2 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
-
-        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "motherCloseCaseXml.st");
-        postXmlToMotechCare(stringTemplate.toString());
-
-        AlertDocCase alertForClose = dbUtils.getAlertDocCaseWithRetry(alertForTT2.getCaseId(), true);
-
-        Assert.assertNotNull(alertForClose);
-    }
-
-    private void postAndVerifyTt2AlertIsRaised(String uniqueCaseId, LocalDate edd) {
-
-        LocalDate tt1Date = DateUtil.now().minusMonths(2).toLocalDate();
-        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
-        stringTemplate.setAttribute("edd", edd.toString());
-        stringTemplate.setAttribute("tt1Date", tt1Date.toString());
-        postXmlToMotechCare(stringTemplate.toString());
-
-        AlertDocCase alertForTT2 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
-        Assert.assertNotNull(alertForTT2);
-        CareCaseTask careCaseTask = dbUtils.getCareCaseTask(uniqueCaseId, MilestoneType.TT2.getName());
-        Assert.assertNotNull(careCaseTask);
     }
 
     private void postAndVerifyTt1AlertIsRaised(String uniqueCaseId, LocalDate edd) {
@@ -90,6 +79,33 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
 
         AlertDocCase alertForTT1 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT1.getTaskId());
         Assert.assertNotNull(alertForTT1);
+    }
+
+    private void postAndVerifyTt2AlertIsRaised(String uniqueCaseId, LocalDate edd) throws SchedulerException, IOException, ParseException {
+
+        LocalDate tt1Date = DateUtil.now().minusDays(1).toLocalDate();
+        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
+        stringTemplate.setAttribute("edd", edd.toString());
+        stringTemplate.setAttribute("tt1Date", tt1Date.toString());
+        postXmlToMotechCare(stringTemplate.toString());
+
+        HashMap<String, String> alertDetails = quartzWrapper.checkQuartzQueueForAlertsForThisSchedule(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+
+        assertTrue(alertDetails.get("milestone").equals(MilestoneType.TT2.toString()));
+        String dateTimeString = alertDetails.get("time");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+        DateTime alertDateTime = DateUtil.newDateTime(simpleDateFormat.parse(dateTimeString));
+        assertTrue(alertDateTime.isAfterNow());
+    }
+
+    private void postAndVerifyCloseAlertIsRaised(String uniqueCaseId) {
+        CareCaseTask anc1TaskThatCanBeClosed = allCareCaseTasks.findByClientCaseIdAndMilestoneName(uniqueCaseId, MilestoneType.Anc1.toString());
+
+        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "motherCloseCaseXml.st");
+        postXmlToMotechCare(stringTemplate.toString());
+
+        AlertDocCase alertForClose = dbUtils.getAlertDocCaseWithRetry(anc1TaskThatCanBeClosed.getCaseId(), true);
+        Assert.assertNotNull(alertForClose);
     }
 
     private StringTemplate fillBasicStringTemplateDetails(String uniqueCaseId, String stringTemplateName) {

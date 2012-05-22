@@ -3,6 +3,8 @@ package org.motechproject.care.qa;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.care.repository.AllCareCaseTasks;
+import org.motechproject.care.tools.QuartzWrapper;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.TestCaseThreadRunner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,18 @@ public class E2ETestsRunner extends TestCaseThreadRunner {
 
     @Autowired
     private DbUtils dbUtils;
+    @Autowired
+    QuartzWrapper quartzWrapper;
+    @Autowired
+    private AllCareCaseTasks allCareCaseTasks;
 
     @Test
     public void e2eTest() {
-        String userId = "d823ea3d392a06f8b991e9e4933348bd";
+        String userId = "e819879aaf53a3787e0fd88993ac105d";
         String ownerId = "d823ea3d392a06f8b991e9e49394ce45";
         this.addTest(new ChildCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
         this.addTest(new MotherCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
-        this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId));
+        this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId, quartzWrapper,allCareCaseTasks));
         this.run();
     }
 
@@ -53,7 +59,7 @@ public class E2ETestsRunner extends TestCaseThreadRunner {
 
         for(String userId: userIds) {
             for(int i=0; i<10; i++) {
-                this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId));
+                this.addTest(new MotherCaseFunctionalThread(ananyaCareProperties, dbUtils, userId, ownerId, quartzWrapper, allCareCaseTasks));
                 this.addTest(new ChildCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
                 this.addTest(new MotherCaseE2EThread(ananyaCareProperties, dbUtils, userId, ownerId));
             }
