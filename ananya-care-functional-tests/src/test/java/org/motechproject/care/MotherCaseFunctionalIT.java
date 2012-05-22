@@ -21,6 +21,8 @@ import java.util.UUID;
 public class MotherCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;
+    String userId = "d823ea3d392a06f8b991e9e4933348bd";
+    String ownerId = "d823ea3d392a06f8b991e9e49394ce45";
 
     @After
     public void tearDown(){
@@ -34,8 +36,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         Mother motherFromDb = allMothers.findByCaseId(uniqueCaseId);
 
-        Assert.assertEquals("d823ea3d392a06f8b991e9e49394ce45", motherFromDb.getGroupId());
-        Assert.assertEquals("d823ea3d392a06f8b991e9e4933348bd",motherFromDb.getFlwId());
+        Assert.assertEquals(ownerId, motherFromDb.getGroupId());
+        Assert.assertEquals(userId,motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(null,motherFromDb.getEdd());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
@@ -59,8 +61,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
-        stringTemplate.setAttribute("userId","d823ea3d392a06f8b991e9e4933348bd");
-        stringTemplate.setAttribute("ownerId","d823ea3d392a06f8b991e9e49394ce45");
+        stringTemplate.setAttribute("userId",userId);
+        stringTemplate.setAttribute("ownerId",ownerId);
 
         LocalDate edd = DateUtil.now().plusMonths(1).toLocalDate();
         stringTemplate.setAttribute("edd", edd.toString());
@@ -103,6 +105,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
 
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
+        stringTemplate.setAttribute("userId",userId);
+        stringTemplate.setAttribute("ownerId",ownerId);
         postXmlToMotechCare(stringTemplate.toString());
 
         motherFromDb = allMothers.findByCaseId(uniqueCaseId);
@@ -114,6 +118,8 @@ public class MotherCaseFunctionalIT extends SpringIntegrationTest {
     private void createAMother(String uniqueCaseId) throws IOException {
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherNewCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
+        stringTemplate.setAttribute("userId",userId);
+        stringTemplate.setAttribute("ownerId",ownerId);
         postXmlToMotechCare(stringTemplate.toString());
     }
 

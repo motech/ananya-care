@@ -4,6 +4,8 @@ package org.motechproject.care.tools;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDate;
+import org.motechproject.care.domain.CareCaseTask;
+import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.delivery.schedule.util.Pair;
 import org.motechproject.scheduletracking.api.domain.Enrollment;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
@@ -42,35 +44,30 @@ public class AlertInformationService {
 
     private final Scheduler scheduler;
     private ScheduleTrackingService trackingService;
+    private AllCareCaseTasks allCareCaseTasks;
     private Map<Pair, List<Date>> alertTimes;
 
 
-
-
     @Autowired
-    public AlertInformationService(EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments,SchedulerFactoryBean schedulerFactoryBean,ScheduleTrackingService trackingService) throws IOException {
+    public AlertInformationService(EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments, SchedulerFactoryBean schedulerFactoryBean, ScheduleTrackingService trackingService, AllCareCaseTasks allCareCaseTasks) throws IOException {
         this.enrollmentAlertService = enrollmentAlertService;
         this.allEnrollments = allEnrollments;
         this.trackingService = trackingService;
+        this.allCareCaseTasks = allCareCaseTasks;
         this.scheduler = schedulerFactoryBean.getScheduler();
 
         InputStream resourceAsStream = getClass().getResourceAsStream("/alertResponse.st");
         stringTemplate = new StringTemplate(IOUtils.toString(resourceAsStream));
     }
 
-    @RequestMapping(value="/alerts",method = RequestMethod.GET)
+    @RequestMapping(value = "/alerts", method = RequestMethod.GET)
     public void captureAlertsFor(@RequestParam("externalId") String externalId, HttpServletResponse response) throws IOException, SchedulerException {
 
         stringTemplate.reset();
         List<Enrollment> enrollments = allEnrollments.findByExternalId(externalId);
         List<EnrollmentAlert> enrollmentAlerts = new ArrayList<EnrollmentAlert>();
-        for (Enrollment enrollment : enrollments) {
-            String scheduleAlertTimings = checkQuartzQueueForAlertsForThisSchedule(externalId, enrollment.getScheduleName());
-            if(scheduleAlertTimings!=null)
-                enrollmentAlerts.add(new EnrollmentAlert(enrollment, scheduleAlertTimings));
-            else
-                enrollmentAlerts.add(new EnrollmentAlert(enrollment, "No alerts are scheduled in the quartz queue for this milestone. Your alert might have already been raised. Please check the database."));
-        }
+        for (Enrollment enrollment : enrollments)
+            enrollmentAlerts.add(getEnrollmentAlert(externalId, enrollment));
 
         String result = "No Match";
         if (enrollmentAlerts.size() > 0) {
@@ -81,6 +78,22 @@ public class AlertInformationService {
 
         response.getOutputStream().print(result);
 
+    }
+
+    private EnrollmentAlert getEnrollmentAlert(String externalId, Enrollment enrollment) throws SchedulerException, IOException {
+        String alertTimingsText = "No alerts are scheduled in the quartz queue for this milestone.";
+        CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(externalId, enrollment.getCurrentMilestoneName());
+        if (careCaseTask != null)
+            alertTimingsText = "An alert for this milestone has already been raised.";
+
+        else {
+            String scheduleAlertTimings = checkQuartzQueueForAlertsForThisSchedule(externalId, enrollment.getScheduleName());
+            if (scheduleAlertTimings != null)
+                alertTimingsText = scheduleAlertTimings;
+        }
+
+
+        return new EnrollmentAlert(enrollment, alertTimingsText);
     }
 
 
@@ -110,8 +123,8 @@ public class AlertInformationService {
         MilestoneAlert milestoneAlert = (MilestoneAlert) detail.getJobDataMap().get(EventDataKeys.MILESTONE_NAME);
         String milestoneName = milestoneAlert.getMilestoneName();
 
-        if(times!=null && times.size()>0)
-            return "Milestone Name"+milestoneName + ":" + times.get(0).toString();
+        if (times != null && times.size() > 0)
+            return "Milestone Name" + milestoneName + ":" + times.get(0).toString();
         return null;
     }
 

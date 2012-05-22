@@ -39,12 +39,38 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         createAMother(uniqueCaseId);
 
         LocalDate edd = DateUtil.now().plusMonths(1).toLocalDate();
-        StringTemplate stringTemplate;
-        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddCaseXml.st");
-        stringTemplate.setAttribute("caseId",uniqueCaseId);
-        stringTemplate.setAttribute("userId",userId);
-        stringTemplate.setAttribute("ownerId",ownerId);
+        postAndVerifyTt1AlertIsRaised(uniqueCaseId, edd);
+        postAndVerifyTt2AlertIsRaised(uniqueCaseId, edd);
+        postAndVerifyCloseAlertIsRaised(uniqueCaseId);
+    }
 
+    private void postAndVerifyCloseAlertIsRaised(String uniqueCaseId) {
+        AlertDocCase alertForTT2 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
+
+        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "motherCloseCaseXml.st");
+        postXmlToMotechCare(stringTemplate.toString());
+
+        AlertDocCase alertForClose = dbUtils.getAlertDocCaseWithRetry(alertForTT2.getCaseId(), true);
+
+        Assert.assertNotNull(alertForClose);
+    }
+
+    private void postAndVerifyTt2AlertIsRaised(String uniqueCaseId, LocalDate edd) {
+
+        LocalDate tt1Date = DateUtil.now().minusMonths(2).toLocalDate();
+        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
+        stringTemplate.setAttribute("edd", edd.toString());
+        stringTemplate.setAttribute("tt1Date", tt1Date.toString());
+        postXmlToMotechCare(stringTemplate.toString());
+
+        AlertDocCase alertForTT2 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
+        Assert.assertNotNull(alertForTT2);
+        CareCaseTask careCaseTask = dbUtils.getCareCaseTask(uniqueCaseId, MilestoneType.TT2.getName());
+        Assert.assertNotNull(careCaseTask);
+    }
+
+    private void postAndVerifyTt1AlertIsRaised(String uniqueCaseId, LocalDate edd) {
+        StringTemplate stringTemplate = fillBasicStringTemplateDetails(uniqueCaseId, "pregnantMotherRegisterWithEddCaseXml.st");
         stringTemplate.setAttribute("edd", edd.toString());
         postXmlToMotechCare(stringTemplate.toString());
 
@@ -53,7 +79,7 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         markScheduleForUnEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
 
         Assert.assertEquals(ownerId, motherFromDb.getGroupId());
-        Assert.assertEquals(userId,motherFromDb.getFlwId());
+        Assert.assertEquals(userId, motherFromDb.getFlwId());
         Assert.assertEquals("NEERAJ",motherFromDb.getName());
         Assert.assertEquals(DateUtil.newDateTime(edd), motherFromDb.getEdd());
         Assert.assertEquals(false,motherFromDb.isLastPregTt());
@@ -62,29 +88,23 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         EnrollmentRecord ttEnrollment = dbUtils.getEnrollment(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         Assert.assertEquals("TT 1", ttEnrollment.getCurrentMilestoneName());
 
-        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherRegisterWithEddAndTT1DateCaseXml.st");
+        AlertDocCase alertForTT1 = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT1.getTaskId());
+        Assert.assertNotNull(alertForTT1);
+    }
+
+    private StringTemplate fillBasicStringTemplateDetails(String uniqueCaseId, String stringTemplateName) {
+        StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/" + stringTemplateName);
         stringTemplate.setAttribute("caseId",uniqueCaseId);
-        LocalDate tt1Date = DateUtil.now().minusMonths(2).toLocalDate();
-        stringTemplate.setAttribute("edd", edd.toString());
-        stringTemplate.setAttribute("tt1Date", tt1Date.toString());
-        postXmlToMotechCare(stringTemplate.toString());
-
-        AlertDocCase alertDocCase = dbUtils.getAlertDocCaseWithRetry(uniqueCaseId, MilestoneType.TT2.getTaskId());
-        Assert.assertNotNull(alertDocCase);
-        CareCaseTask careCaseTask = dbUtils.getCareCaseTask(uniqueCaseId, MilestoneType.TT2.getName());
-        Assert.assertNotNull(careCaseTask);
-
-        stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/motherCloseCaseXml.st");
-        stringTemplate.setAttribute("caseId",uniqueCaseId);
-        postXmlToMotechCare(stringTemplate.toString());
-
-        alertDocCase = dbUtils.getAlertDocCaseWithRetry(alertDocCase.getCaseId(), true);
-        Assert.assertNotNull(alertDocCase);
+        stringTemplate.setAttribute("userId",userId);
+        stringTemplate.setAttribute("ownerId",ownerId);
+        return stringTemplate;
     }
 
     private void createAMother(String uniqueCaseId) {
         StringTemplate stringTemplate = StringTemplateHelper.getStringTemplate("/caseXmls/pregnantMotherNewCaseXml.st");
         stringTemplate.setAttribute("caseId",uniqueCaseId);
+        stringTemplate.setAttribute("userId",userId);
+        stringTemplate.setAttribute("ownerId",ownerId);
         postXmlToMotechCare(stringTemplate.toString());
     }
 
