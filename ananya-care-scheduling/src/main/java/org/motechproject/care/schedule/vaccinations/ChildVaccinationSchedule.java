@@ -1,7 +1,5 @@
 package org.motechproject.care.schedule.vaccinations;
 
-import java.util.ArrayList;
-
 public enum ChildVaccinationSchedule {
 
     Measles("Measles Vaccination"),
@@ -15,7 +13,6 @@ public enum ChildVaccinationSchedule {
     OPV("OPV Vaccination"),
     OPVBooster("OPVBooster Vaccination");
 
-
     private String vaccinationScheduleName;
 
     ChildVaccinationSchedule(String vaccinationScheduleName) {
@@ -24,14 +21,6 @@ public enum ChildVaccinationSchedule {
 
     public String getName() {
         return vaccinationScheduleName;
-    }
-
-    public static ArrayList<String> allVaccineNames() {
-        ArrayList<String> vaccines = new ArrayList<String>();
-        for (ChildVaccinationSchedule b : ChildVaccinationSchedule.values()) {
-            vaccines.add(b.getName());
-        }
-        return vaccines;
     }
 }
 

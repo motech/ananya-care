@@ -50,15 +50,27 @@ public class AlertRouter {
     }
 
     private Matcher childSchedules() {
-        return anyOf(ChildVaccinationSchedule.allVaccineNames());
+        ArrayList<String> childVaccines = new ArrayList<String>();
+        for (ChildVaccinationSchedule b : ChildVaccinationSchedule.values()) {
+            childVaccines.add(b.getName());
+        }
+        return anyOf(childVaccines);
     }
 
     private Matcher motherSchedules() {
-        return anyOf(MotherVaccinationSchedule.allVaccineNames());
+        ArrayList<String> motherVaccines = new ArrayList<String>();
+        for (MotherVaccinationSchedule b : MotherVaccinationSchedule.values()) {
+            motherVaccines.add(b.getName());
+        }
+        return anyOf(motherVaccines);
     }
 
     private Matcher expirySchedules() {
-        return anyOf(ExpirySchedule.allVaccineNames());
+        ArrayList<String> expiryVaccines = new ArrayList<String>();
+        for (ExpirySchedule b : ExpirySchedule.values()) {
+            expiryVaccines.add(b.getName());
+        }
+        return anyOf(expiryVaccines);
     }
 
     private class Route {
