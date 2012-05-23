@@ -25,7 +25,7 @@ public class AlertChildAction extends AlertClientAction implements Action{
     @Override
     public void process(Window alertWindow, String externalId, String milestoneName) {
         Child child = allChildren.findByCaseId(externalId);
-        if(!child.isActive()) {
+        if(child == null || !child.isActive()) {
             return;
         }
         alertWindow = alertWindow.resize(new Window(DateTime.now(), dateOf2ndYear(child)));
