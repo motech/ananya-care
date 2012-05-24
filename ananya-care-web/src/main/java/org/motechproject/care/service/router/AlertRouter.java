@@ -1,5 +1,6 @@
 package org.motechproject.care.service.router;
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
@@ -21,6 +22,7 @@ import static org.motechproject.care.service.router.Matcher.*;
 @Component
 public class AlertRouter {
     private List<Route> routes;
+    Logger logger = Logger.getLogger(AlertRouter.class);
 
     @Autowired
     public AlertRouter(AlertChildAction alertChildAction
@@ -39,6 +41,7 @@ public class AlertRouter {
     public void handle(MotechEvent realEvent) {
         MilestoneEvent event = new MilestoneEvent(realEvent);
         MilestoneAlert milestoneAlert = event.getMilestoneAlert();
+        logger.info( String.format("Received alert -- ScheduleName: %s, MilestoneName: %s, WindowName: %s, ExternalId: %s" + event.getScheduleName(), milestoneAlert.getMilestoneName(), event.getWindowName(), event.getExternalId()));
 
         for (Route route : routes) {
             if (route.isSatisfiedBy(event.getScheduleName(), milestoneAlert.getMilestoneName(), event.getWindowName())) {

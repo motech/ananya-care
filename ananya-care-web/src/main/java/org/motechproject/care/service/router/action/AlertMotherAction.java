@@ -25,7 +25,7 @@ public class AlertMotherAction extends AlertClientAction implements Action{
     @Override
     public void process(Window alertWindow, String externalId, String milestoneName) {
         Mother mother = allMothers.findByCaseId(externalId);
-        if(mother == null || !mother.isActive()) {
+        if(!mother.isActive()) {
             return;
         }
         alertWindow = alertWindow.resize(new Window(DateTime.now(), mother.getEdd()));
