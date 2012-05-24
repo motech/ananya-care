@@ -41,7 +41,7 @@ public class AlertRouter {
     public void handle(MotechEvent realEvent) {
         MilestoneEvent event = new MilestoneEvent(realEvent);
         MilestoneAlert milestoneAlert = event.getMilestoneAlert();
-        logger.info( String.format("Received alert -- ScheduleName: %s, MilestoneName: %s, WindowName: %s, ExternalId: %s" + event.getScheduleName(), milestoneAlert.getMilestoneName(), event.getWindowName(), event.getExternalId()));
+        logger.info( String.format("Received alert -- ScheduleName: %s, MilestoneName: %s, WindowName: %s, ExternalId: %s", event.getScheduleName(), milestoneAlert.getMilestoneName(), event.getWindowName(), event.getExternalId()));
 
         for (Route route : routes) {
             if (route.isSatisfiedBy(event.getScheduleName(), milestoneAlert.getMilestoneName(), event.getWindowName())) {
