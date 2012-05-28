@@ -151,6 +151,7 @@
                             <file>
                                 ${project.build.directory}/${project.artifactId}-${project.version}.jar
                             </file>
+                            <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
                         </configuration>
                     </execution>
                 </executions>
