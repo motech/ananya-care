@@ -19,14 +19,6 @@
         <main.basedir>${project.basedir}/..</main.basedir>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>local.repository</id>
-            <name>Local Repository</name>
-            <url>file://${user.home}/.m2/repository</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.motechproject.ananya-care</groupId>
