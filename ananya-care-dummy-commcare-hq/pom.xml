@@ -32,7 +32,6 @@
             <groupId>org.motechproject.ananya-care</groupId>
             <artifactId>ananya-care-web</artifactId>
             <version>0.1-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
