@@ -436,5 +436,9 @@
             </build>
         </profile>
     </profiles>
-
+    <scm>
+        <connection>scm:git:https://github.com/motech/ananya-care</connection>
+        <developerConnection>scm:git:https://github.com/motech/ananya-care</developerConnection>
+        <url>https://github.com/motech/ananya-care</url>
+    </scm>
 </project>
