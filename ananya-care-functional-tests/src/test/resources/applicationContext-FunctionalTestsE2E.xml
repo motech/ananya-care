@@ -13,6 +13,18 @@
 
 
     <import resource="classpath:applicationContext-Web.xml"/>
+
+    <util:properties id="quartzProperties" location="classpath:quartzQA.properties"/>
+
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="configLocation">
+            <value>classpath:quartzQA.properties</value>
+        </property>
+        <property name="applicationContextSchedulerContextKey">
+            <value>applicationContext</value>
+        </property>
+    </bean>
+
     <util:properties id="couchdbProperties" location="classpath:/couchdbQA.properties"/>
     <util:properties id="ananyaCareProperties" location="classpath:/ananyaCareQA.properties"/>
 
