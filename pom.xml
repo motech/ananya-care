@@ -18,7 +18,7 @@
     <properties>
         <jetty.port>9979</jetty.port>
         <spring.version>3.0.5.RELEASE</spring.version>
-        <release.version>0.1-SNAPSHOT</release.version>
+        <release.version>${version}</release.version>
         <motech.version>0.10.1</motech.version>
         <motech.contrib.version>0.10.1</motech.contrib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
