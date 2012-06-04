@@ -22,12 +22,12 @@
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>case-service</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>commcare-case-gateway</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya-care</groupId>

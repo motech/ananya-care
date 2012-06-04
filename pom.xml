@@ -19,7 +19,8 @@
         <jetty.port>9979</jetty.port>
         <spring.version>3.0.5.RELEASE</spring.version>
         <release.version>0.1-SNAPSHOT</release.version>
-        <motech.version>0.11-SNAPSHOT</motech.version>
+        <motech.version>0.10.1</motech.version>
+        <motech.contrib.version>0.10.1</motech.contrib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <db.server>localhost</db.server>
@@ -31,13 +32,13 @@
 
     <distributionManagement>
         <repository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.snapshots</id>
             <name>Motech Releases Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/releases</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
         <snapshotRepository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.releases</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
             <uniqueVersion>false</uniqueVersion>
@@ -64,9 +65,14 @@
             <url>http://maven.springframework.org/milestone</url>
         </repository>
         <repository>
-            <id>motech.nexus</id>
+            <id>motech.nexus.snapshots</id>
             <name>Motech Snapshots Repository</name>
             <url>http://nexus.motechproject.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>motech.nexus.releases</id>
+            <name>Motech Releases Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/releases</url>
         </repository>
         <repository>
             <id>javax.transaction</id>

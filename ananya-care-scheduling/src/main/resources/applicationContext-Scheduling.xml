@@ -18,6 +18,7 @@
     <context:spring-configured/>
     <context:annotation-config/>
 
+    <import resource="classpath:applicationContextHttpClient.xml"/>
     <import resource="classpath:applicationPlatformServerAPI.xml"/>
     <import resource="classpath:applicationSchedulerTrackingAPI.xml"/>
 

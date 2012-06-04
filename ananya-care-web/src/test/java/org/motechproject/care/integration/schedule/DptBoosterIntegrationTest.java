@@ -83,7 +83,7 @@ public class DptBoosterIntegrationTest extends SpringIntegrationTest {
         LocalDate dpt3Date = dob.plusMonths(15);
         LocalDate expectedReferenceDate = dpt3Date.plusDays(180).plus(periodUtil.getScheduleOffset());
         LocalDate expectedStartDueDate = dpt3Date.plusDays(180);
-        LocalDate expectedStartLateDate = expectedStartDueDate.plusMonths(8);
+        LocalDate expectedStartLateDate = expectedReferenceDate.plusMonths(8).plusWeeks(2);
 
         CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).withDptBoosterDate(null).build();
         childService.process(careCase);
