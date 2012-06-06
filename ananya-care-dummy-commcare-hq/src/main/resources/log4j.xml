@@ -3,7 +3,7 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 <appender name="production" class="org.apache.log4j.RollingFileAppender">
-    <param value="E:/logs/care.log" name="File"/>
+    <param value="E:/logs/dummyCommcareHQ.log" name="File"/>
     <param name="Append" value="true"/>
     <param name="MaxFileSize" value="4096KB"/>
     <param name="maxBackupIndex" value="5"/>

@@ -2,18 +2,18 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-<appender name="production" class="org.apache.log4j.RollingFileAppender">
-    <param value="E:/logs/care.log" name="File"/>
-    <param name="Append" value="true"/>
-    <param name="MaxFileSize" value="4096KB"/>
-    <param name="maxBackupIndex" value="5"/>
-    <param name="immediateFlush" value="true"/>
-    <layout class="org.apache.log4j.PatternLayout">
-        <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
-    </layout>
-</appender>
+  <appender name="production" class="org.apache.log4j.RollingFileAppender">
+      <param value="E:/logs/ananyaCare.log" name="File"/>
+      <param name="Append" value="true"/>
+      <param name="MaxFileSize" value="4096KB"/>
+      <param name="maxBackupIndex" value="5"/>
+      <param name="immediateFlush" value="true"/>
+      <layout class="org.apache.log4j.PatternLayout">
+          <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
+      </layout>
+  </appender>
 
-    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
     </layout>
@@ -24,11 +24,11 @@
   </logger>
 
   <logger name="org.quartz">
-    <level value="WARN"/>
+    <level value="INFO"/>
   </logger>
 
   <logger name="metrics">
-    <level value="WARN"/>
+    <level value="INFO"/>
   </logger>
 
   <logger name="org.springframework">
