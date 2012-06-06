@@ -73,15 +73,6 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
         schedulesToDelete.add(new Pair(externalId, scheduleName));
     }
 
-    protected String getAppServerPort() {
-        return ananyaCareProperties.getProperty("app.server.port");
-    }
-
-
-    protected String getAppServerHostUrl() {
-        return "http://localhost:" + getAppServerPort();
-    }
-
     protected EnrollmentRecord getEnrollmentRecord(String scheduleName, String externalId, EnrollmentStatus status) {
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(externalId)
