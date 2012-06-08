@@ -90,7 +90,7 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
 
         AlertDetails alertDetails = quartzWrapper.checkQuartzQueueForNextAlertsForThisSchedule(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
         assertTrue(MilestoneType.TT2.toString().equals(alertDetails.getMilestoneName()));
-        assertTrue("due".equals(alertDetails.getMilestoneName()));
+        assertTrue("due".equals(alertDetails.getWindowName()));
         assertTrue(alertDetails.getScheduledTime().after(new Date()));
     }
 
