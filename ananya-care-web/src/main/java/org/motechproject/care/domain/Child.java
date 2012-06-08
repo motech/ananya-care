@@ -231,10 +231,10 @@ public class Child extends Client {
 
     @JsonIgnore
     public boolean shouldEnrollForSchedules(){
-        return getDOB()!=null && !isOlderThanAYear() && isActive();
+        return getDOB() !=null && !isOlderThanAYear() && isActive();
     }
     @JsonIgnore
-    public boolean isOlderThanAYear() {
+    private boolean isOlderThanAYear() {
         return !DateUtil.today().minusYears(1).isBefore(getDOB().toLocalDate());
     }
 
