@@ -5,11 +5,11 @@ import org.motechproject.scheduletracking.api.domain.Enrollment;
 
 public class EnrollmentAlert {
     private Enrollment enrollment;
-    private String dueWindowAlertTimings;
+    private String nextAlertDetails;
 
-    public EnrollmentAlert(Enrollment enrollment, String dueWindowAlertTimings) {
+    public EnrollmentAlert(Enrollment enrollment, String nextAlertDetails) {
         this.enrollment = enrollment;
-        this.dueWindowAlertTimings = dueWindowAlertTimings;
+        this.nextAlertDetails = nextAlertDetails;
     }
 
 
@@ -30,8 +30,8 @@ public class EnrollmentAlert {
         return preferredAlertTime != null ? preferredAlertTime.toString() : "";
     }
 
-    public String getDueWindowAlertTimings() {
-        return dueWindowAlertTimings;
+    public String getNextAlertDetails() {
+        return nextAlertDetails;
     }
 
 }

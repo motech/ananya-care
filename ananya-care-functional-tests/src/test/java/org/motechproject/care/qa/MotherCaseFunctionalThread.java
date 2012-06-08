@@ -2,7 +2,6 @@ package org.motechproject.care.qa;
 
 import junit.framework.Assert;
 import org.antlr.stringtemplate.StringTemplate;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,6 +10,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
+import org.motechproject.care.tools.AlertDetails;
 import org.motechproject.care.tools.QuartzWrapper;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.StringTemplateHelper;
@@ -22,8 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -89,13 +88,10 @@ public class MotherCaseFunctionalThread extends  E2EIntegrationTest {
         stringTemplate.setAttribute("tt1Date", tt1Date.toString());
         postXmlToMotechCare(stringTemplate.toString());
 
-        HashMap<String, String> alertDetails = quartzWrapper.checkQuartzQueueForAlertsForThisSchedule(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
-
-        assertTrue(alertDetails.get("milestone").equals(MilestoneType.TT2.toString()));
-        String dateTimeString = alertDetails.get("time");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
-        DateTime alertDateTime = DateUtil.newDateTime(simpleDateFormat.parse(dateTimeString));
-        assertTrue(alertDateTime.isAfterNow());
+        AlertDetails alertDetails = quartzWrapper.checkQuartzQueueForNextAlertsForThisSchedule(uniqueCaseId, MotherVaccinationSchedule.TT.getName());
+        assertTrue(MilestoneType.TT2.toString().equals(alertDetails.getMilestoneName()));
+        assertTrue("due".equals(alertDetails.getMilestoneName()));
+        assertTrue(alertDetails.getScheduledTime().after(new Date()));
     }
 
     private void postAndVerifyCloseAlertIsRaised(String uniqueCaseId) {

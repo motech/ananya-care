@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -27,7 +26,6 @@ public class AlertInformationService {
 
     private EnrollmentAlertService enrollmentAlertService;
     private AllEnrollments allEnrollments;
-    private StringTemplate stringTemplate;
     private AllCareCaseTasks allCareCaseTasks;
     private QuartzWrapper quartzWrapper;
 
@@ -38,14 +36,13 @@ public class AlertInformationService {
         this.allCareCaseTasks = allCareCaseTasks;
         this.quartzWrapper = quartzWrapper;
 
-        InputStream resourceAsStream = getClass().getResourceAsStream("/alertResponse.st");
-        stringTemplate = new StringTemplate(IOUtils.toString(resourceAsStream));
+
     }
 
     @RequestMapping(value = "/alerts", method = RequestMethod.GET)
     public void captureAlertsFor(@RequestParam("externalId") String externalId, HttpServletResponse response) throws IOException, SchedulerException {
+        StringTemplate stringTemplate = getTemplate();
 
-        stringTemplate.reset();
         List<Enrollment> enrollments = allEnrollments.findByExternalId(externalId);
         List<EnrollmentAlert> enrollmentAlerts = new ArrayList<EnrollmentAlert>();
         for (Enrollment enrollment : enrollments)
@@ -55,27 +52,30 @@ public class AlertInformationService {
         if (enrollmentAlerts.size() > 0) {
             stringTemplate.setAttribute("enrollmentAlerts", enrollmentAlerts);
             result = stringTemplate.toString();
-
         }
+
         response.getOutputStream().print(result);
     }
 
-    private EnrollmentAlert getEnrollmentAlert(String externalId, Enrollment enrollment) throws SchedulerException, IOException {
-        String alertTimingsText;
-        CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(externalId, enrollment.getCurrentMilestoneName());
-        if (careCaseTask != null)
-            alertTimingsText = "An alert for this milestone has already been raised.";
-
-        else
-            alertTimingsText = getAlertDetails(externalId, enrollment);
-
-        return new EnrollmentAlert(enrollment, alertTimingsText);
+    private StringTemplate getTemplate() throws IOException {
+        InputStream resourceAsStream = getClass().getResourceAsStream("/alertResponse.st");
+        return new StringTemplate(IOUtils.toString(resourceAsStream));
     }
 
-    private String getAlertDetails(String externalId, Enrollment enrollment) throws SchedulerException, IOException {
-        HashMap<String, String> alertDetails = quartzWrapper.checkQuartzQueueForAlertsForThisSchedule(externalId, enrollment.getScheduleName());
-        if (alertDetails == null || alertDetails.isEmpty())
-            return "No alert are scheduled in the quartz queue for this milestone.";
-        return "Milestone Name - " + alertDetails.get("milestone") + " : " + alertDetails.get("time");
+    private EnrollmentAlert getEnrollmentAlert(String externalId, Enrollment enrollment) throws SchedulerException, IOException {
+        String nextAlertDetails;
+        CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(externalId, enrollment.getCurrentMilestoneName());
+        if (careCaseTask != null)
+            nextAlertDetails = "An alert for this milestone has already been raised.";
+
+        else
+            nextAlertDetails = getNextAlertDetails(externalId, enrollment);
+
+        return new EnrollmentAlert(enrollment, nextAlertDetails);
+    }
+
+    private String getNextAlertDetails(String externalId, Enrollment enrollment) throws SchedulerException, IOException {
+        AlertDetails alertDetails = quartzWrapper.checkQuartzQueueForNextAlertsForThisSchedule(externalId, enrollment.getScheduleName());
+        return alertDetails.details();
     }
 }

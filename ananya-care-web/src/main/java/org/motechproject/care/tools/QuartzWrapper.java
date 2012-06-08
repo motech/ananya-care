@@ -12,7 +12,7 @@ import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -29,8 +29,8 @@ public class QuartzWrapper {
 
     }
 
-    public HashMap<String, String> checkQuartzQueueForAlertsForThisSchedule(String externalId, String scheduleName) throws SchedulerException, IOException {
-        HashMap<String, String> alertDetails = null;
+    public AlertDetails checkQuartzQueueForNextAlertsForThisSchedule(String externalId, String scheduleName) throws SchedulerException, IOException {
+        AlertDetails nextAlertDetails = new NullAlertDetails();
         for (String triggerName : scheduler.getTriggerNames("default")) {
             Trigger trigger = scheduler.getTrigger(triggerName, "default");
             JobDetail detail = scheduler.getJobDetail(trigger.getJobName(), "default");
@@ -38,31 +38,27 @@ public class QuartzWrapper {
             JobDataMap dataMap = detail.getJobDataMap();
             if (scheduleName.equals(dataMap.get(EventDataKeys.SCHEDULE_NAME)) && externalId.equals(dataMap.get(EventDataKeys.EXTERNAL_ID))) {
                 EnrollmentRecord enrollment = trackingService.getEnrollment(externalId, scheduleName);
-                if (enrollment != null) {
-                    alertDetails = getAlertTimes(trigger, detail, new LocalDate(enrollment.getReferenceDateTime()));
+                if(enrollment == null) {
+                    continue;
+                }
+                AlertDetails alertDetails = getAlertDetail(trigger, dataMap, new LocalDate(enrollment.getReferenceDateTime()));
+                if(alertDetails.isBefore(nextAlertDetails)) {
+                    nextAlertDetails = alertDetails;
                 }
             }
         }
-
-        return alertDetails;
-
+        return nextAlertDetails;
     }
 
-    private HashMap<String, String> getAlertTimes(Trigger trigger, JobDetail detail, LocalDate startDate) {
-        LocalDate endDate = startDate.plusYears(2);
+    private AlertDetails getAlertDetail(Trigger trigger, JobDataMap dataMap, LocalDate startDate) {
+        LocalDate endDate = startDate.plusYears(2).plusMonths(1);
         List times = TriggerUtils.computeFireTimesBetween(trigger, new BaseCalendar(), startDate.toDate(), endDate.toDate());
-
-        MilestoneAlert milestoneAlert = (MilestoneAlert) detail.getJobDataMap().get(EventDataKeys.MILESTONE_NAME);
-        String milestoneName = milestoneAlert.getMilestoneName();
-
-        if (times != null && times.size() > 0) {
-            HashMap<String, String> alertDetails = new HashMap<String, String>();
-             alertDetails.put("milestone",milestoneName);
-             alertDetails.put("time",times.get(0).toString());
-            return alertDetails;
+        if (times == null || times.size() == 0) {
+            return new NullAlertDetails();
         }
-        return null;
+
+        MilestoneAlert milestoneAlert = (MilestoneAlert) dataMap.get(EventDataKeys.MILESTONE_NAME);
+        String milestoneName = milestoneAlert.getMilestoneName();
+        return new AlertDetails(milestoneName, (String) dataMap.get(EventDataKeys.WINDOW_NAME), (Date) times.get(0));
     }
-
-
 }
