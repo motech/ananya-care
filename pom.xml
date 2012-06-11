@@ -6,7 +6,7 @@
     <groupId>org.motechproject.ananya-care</groupId>
     <artifactId>ananya-care</artifactId>
     <packaging>pom</packaging>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <modules>
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
