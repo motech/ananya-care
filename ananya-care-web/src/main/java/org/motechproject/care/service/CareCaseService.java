@@ -27,9 +27,10 @@ public class CareCaseService extends CaseService<CareCase>{
     @Override
     public void createCase(CareCase careCase) throws CaseException{
         validateCreateCase(careCase);
-        if(careCase.getCase_type().equals(CaseType.Mother.getType()))
+        String caseType = careCase.getCase_type();
+        if(CaseType.Mother.getType().equals(caseType))
             motherService.process(careCase);
-        else
+        else if(CaseType.Child.getType().equals(caseType))
             childService.process(careCase);
     }
 

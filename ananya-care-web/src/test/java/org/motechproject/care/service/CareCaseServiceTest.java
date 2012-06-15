@@ -42,7 +42,7 @@ public class CareCaseServiceTest  {
         String xml = readFile("/sampleMotherCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(motherService).process((CareCase) Matchers.any());
-
+        verify(childService, never()).process((CareCase) Matchers.any());
     }
 
     @Test
@@ -57,7 +57,16 @@ public class CareCaseServiceTest  {
         String xml = readFile("/sampleChildCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
         verify(childService).process((CareCase) Matchers.any());
+        verify(motherService, never()).process((CareCase) Matchers.any());
+    }
 
+    @Test
+    public void shouldIgnoreIfCaseTypeBelongsIsAnythingElse() throws IOException {
+        String xml = readFile("/sampleChildCase.xml");
+        xml = xml.replace("cc_bihar_newborn", "task");
+        careCaseService.processCase(new HttpEntity<String>(xml));
+        verify(childService, never()).process((CareCase) Matchers.any());
+        verify(motherService, never()).process((CareCase) Matchers.any());
     }
 
     private String readFile(String resourcePath) throws IOException {
