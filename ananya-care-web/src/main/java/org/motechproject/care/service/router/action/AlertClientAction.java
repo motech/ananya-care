@@ -18,7 +18,6 @@ public abstract class AlertClientAction {
     private CommcareCaseGateway commcareCaseGateway;
     private AllCareCaseTasks allCareCaseTasks;
     private Properties ananyaCareProperties;
-    public static final String personElementTag = "person_id";
     Logger logger = Logger.getLogger(AlertClientAction.class);
 
     public AlertClientAction(CommcareCaseGateway commcareCaseGateway, AllCareCaseTasks allCareCaseTasks, Properties ananyaCareProperties) {

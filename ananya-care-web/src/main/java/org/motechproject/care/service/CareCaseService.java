@@ -1,5 +1,6 @@
 package org.motechproject.care.service;
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.casexml.service.CaseService;
@@ -16,6 +17,7 @@ public class CareCaseService extends CaseService<CareCase>{
 
     private MotherService motherService;
     private ChildService childService;
+    Logger logger = Logger.getLogger(CareCaseService.class);
 
     @Autowired
     public CareCaseService(MotherService motherService, ChildService childService) {
@@ -32,6 +34,8 @@ public class CareCaseService extends CaseService<CareCase>{
             motherService.process(careCase);
         else if(CaseType.Child.getType().equals(caseType))
             childService.process(careCase);
+        else
+            logger.info(String.format("Ignoring Case with type: %s", caseType));
     }
 
     @Override
