@@ -35,7 +35,7 @@ public class Anc4Service extends VaccinationService{
             }
         }
         if(mother.getAnc4Date() != null) {
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.Anc4.toString(),  mother.getAnc4Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.Anc4, mother.getAnc4Date());
         }
     }
 

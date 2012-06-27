@@ -65,6 +65,7 @@ public class OpvServiceTest {
 
         opvService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.OPV1.toString(),  OPV1Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.OPV1.toString());
     }
 
     @Test
@@ -77,6 +78,7 @@ public class OpvServiceTest {
 
         opvService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.OPV2.toString(),  OPV2Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.OPV2.toString());
     }
 
     @Test
@@ -89,6 +91,7 @@ public class OpvServiceTest {
 
         opvService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.OPV3.toString(),  OPV3Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.OPV3.toString());
     }
 
     @Test
@@ -98,6 +101,7 @@ public class OpvServiceTest {
 
         opvService.process(child);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
     @Test

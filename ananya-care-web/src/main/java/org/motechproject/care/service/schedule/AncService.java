@@ -24,13 +24,13 @@ public class AncService extends VaccinationService{
             schedulerService.enroll(mother.getCaseId(), mother.getEdd().minusDays(PeriodUtil.DAYS_IN_9_MONTHS), scheduleName);
         }
         if(mother.getAnc1Date() != null) {
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.Anc1.toString(),  mother.getAnc1Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.Anc1, mother.getAnc1Date());
         }
         if(mother.getAnc2Date() != null) {
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.Anc2.toString(),  mother.getAnc2Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.Anc2, mother.getAnc2Date());
         }
         if(mother.getAnc3Date() != null) {
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.Anc3.toString(),  mother.getAnc3Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.Anc3, mother.getAnc3Date());
         }
     }
 }

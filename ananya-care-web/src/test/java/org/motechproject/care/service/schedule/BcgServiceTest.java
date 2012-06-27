@@ -67,6 +67,7 @@ public class BcgServiceTest {
 
         bcgService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Bcg.toString(),  bcgDate, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Bcg.toString());
     }
 
     @Test
@@ -76,6 +77,7 @@ public class BcgServiceTest {
 
         bcgService.process(child);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
     @Test

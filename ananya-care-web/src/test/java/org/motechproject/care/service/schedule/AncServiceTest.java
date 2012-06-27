@@ -66,6 +66,7 @@ public class AncServiceTest {
 
         ancService.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc1.toString(),  anc1Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc1.toString());
     }
 
     @Test
@@ -78,6 +79,7 @@ public class AncServiceTest {
 
         ancService.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc2.toString(),  anc2Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc2.toString());
     }
 
     @Test
@@ -90,6 +92,7 @@ public class AncServiceTest {
 
         ancService.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc3.toString(),  anc3Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc3.toString());
     }
 
     @Test
@@ -99,6 +102,7 @@ public class AncServiceTest {
 
         ancService.process(mother);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
     @Test

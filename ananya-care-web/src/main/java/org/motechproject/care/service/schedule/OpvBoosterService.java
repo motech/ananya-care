@@ -35,7 +35,7 @@ public class OpvBoosterService extends VaccinationService{
             }
         }
         if(child.getOpvBoosterDate() != null) {
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.OPVBooster.toString(),  child.getOpvBoosterDate(), scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.OPVBooster, child.getOpvBoosterDate());
         }
     }
 

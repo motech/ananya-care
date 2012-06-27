@@ -26,7 +26,7 @@ public class TTBoosterService extends VaccinationService{
             schedulerService.enroll(mother.getCaseId(), mother.getEdd().minusDays(PeriodUtil.DAYS_IN_9_MONTHS), scheduleName);
         }
         if(mother.getTtBoosterDate() != null){
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TTBooster.toString(),  mother.getTtBoosterDate(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.TTBooster, mother.getTtBoosterDate());
         }
     }
 }

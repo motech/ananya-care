@@ -65,6 +65,7 @@ public class DptServiceTest {
 
         dptService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT1.toString(),  dpt1Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT1.toString());
     }
 
     @Test
@@ -77,6 +78,7 @@ public class DptServiceTest {
 
         dptService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT2.toString(),  dpt2Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT2.toString());
     }
 
     @Test
@@ -88,7 +90,9 @@ public class DptServiceTest {
         child.setCaseId(caseId);
 
         dptService.process(child);
+
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT3.toString(),  dpt3Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT3.toString());
     }
 
     @Test
@@ -98,6 +102,7 @@ public class DptServiceTest {
 
         dptService.process(child);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
     @Test

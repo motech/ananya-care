@@ -23,10 +23,10 @@ public class DptService extends VaccinationService{
         if(child.getDOB() != null)
             schedulerService.enroll(child.getCaseId(), child.getDOB(), scheduleName);
         if(child.getDpt1Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPT1.toString(),child.getDpt1Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.DPT1, child.getDpt1Date());
         if(child.getDpt2Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPT2.toString(),child.getDpt2Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.DPT2, child.getDpt2Date());
         if(child.getDpt3Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.DPT3.toString(),child.getDpt3Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.DPT3, child.getDpt3Date());
     }
 }

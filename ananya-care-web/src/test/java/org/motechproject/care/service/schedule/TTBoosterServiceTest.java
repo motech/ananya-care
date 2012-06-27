@@ -83,6 +83,7 @@ public class TTBoosterServiceTest {
 
         ttBoosterService.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TTBooster.toString(),  ttBoosterDate, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.TTBooster.toString());
     }
 
     @Test

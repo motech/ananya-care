@@ -24,7 +24,7 @@ public class MeaslesService extends VaccinationService{
             schedulerService.enroll(child.getCaseId(), child.getDOB(), scheduleName);
         }
         if(child.getMeaslesDate() != null){
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.Measles.toString(),  child.getMeaslesDate(), scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.Measles, child.getMeaslesDate());
         }
     }
 }

@@ -23,10 +23,10 @@ public class OpvService extends VaccinationService{
         if(child.getDOB() != null)
             schedulerService.enroll(child.getCaseId(), child.getDOB(), scheduleName);
         if(child.getOpv1Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.OPV1.toString(),child.getOpv1Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.OPV1, child.getOpv1Date());
         if(child.getOpv2Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.OPV2.toString(),child.getOpv2Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.OPV2, child.getOpv2Date());
         if(child.getOpv3Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.OPV3.toString(),child.getOpv3Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.OPV3, child.getOpv3Date());
     }
 }

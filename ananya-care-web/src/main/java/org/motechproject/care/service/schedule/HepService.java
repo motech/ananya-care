@@ -23,10 +23,10 @@ public class HepService extends VaccinationService{
         if(child.getDOB() != null)
             schedulerService.enroll(child.getCaseId(), child.getDOB(), scheduleName);
         if(child.getHep1Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.Hep1.toString(),child.getHep1Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.Hep1, child.getHep1Date());
         if(child.getHep2Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.Hep2.toString(),child.getHep2Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.Hep2, child.getHep2Date());
         if(child.getHep3Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.Hep3.toString(),child.getHep3Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.Hep3, child.getHep3Date());
     }
 }

@@ -23,6 +23,6 @@ public class Opv0Service extends VaccinationService{
         if(child.getDOB() != null)
             schedulerService.enroll(child.getCaseId(), child.getDOB(), scheduleName);
         if(child.getOpv0Date()!=null)
-            schedulerService.fulfillMileStone(child.getCaseId(), MilestoneType.OPV0.toString(),child.getOpv0Date(),scheduleName);
+            fulfillMilestone(child.getCaseId(), MilestoneType.OPV0, child.getOpv0Date());
     }
 }

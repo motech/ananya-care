@@ -65,6 +65,7 @@ public class HepServiceTest {
 
         hepService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Hep1.toString(),  hep1Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Hep1.toString());
     }
 
     @Test
@@ -77,6 +78,7 @@ public class HepServiceTest {
 
         hepService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Hep2.toString(),  hep2Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Hep2.toString());
     }
 
     @Test
@@ -89,6 +91,7 @@ public class HepServiceTest {
 
         hepService.process(child);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Hep3.toString(),  hep3Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Hep3.toString());
     }
 
     @Test
@@ -98,6 +101,7 @@ public class HepServiceTest {
 
         hepService.process(child);
         verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
 

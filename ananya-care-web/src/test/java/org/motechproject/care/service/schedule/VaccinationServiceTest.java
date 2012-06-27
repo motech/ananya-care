@@ -1,5 +1,6 @@
 package org.motechproject.care.service.schedule;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Client;
 import org.motechproject.care.domain.Mother;
+import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.service.ScheduleService;
 import org.motechproject.care.service.CareCaseTaskService;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
@@ -33,6 +35,11 @@ public class VaccinationServiceTest {
             public void process(Client client) {
 
             }
+
+            @Override
+            public void fulfillMilestone(String caseId, MilestoneType milestoneType, DateTime fulfillmentDate) {
+                super.fulfillMilestone(caseId, milestoneType, fulfillmentDate);
+            }
         };
     }
     
@@ -51,8 +58,19 @@ public class VaccinationServiceTest {
         verify(careCaseTaskService, only()).close(caseId, milestoneName);
     }
     
+    @Test
+    public void shouldCloseTheCaseDuringFulfillment() {
+        String caseId = "mycaseid";
+        MilestoneType milestone = MilestoneType.Anc3;
+        DateTime fulfillmentDate = DateTime.now();
+
+        vaccinationService.fulfillMilestone(caseId, milestone, fulfillmentDate);
+
+        verify(schedulerService).fulfillMileStone(caseId, milestone.toString(), fulfillmentDate, scheduleName);
+        verify(careCaseTaskService).close(caseId, milestone.toString());
+    }
+
     private EnrollmentRecord enrollmentRecordForMilestone(String currentMilestoneName) {
         return new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null);
     }
-
 }

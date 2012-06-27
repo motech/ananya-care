@@ -118,6 +118,7 @@ public class Anc4ServiceTest {
 
         anc4Service.process(mother);
         Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc4.toString(), anc4Date, scheduleName);
+        Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc4.toString());
     }
 
     @Test

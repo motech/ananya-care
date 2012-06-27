@@ -25,10 +25,10 @@ public class TTService extends VaccinationService{
             schedulerService.enroll(mother.getCaseId(), mother.getEdd().minusDays(PeriodUtil.DAYS_IN_9_MONTHS), scheduleName);
         }
         if(mother.getTt1Date() != null){
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT1.toString(),  mother.getTt1Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.TT1, mother.getTt1Date());
         }
         if(mother.getTt2Date() != null){
-            schedulerService.fulfillMileStone(mother.getCaseId(), MilestoneType.TT2.toString(),  mother.getTt2Date(), scheduleName);
+            fulfillMilestone(mother.getCaseId(), MilestoneType.TT2, mother.getTt2Date());
         }
     }
 
