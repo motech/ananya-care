@@ -43,7 +43,7 @@ public class ScheduleService {
 
     }
 
-    public void fulfillMileStone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {
+    public void fulfillMilestone(String caseId, String milestoneName, DateTime vaccinationTakenDate, String scheduleName) {
         if (isCurrentMilestone(caseId, milestoneName, scheduleName))
             fulfillCurrentMilestone(caseId, vaccinationTakenDate, scheduleName);
     }

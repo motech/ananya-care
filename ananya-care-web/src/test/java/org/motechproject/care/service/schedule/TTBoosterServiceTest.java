@@ -82,7 +82,7 @@ public class TTBoosterServiceTest {
         mother.setCaseId(caseId);
 
         ttBoosterService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TTBooster.toString(),  ttBoosterDate, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.TTBooster.toString(), ttBoosterDate, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.TTBooster.toString());
     }
 
@@ -94,7 +94,7 @@ public class TTBoosterServiceTest {
         mother.setCaseId(caseId);
 
         ttBoosterService.close(mother);
-        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+        Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }
 

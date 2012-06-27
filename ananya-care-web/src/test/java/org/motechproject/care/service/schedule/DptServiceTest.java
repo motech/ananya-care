@@ -64,7 +64,7 @@ public class DptServiceTest {
         child.setCaseId(caseId);
 
         dptService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT1.toString(),  dpt1Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.DPT1.toString(), dpt1Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT1.toString());
     }
 
@@ -77,7 +77,7 @@ public class DptServiceTest {
         child.setCaseId(caseId);
 
         dptService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT2.toString(),  dpt2Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.DPT2.toString(), dpt2Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT2.toString());
     }
 
@@ -91,7 +91,7 @@ public class DptServiceTest {
 
         dptService.process(child);
 
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPT3.toString(),  dpt3Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.DPT3.toString(), dpt3Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPT3.toString());
     }
 
@@ -101,7 +101,7 @@ public class DptServiceTest {
         child.setCaseId("caseId");
 
         dptService.process(child);
-        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        verify(schedulerService, never()).fulfillMilestone(any(String.class), any(String.class), any(DateTime.class), anyString());
         Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
@@ -113,7 +113,7 @@ public class DptServiceTest {
         mother.setCaseId(caseId);
 
         dptService.close(mother);
-        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+        Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }
 

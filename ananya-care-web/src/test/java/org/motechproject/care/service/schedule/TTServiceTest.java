@@ -77,7 +77,7 @@ public class TTServiceTest {
         mother.setCaseId(caseId);
 
         ttService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TT1.toString(),  tt1Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.TT1.toString(), tt1Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.TT1.toString());
     }
 
@@ -90,7 +90,7 @@ public class TTServiceTest {
         mother.setCaseId(caseId);
 
         ttService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.TT2.toString(),  tt2Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.TT2.toString(), tt2Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.TT2.toString());
     }
 
@@ -100,7 +100,7 @@ public class TTServiceTest {
         mother.setCaseId("caseId");
 
         ttService.process(mother);
-        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        verify(schedulerService, never()).fulfillMilestone(any(String.class), any(String.class), any(DateTime.class), anyString());
         Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 

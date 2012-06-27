@@ -30,7 +30,7 @@ public abstract class VaccinationService {
     }
 
     protected void fulfillMilestone(String caseId, MilestoneType milestone, DateTime fulfillmentDate) {
-        schedulerService.fulfillMileStone(caseId, milestone.toString(), fulfillmentDate, scheduleName);
+        schedulerService.fulfillMilestone(caseId, milestone.toString(), fulfillmentDate, scheduleName);
         careCaseTaskService.close(caseId, milestone.toString());
     }
 }

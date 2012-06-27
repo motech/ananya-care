@@ -66,7 +66,7 @@ public class VaccinationServiceTest {
 
         vaccinationService.fulfillMilestone(caseId, milestone, fulfillmentDate);
 
-        verify(schedulerService).fulfillMileStone(caseId, milestone.toString(), fulfillmentDate, scheduleName);
+        verify(schedulerService).fulfillMilestone(caseId, milestone.toString(), fulfillmentDate, scheduleName);
         verify(careCaseTaskService).close(caseId, milestone.toString());
     }
 

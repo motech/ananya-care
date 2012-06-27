@@ -65,7 +65,7 @@ public class AncServiceTest {
         mother.setCaseId(caseId);
 
         ancService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc1.toString(),  anc1Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.Anc1.toString(), anc1Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc1.toString());
     }
 
@@ -78,7 +78,7 @@ public class AncServiceTest {
         mother.setCaseId(caseId);
 
         ancService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc2.toString(),  anc2Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.Anc2.toString(), anc2Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc2.toString());
     }
 
@@ -91,7 +91,7 @@ public class AncServiceTest {
         mother.setCaseId(caseId);
 
         ancService.process(mother);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Anc3.toString(),  anc3Date, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.Anc3.toString(), anc3Date, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Anc3.toString());
     }
 
@@ -101,7 +101,7 @@ public class AncServiceTest {
         mother.setCaseId("caseId");
 
         ancService.process(mother);
-        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        verify(schedulerService, never()).fulfillMilestone(any(String.class), any(String.class), any(DateTime.class), anyString());
         Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
@@ -112,7 +112,7 @@ public class AncServiceTest {
         Mother mother = new Mother();
         mother.setCaseId(caseId);
         ancService.close(mother);
-        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+        Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }
 

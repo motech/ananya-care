@@ -65,7 +65,7 @@ public class VitaServiceTest {
         child.setCaseId(caseId);
 
         vitaService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.VitaminA.toString(),  vitaDate, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.VitaminA.toString(), vitaDate, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.VitaminA.toString());
     }
 
@@ -75,7 +75,7 @@ public class VitaServiceTest {
         child.setCaseId("caseId");
 
         vitaService.process(child);
-        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        verify(schedulerService, never()).fulfillMilestone(any(String.class), any(String.class), any(DateTime.class), anyString());
         Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 

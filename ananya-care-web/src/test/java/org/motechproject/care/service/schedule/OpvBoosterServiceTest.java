@@ -118,7 +118,7 @@ public class OpvBoosterServiceTest {
         child.setCaseId(caseId);
 
         opvBoosterService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.OPVBooster.toString(),  opvBoosterDate, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.OPVBooster.toString(), opvBoosterDate, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.OPVBooster.toString());
     }
 

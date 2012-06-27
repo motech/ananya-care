@@ -118,7 +118,7 @@ public class DptBoosterServiceTest {
         child.setCaseId(caseId);
 
         dptBoosterService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.DPTBooster.toString(),  dptBoosterDate, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.DPTBooster.toString(), dptBoosterDate, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.DPTBooster.toString());
     }
 

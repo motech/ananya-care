@@ -66,7 +66,7 @@ public class BcgServiceTest {
         child.setCaseId(caseId);
 
         bcgService.process(child);
-        Mockito.verify(schedulerService).fulfillMileStone(caseId, MilestoneType.Bcg.toString(),  bcgDate, scheduleName);
+        Mockito.verify(schedulerService).fulfillMilestone(caseId, MilestoneType.Bcg.toString(), bcgDate, scheduleName);
         Mockito.verify(careCaseTaskService).close(caseId, MilestoneType.Bcg.toString());
     }
 
@@ -76,7 +76,7 @@ public class BcgServiceTest {
         child.setCaseId("caseId");
 
         bcgService.process(child);
-        verify(schedulerService, never()).fulfillMileStone(any(String.class), any(String.class), any(DateTime.class), anyString());
+        verify(schedulerService, never()).fulfillMilestone(any(String.class), any(String.class), any(DateTime.class), anyString());
         Mockito.verify(careCaseTaskService, never()).close(any(String.class), any(String.class));
     }
 
@@ -88,7 +88,7 @@ public class BcgServiceTest {
         mother.setCaseId(caseId);
 
         bcgService.close(mother);
-        Mockito.verify(schedulerService).unenroll(caseId,scheduleName);
+        Mockito.verify(schedulerService).unenroll(caseId, scheduleName);
 
     }
 

@@ -70,7 +70,7 @@ public class ScheduleServiceTest {
         DateTime measlesTakenDateTime = new DateTime(2011, 6, 10, 10, 11);
         String caseId = "caseId";
         when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(MilestoneType.Measles.toString()));
-        schedulerService.fulfillMileStone(caseId, MilestoneType.Measles.toString(), measlesTakenDateTime, scheduleName);
+        schedulerService.fulfillMilestone(caseId, MilestoneType.Measles.toString(), measlesTakenDateTime, scheduleName);
         verify(trackingService).fulfillCurrentMilestone(eq(caseId), eq(scheduleName), eq(measlesTakenDateTime.toLocalDate()), eq(DateUtil.time(measlesTakenDateTime)));
     }
 
@@ -78,7 +78,7 @@ public class ScheduleServiceTest {
     public void shouldNotTryToFulfillIfScheduleNotEnrolledOrEnrollmentComplete() {
         String caseId = "caseId";
         when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(null);
-        schedulerService.fulfillMileStone(caseId, MilestoneType.Measles.toString(), new DateTime(2011, 6, 10, 10, 11), scheduleName);
+        schedulerService.fulfillMilestone(caseId, MilestoneType.Measles.toString(), new DateTime(2011, 6, 10, 10, 11), scheduleName);
         verify(trackingService, never()).fulfillCurrentMilestone(any(String.class), any(String.class), any(LocalDate.class), any(Time.class));
     }
 
