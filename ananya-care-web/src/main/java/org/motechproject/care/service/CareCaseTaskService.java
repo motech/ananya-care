@@ -1,5 +1,6 @@
 package org.motechproject.care.service;
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
@@ -15,6 +16,7 @@ public class CareCaseTaskService {
     private CommcareCaseGateway commcareCaseGateway;
     private Properties ananyaCareProperties;
 
+    Logger logger = Logger.getLogger(CareCaseTaskService.class);
 
     @Autowired
     public CareCaseTaskService(AllCareCaseTasks allCareCaseTasks, CommcareCaseGateway commcareCaseGateway, Properties ananyaCareProperties) {
@@ -24,10 +26,13 @@ public class CareCaseTaskService {
     }
 
     public void close(String clientCaseId, String milestoneName) {
+        logger.info(String.format("Closing case for Client Case Id: %s; Milestone Name: %s", clientCaseId, milestoneName));
         CareCaseTask careCaseTask = allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName);
         if(careCaseTask == null|| !careCaseTask.getOpen()) {
+            logger.info(String.format("Valid care case not found for Client Case Id: %s; Milestone Name: %s", clientCaseId, milestoneName));
             return;
         }
+        logger.info(String.format("Sending close case to Commcare for Client Case Id: %s; Milestone Name: %s", clientCaseId, milestoneName));
         careCaseTask.setOpen(false);
         allCareCaseTasks.update(careCaseTask);
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
