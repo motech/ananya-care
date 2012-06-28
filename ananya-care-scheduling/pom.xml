@@ -5,10 +5,10 @@
     <parent>
         <artifactId>ananya-care</artifactId>
         <groupId>org.motechproject.ananya-care</groupId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <artifactId>ananya-care-scheduling</artifactId>
     <name>Ananya Care Scheduling</name>
