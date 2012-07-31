@@ -20,12 +20,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
             <artifactId>case-service</artifactId>
             <version>${motech.contrib.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.motechproject</groupId>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
             <artifactId>commcare-case-gateway</artifactId>
             <version>${motech.contrib.version}</version>
         </dependency>
