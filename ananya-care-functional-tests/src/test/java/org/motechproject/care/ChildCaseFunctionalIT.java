@@ -21,7 +21,6 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@Ignore("Rahul : ignoring it to get a build on QA, these tests leave few messages in queue which results the jetty to hang")
 public class ChildCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
     private AllChildren allChildren;

@@ -76,16 +76,18 @@ public class ScheduleService {
     }
 
     private void fulfillCurrentMilestone(String caseId, DateTime fulfillmentDate, String scheduleName) {
-        DateTime fulfillmentDateTime = DateTime.now().withDate(fulfillmentDate.getYear(), fulfillmentDate.getMonthOfYear(), fulfillmentDate.getDayOfMonth());
+        DateTime nowPlus2Minutes = DateTime.now().plusMinutes(2);
+        DateTime fulfillmentDateTime = nowPlus2Minutes.withDate(fulfillmentDate.getYear(), fulfillmentDate.getMonthOfYear(), fulfillmentDate.getDayOfMonth());
 
         logger.info(String.format("Fulfilling current milestone for external id : %s , schedule : %s", caseId, scheduleName));
         trackingService.fulfillCurrentMilestone(caseId, scheduleName, fulfillmentDateTime.toLocalDate(), DateUtil.time(fulfillmentDateTime));
     }
 
     private EnrollmentRequest enrollmentRequestFor(String caseId, LocalDate referenceDate, String scheduleName) {
-        Time referenceTime = DateUtil.time(DateTime.now());
+        DateTime now = DateTime.now();
+        Time referenceTime = DateUtil.time(now.plusMinutes(2));
         LocalDate enrollmentDate = DateUtil.today();
-        Time enrollmentTime = DateUtil.time(DateUtil.now());
+        Time enrollmentTime = referenceTime;
         return new EnrollmentRequest(caseId, scheduleName, null, referenceDate, referenceTime, enrollmentDate, enrollmentTime, null, null);
     }
 }

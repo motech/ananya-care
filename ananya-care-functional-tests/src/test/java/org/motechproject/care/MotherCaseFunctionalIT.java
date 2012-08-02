@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.UUID;
 
-@Ignore("Rahul : ignoring it to get a build on QA, these tests leave few messages in queue which results the jetty to hang")
 public class MotherCaseFunctionalIT extends SpringIntegrationTest {
     @Autowired
     private AllMothers allMothers;

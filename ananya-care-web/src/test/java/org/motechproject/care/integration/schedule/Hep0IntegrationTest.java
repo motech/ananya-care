@@ -81,7 +81,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
     @Test
     public void shouldVerifyHep0ScheduleIsNotActiveWhenChildIsOlderThanADay() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(2));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(3));
 
         String motherCaseId = "motherCaseId";
 
