@@ -69,8 +69,8 @@ public class ChildCareIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.ChildCare.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(dob), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 }

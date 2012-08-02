@@ -70,9 +70,9 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(tt1Taken.plusWeeks(4)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(tt1Taken.plusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(tt1Taken.plusWeeks(4)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(tt1Taken.plusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -122,9 +122,9 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(ttScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
 
         careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withTT1(null).withTT2(null).withMotherAlive("no").build();

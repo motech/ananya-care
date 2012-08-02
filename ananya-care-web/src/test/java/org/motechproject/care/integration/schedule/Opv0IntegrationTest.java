@@ -69,9 +69,9 @@ public class Opv0IntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.OPV0.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(dob, enrollment.getReferenceDateTime());
-        assertEquals(dob, enrollment.getStartOfDueWindow());
-        assertEquals(dob.plusDays(15), enrollment.getStartOfLateWindow());
+        assertEquals(dob, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(dob, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dob.plusDays(15), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob , child.getDOB());

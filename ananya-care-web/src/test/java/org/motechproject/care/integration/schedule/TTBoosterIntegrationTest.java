@@ -62,9 +62,9 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TTBooster.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

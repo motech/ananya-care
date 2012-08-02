@@ -70,9 +70,9 @@ public class DptBoosterIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
         enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
         assertEquals(MilestoneType.DPTBooster.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(expectedReferenceDate.plusMonths(8).plusWeeks(2)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate.plusMonths(8).plusWeeks(2)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -95,9 +95,9 @@ public class DptBoosterIntegrationTest extends SpringIntegrationTest {
         childService.process(careCase);
         enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
         assertEquals(MilestoneType.DPTBooster.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(expectedStartLateDate), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartLateDate), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

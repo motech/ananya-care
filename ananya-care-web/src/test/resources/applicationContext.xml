@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:integration="http://www.springframework.org/schema/integration"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/integration
+			http://www.springframework.org/schema/integration/spring-integration.xsd">
 
     <import resource="classpath:applicationContext-Web.xml"/>
     <bean id="careCaseTaskService" class="org.motechproject.care.utils.DummyCareCaseTaskService" />
+    <integration:gateway service-interface="org.motechproject.scheduler.SchedulerFireEventGateway"
+             id="schedulerFireEventGateway"
+             default-request-channel="nullChannel"/>
 </beans>

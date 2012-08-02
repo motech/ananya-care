@@ -17,11 +17,12 @@ import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -52,7 +53,7 @@ public class ScheduleServiceTest {
         EnrollmentRequest enrollmentRequest = captor.getValue();
         assertEquals(dob.toLocalDate(), enrollmentRequest.getReferenceDate());
         assertEquals(DateUtil.today(), enrollmentRequest.getEnrollmentDateTime().toLocalDate());
-        assertEquals(DateUtil.time(now.plusMinutes(2)).getMinute(), enrollmentRequest.getPreferredAlertTime().getMinute());
+        assertNull(enrollmentRequest.getPreferredAlertTime());
         assertEquals(scheduleName, enrollmentRequest.getScheduleName());
     }
 
@@ -68,10 +69,17 @@ public class ScheduleServiceTest {
     @Test
     public void shouldFulfilMeaslesTakenIfScheduleIsCurrentlyNotFulfilledAndCurrentMilestone() {
         DateTime measlesTakenDateTime = new DateTime(2011, 6, 10, 10, 11);
+        DateTime beforeTest = DateTime.now();
         String caseId = "caseId";
         when(trackingService.getEnrollment(caseId, scheduleName)).thenReturn(dummyEnrollmentRecord(MilestoneType.Measles.toString()));
         schedulerService.fulfillMilestone(caseId, MilestoneType.Measles.toString(), measlesTakenDateTime, scheduleName);
-        verify(trackingService).fulfillCurrentMilestone(eq(caseId), eq(scheduleName), eq(measlesTakenDateTime.toLocalDate()), eq(DateUtil.time(measlesTakenDateTime)));
+
+        ArgumentCaptor<Time> captor = ArgumentCaptor.forClass(Time.class);
+        verify(trackingService).fulfillCurrentMilestone(eq(caseId), eq(scheduleName), eq(measlesTakenDateTime.toLocalDate()), captor.capture());
+
+        Time fulfillmentTime = captor.getValue();
+        assertFalse(fulfillmentTime.isBefore(DateUtil.time(beforeTest)));
+        assertTrue(fulfillmentTime.isBefore(DateUtil.time(DateTime.now().plusMinutes(1))));
     }
 
     @Test
@@ -83,7 +91,7 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void shouldEnrollMotherForMeaslesVaccinationWithPreferredAlertTimeSetFewMinutesInAdvance() {
+    public void shouldEnrollMotherForMeaslesVaccinationWithPreferredAlertTimeSetToNull() {
         DateTime dob = new DateTime(2012, 10, 10, 0, 0);
         String caseId = "caseId";
 
@@ -96,9 +104,27 @@ public class ScheduleServiceTest {
         EnrollmentRequest enrollmentRequest = captor.getValue();
 
         Time preferredAlertTime = enrollmentRequest.getPreferredAlertTime();
-        DateTime preferredAlertDateTime = DateUtil.newDateTime(DateUtil.today(), preferredAlertTime);
-        assertTrue(preferredAlertDateTime.isAfter(DateUtil.now().plusMinutes(1))); // Assuming that schedule creation time will take atmost 1 min
-        assertTrue(preferredAlertDateTime.isBefore(DateUtil.now().plusMinutes(5)));
+        assertNull(preferredAlertTime);
+    }
+
+    @Test
+    public void shouldEnrollMotherForMeaslesVaccinationWithReferenceTimeSetToNow() {
+        DateTime dob = new DateTime(2012, 10, 10, 0, 0);
+        String caseId = "caseId";
+
+        DateTime beforeTest = DateTime.now();
+        when(trackingService.search(any(EnrollmentsQuery.class))).thenReturn(new ArrayList<EnrollmentRecord>());
+        schedulerService.enroll(caseId, dob, ChildVaccinationSchedule.Measles.getName());
+
+        ArgumentCaptor<EnrollmentRequest> captor = ArgumentCaptor.forClass(EnrollmentRequest.class);
+        verify(trackingService).enroll(captor.capture());
+
+        EnrollmentRequest enrollmentRequest = captor.getValue();
+        Time referenceTime = enrollmentRequest.getReferenceTime();
+        DateTime afterTest = DateTime.now();
+
+        assertFalse(referenceTime.isBefore(new Time(beforeTest.getHourOfDay(), beforeTest.getMinuteOfHour())));
+        assertTrue(referenceTime.isBefore(new Time(afterTest.getHourOfDay(), afterTest.getMinuteOfHour() + 1)));
     }
 
     @Test

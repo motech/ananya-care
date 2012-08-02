@@ -71,9 +71,9 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         motherService.process(careCase);
         enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
         assertEquals(MilestoneType.Anc4.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -97,9 +97,9 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         motherService.process(careCase);
         enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
         assertEquals(MilestoneType.Anc4.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(expectedStartLateDate), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(expectedReferenceDate), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartDueDate), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(expectedStartLateDate), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

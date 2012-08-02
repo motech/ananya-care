@@ -60,9 +60,9 @@ public class OpvIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(opvScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.OPV1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime());
-        assertEquals(DateUtil.newDateTime(dob.plusWeeks(6)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(dob.plusWeeks(6)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class OpvIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(opvScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.OPV2.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(opv1Date.plusWeeks(4)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(opv1Date.plusMonths(24)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(opv1Date.plusWeeks(4)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(opv1Date.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -100,8 +100,8 @@ public class OpvIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = getEnrollmentRecord(opvScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.OPV3.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(opv2Date.plusWeeks(4)), enrollment.getStartOfDueWindow());
-        assertEquals(DateUtil.newDateTime(opv2Date.plusMonths(24)), enrollment.getStartOfLateWindow());
+        assertEquals(DateUtil.newDateTime(opv2Date.plusWeeks(4)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(DateUtil.newDateTime(opv2Date.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

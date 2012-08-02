@@ -70,9 +70,9 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = trackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.Bcg.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(dob, enrollment.getReferenceDateTime());
-        assertEquals(dob, enrollment.getStartOfDueWindow());
-        assertEquals(dob.plusMonths(12), enrollment.getStartOfLateWindow());
+        assertEquals(dob, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(dob, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dob.plusMonths(12), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
         Child child = allChildren.findByCaseId(caseId);
         assertEquals(dob , child.getDOB());
