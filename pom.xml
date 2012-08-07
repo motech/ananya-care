@@ -384,6 +384,12 @@
             <artifactId>mail</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.motechproject.contrib-ananya-care</groupId>
+            <artifactId>motech-common</artifactId>
+            <version>${motech.contrib.version}</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>

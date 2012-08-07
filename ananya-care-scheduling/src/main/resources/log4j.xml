@@ -3,7 +3,7 @@
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
     <appender name="production" class="org.apache.log4j.RollingFileAppender">
-        <param value="<path to log file>/ananyaCare.log" name="File"/>
+        <param value="/ananyaCare.log" name="File"/>
         <param name="Append" value="true"/>
         <param name="MaxFileSize" value="4096KB"/>
         <param name="maxBackupIndex" value="5"/>
@@ -19,10 +19,10 @@
         </layout>
     </appender>
 
-    <appender name="email" class="org.motechproject.care.tools.EmailAppender">
+    <appender name="email" class="org.motechproject.common.logAppender.EmailAppender">
         <param name="SMTPHost" value="gmail-smtp-in.l.google.com"/>
         <param name="From" value="motech_care_errors@thoughtworks.com"/>
-        <param name="To" value="<email address>"/>
+        <param name="To" value="email@address.com"/>
         <param name="Subject" value="Ananya Care Error | "/>
         <param name="BufferSize" value="50"/>
         <param name="threshold" value="error"/>
