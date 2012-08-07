@@ -274,6 +274,7 @@
                 </plugin>
             </plugins>
     </build>
+
     <dependencies>
         <!-- Spring 3 dependencies -->
         <dependency>
@@ -368,7 +369,6 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.ektorp</groupId>
             <artifactId>org.ektorp</artifactId>
@@ -379,7 +379,13 @@
             <artifactId>org.ektorp.spring</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
+
     <profiles>
         <profile>
             <id>DefaultDevProfile</id>

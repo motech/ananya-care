@@ -2,42 +2,55 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-  <appender name="production" class="org.apache.log4j.RollingFileAppender">
-      <param value="E:/logs/ananyaCare.log" name="File"/>
-      <param name="Append" value="true"/>
-      <param name="MaxFileSize" value="4096KB"/>
-      <param name="maxBackupIndex" value="5"/>
-      <param name="immediateFlush" value="true"/>
-      <layout class="org.apache.log4j.PatternLayout">
-          <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
-      </layout>
-  </appender>
+    <appender name="production" class="org.apache.log4j.RollingFileAppender">
+        <param value="/ananyaCare.log" name="File"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="4096KB"/>
+        <param name="maxBackupIndex" value="5"/>
+        <param name="immediateFlush" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
+        </layout>
+    </appender>
 
-  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
-    </layout>
-  </appender>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
+        </layout>
+    </appender>
 
-  <logger name="org.motechproject">
-    <level value="INFO"/>
-  </logger>
+    <appender name="mailAppender" class="org.apache.log4j.net.SMTPAppender">
+        <param name="SMTPHost" value="gmail-smtp-in.l.google.com"/>
+        <param name="From" value="motech_care_errors@thoughtworks.com"/>
+        <param name="To" value="sharvann@thoughtworks.com"/>
+        <param name="Subject" value="[ERROR] ** Ananya-Care **"/>
+        <param name="BufferSize" value="50"/>
+        <param name="threshold" value="error"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ddMMyyyy HH:mm:ss} %-5p [%c{1}] [ThreadId:%t] - %m%n"/>
+        </layout>
+    </appender>
 
-  <logger name="org.quartz">
-    <level value="INFO"/>
-  </logger>
+    <logger name="org.motechproject">
+        <level value="INFO"/>
+    </logger>
 
-  <logger name="metrics">
-    <level value="INFO"/>
-  </logger>
+    <logger name="org.quartz">
+        <level value="INFO"/>
+    </logger>
 
-  <logger name="org.springframework">
-    <level value="INFO"/>
-  </logger>
+    <logger name="metrics">
+        <level value="INFO"/>
+    </logger>
 
-  <root>
-    <priority value="INFO"/>
-    <appender-ref ref="CONSOLE"/>
-  </root>
+    <logger name="org.springframework">
+        <level value="INFO"/>
+    </logger>
+
+    <root>
+        <priority value="INFO"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="production"/>
+    </root>
 
 </log4j:configuration>
