@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AllMothers extends MotechBaseRepository<Mother> {
+public class AllMothers extends MotechBaseRepository<Mother> implements AllClients<Mother> {
 
     @Autowired
     public AllMothers(@Qualifier("ananyaCareDbConnector") CouchDbConnector dbCouchDbConnector) {

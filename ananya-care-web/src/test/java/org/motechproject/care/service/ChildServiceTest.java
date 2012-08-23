@@ -11,82 +11,84 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
+import org.motechproject.care.repository.AllClients;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.builder.ChildBuilder;
 
 import java.io.IOException;
 
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChildServiceTest {
 
     @Mock
-    private AllChildren allChildren;
+    private AllClients<Child> allChildren;
 
     @Mock
-    private ChildVaccinationProcessor childVaccinationProcessor;
+    private VaccinationProcessor vaccinationProcessor;
     private ChildService childService;
     private String caseId="caseId";
 
     @Before
     public void setUp(){
-        childService = new ChildService(allChildren, childVaccinationProcessor);
+        initMocks(this);
+        childService = new ChildService(allChildren, vaccinationProcessor);
     }
 
     @Test
     public void shouldSaveChildIfDoesNotExist_AgeLessThanAYear() {
         String caseId = "caseId";
         DateTime dobOfChild = DateTime.now().minusMonths(1);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dobOfChild).withMeaslesDate(new DateTime(2012, 2, 1, 0, 0, 0)).withVitamin1Date(new DateTime(2012, 8, 7, 0, 0, 0)).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
-        childService.process(careCase);
+        childService.process(child);
         verify(allChildren).add(captor.capture());
-        Child child = captor.getValue();
-        Assert.assertEquals(caseId,child.getCaseId());
-        Assert.assertEquals(CaseType.Child.getType(), child.getCaseType());
-        Assert.assertNull(child.getDocCreateTime());
-        Assert.assertEquals(DateTime.parse("2012-02-01"), child.getMeaslesDate());
-        Assert.assertEquals(DateTime.parse("2012-08-07"),child.getVitamin1Date());
-        verify(childVaccinationProcessor).enrollUpdateVaccines(child);
-        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+        Child actualChild = captor.getValue();
+        Assert.assertEquals(caseId, actualChild.getCaseId());
+        Assert.assertEquals(CaseType.Child.getType(), actualChild.getCaseType());
+        Assert.assertNull(actualChild.getDocCreateTime());
+        Assert.assertEquals(DateTime.parse("2012-02-01"), actualChild.getMeaslesDate());
+        Assert.assertEquals(DateTime.parse("2012-08-07"),actualChild.getVitamin1Date());
+        verify(vaccinationProcessor).enrollUpdateVaccines(actualChild);
+        verify(vaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
     public void shouldSaveChildIfAgeMoreThanAYearButShouldNotEnrollForAnySchedules() {
         String caseId = "caseId";
         DateTime dob = new DateTime(2011, 4, 13, 0, 0);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withCaseId(caseId).build();
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withCaseId(caseId).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
-        childService.process(careCase);
+        childService.process(child);
         verify(allChildren).add((Child) Matchers.any());
-        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
-        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+        verify(vaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(vaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
     public void shouldNotEnrollForAnySchedulesIfDOBIsNull() {
         String caseId = "caseId";
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(null).withCaseType(CaseType.Child.getType()).withCaseId(caseId).build();
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(null).withCaseId(caseId).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
-        childService.process(careCase);
+        childService.process(child);
         verify(allChildren).add((Child) Matchers.any());
-        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
-        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+        verify(vaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(vaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
     public void shouldUpdateChildIfAgeMoreThanAYear() {
         String oldName = "Aryan";
-        String newBcgDate = "2012-05-04";
+        DateTime newBcgDate = new DateTime(2012, 5, 4, 0, 0, 0);
         String newName = "Vijay";
         DateTime docCreateTime = DateTime.now().minus(1);
         DateTime dob = DateTime.now().plusMonths(5);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withCaseType(CaseType.Child.getType()).withCaseId(caseId).withCaseName(newName).withBcgDate(newBcgDate).build();
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withCaseId(caseId).withCaseName(newName).withBcgDate(newBcgDate).build();
         Child childInDb = childWithCaseId(caseId);
         childInDb.setName(oldName);
         childInDb.setDocCreateTime(docCreateTime);
@@ -94,28 +96,27 @@ public class ChildServiceTest {
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
 
         when(allChildren.findByCaseId(caseId)).thenReturn(childInDb);
-        childService.process(careCase);
+        childService.process(child);
 
         verify(allChildren,never()).add((Child) Matchers.any());
         verify(allChildren).update(captor.capture());
         Child childUpdated = captor.getValue();
         Assert.assertEquals(newName,childUpdated.getName());
         Assert.assertEquals(docCreateTime,childUpdated.getDocCreateTime());
-        Assert.assertEquals(DateTime.parse(newBcgDate),childUpdated.getBcgDate());
+        Assert.assertEquals(newBcgDate,childUpdated.getBcgDate());
         Assert.assertTrue(childUpdated.isActive());
-        verify(childVaccinationProcessor).enrollUpdateVaccines(childInDb);
-        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+        verify(vaccinationProcessor).enrollUpdateVaccines(childInDb);
+        verify(vaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
     public void shouldSaveChildAsInactiveIfItDoesNotExistAndIsDead() throws IOException {
         String caseId = "caseId";
         DateTime dobOfChild = DateTime.now().minusMonths(1);
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dobOfChild.toString()).withMeaslesDate("2012-02-01").withVitamin1Date("2012-08-07").withCaseType(CaseType.Child.getType()).build();
-        careCase.setChild_alive("no");
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dobOfChild).withMeaslesDate(new DateTime(2012, 2, 1, 0, 0, 0)).withVitamin1Date(new DateTime(2012, 8, 7, 0, 0, 0)).withAlive(false).build();
         when(allChildren.findByCaseId(caseId)).thenReturn(null);
 
-        childService.process(careCase);
+        childService.process(child);
 
         ArgumentCaptor<Child> captor=ArgumentCaptor.forClass(Child.class);
         verify(allChildren).add(captor.capture());
@@ -125,8 +126,8 @@ public class ChildServiceTest {
 
         org.junit.Assert.assertFalse(childInDb.isActive());
         org.junit.Assert.assertFalse(childInDb.isAlive());
-        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
-        verify(childVaccinationProcessor, never()).closeSchedules(any(Child.class));
+        verify(vaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(vaccinationProcessor, never()).closeSchedules(any(Child.class));
     }
 
     @Test
@@ -142,8 +143,8 @@ public class ChildServiceTest {
         assertTrue(wasClosed);
 
         verify(allChildren, times(1)).update(childFromDb);
-        verify(childVaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
-        verify(childVaccinationProcessor).closeSchedules(childFromDb);
+        verify(vaccinationProcessor, never()).enrollUpdateVaccines(any(Child.class));
+        verify(vaccinationProcessor).closeSchedules(childFromDb);
 
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
         verify(allChildren).update(captor.capture());
@@ -164,7 +165,7 @@ public class ChildServiceTest {
         org.junit.Assert.assertTrue(wasClosed);
 
         verify(allChildren, times(1)).update(childFromDb);
-        verify(childVaccinationProcessor).closeSchedules(childFromDb);
+        verify(vaccinationProcessor).closeSchedules(childFromDb);
 
         ArgumentCaptor<Child> captor = ArgumentCaptor.forClass(Child.class);
         verify(allChildren).update(captor.capture());
@@ -208,11 +209,11 @@ public class ChildServiceTest {
 
         doThrow(new RuntimeException()).when(allChildren).update(Matchers.<Child>any());
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).build();
+        childService.process(child);
 
         verify(allChildren).update(any(Child.class));
-        verify(childVaccinationProcessor,never()).enrollUpdateVaccines(Matchers.<Child>any());
+        verify(vaccinationProcessor,never()).enrollUpdateVaccines(Matchers.<Child>any());
 
     }
 

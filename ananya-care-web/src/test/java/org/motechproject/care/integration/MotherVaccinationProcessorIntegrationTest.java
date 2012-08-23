@@ -1,10 +1,11 @@
 package org.motechproject.care.integration;
 
 import org.junit.Test;
-import org.motechproject.care.service.MotherVaccinationProcessor;
+import org.motechproject.care.service.VaccinationProcessor;
 import org.motechproject.care.service.schedule.*;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
@@ -14,11 +15,12 @@ import static org.junit.Assert.assertTrue;
 public class MotherVaccinationProcessorIntegrationTest extends SpringIntegrationTest {
 
     @Autowired
-    private MotherVaccinationProcessor motherVaccinationProcessor;
+    @Qualifier("motherVaccinationProcessor")
+    private VaccinationProcessor vaccinationProcessor;
 
     @Test
     public void shouldInitializeChildServiceBeansCorrectly(){
-        List<VaccinationService> vaccinationServices = motherVaccinationProcessor.getVaccinationServices();
+        List<VaccinationService> vaccinationServices = vaccinationProcessor.getVaccinationServices();
 
         assertEquals(5, vaccinationServices.size());
         assertTrue(vaccinationServices.get(0) instanceof TTService);

@@ -1,26 +1,20 @@
 package org.motechproject.care.service;
 
 import org.motechproject.care.domain.Mother;
-import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.request.CareCase;
-import org.motechproject.care.service.mapper.MotherMapper;
+import org.motechproject.care.repository.AllClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MotherService {
-    private AllMothers allMothers;
-    private MotherVaccinationProcessor motherVaccinationProcessor;
-
+public class MotherService extends BaseService<Mother> {
     @Autowired
-    public MotherService(AllMothers allMothers, MotherVaccinationProcessor motherVaccinationProcessor) {
-        this.allMothers = allMothers;
-        this.motherVaccinationProcessor = motherVaccinationProcessor;
+    public MotherService(AllClients<Mother> allMothers, @Qualifier("motherVaccinationProcessor") VaccinationProcessor vaccinationProcessor) {
+        super(allMothers, vaccinationProcessor);
     }
 
-    public void process(CareCase careCase) {
-        Mother mother = MotherMapper.map(careCase);
-        Mother motherFromDb = allMothers.findByCaseId(mother.getCaseId());
+    protected void onProcess(Mother mother) {
+        Mother motherFromDb = allClients.findByCaseId(mother.getCaseId());
         
         if(motherFromDb == null)
             processNew(mother);
@@ -29,40 +23,18 @@ public class MotherService {
     }
     
     private void processNew(Mother mother) {
-        allMothers.add(mother);
+        allClients.add(mother);
         if(mother.isActive())
-            motherVaccinationProcessor.enrollUpdateVaccines(mother);
+            vaccinationProcessor.enrollUpdateVaccines(mother);
     }
     
     private void processExisting(Mother motherFromDb, Mother mother) {
         motherFromDb.setValuesFrom(mother);
-        allMothers.update(motherFromDb);
+        allClients.update(motherFromDb);
 
         if(motherFromDb.isActive())
-            motherVaccinationProcessor.enrollUpdateVaccines(motherFromDb);
+            vaccinationProcessor.enrollUpdateVaccines(motherFromDb);
         else
-            motherVaccinationProcessor.closeSchedules(motherFromDb);
-    }
-
-    public boolean closeCase(String caseId) {
-        Mother mother = allMothers.findByCaseId(caseId);
-        if(mother == null)
-            return false;
-
-        mother.setClosedByCommcare(true);
-        allMothers.update(mother);
-        motherVaccinationProcessor.closeSchedules(mother);
-        return true;
-    }
-
-    public boolean expireCase(String caseId) {
-        Mother mother = allMothers.findByCaseId(caseId);
-        if(mother == null)
-            return false;
-
-        mother.setExpired(true);
-        allMothers.update(mother);
-        motherVaccinationProcessor.closeSchedules(mother);
-        return true;
+            vaccinationProcessor.closeSchedules(motherFromDb);
     }
 }

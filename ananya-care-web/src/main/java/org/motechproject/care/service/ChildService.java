@@ -1,28 +1,22 @@
 package org.motechproject.care.service;
 
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
-import org.motechproject.care.service.mapper.ChildMapper;
+import org.motechproject.care.repository.AllClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChildService {
-
-    private AllChildren allChildren;
-    private ChildVaccinationProcessor childVaccinationProcessor;
+public class ChildService extends BaseService<Child> {
 
 
     @Autowired
-    public ChildService(AllChildren allChildren, ChildVaccinationProcessor childVaccinationProcessor) {
-        this.allChildren = allChildren;
-        this.childVaccinationProcessor = childVaccinationProcessor;
+    public ChildService(AllClients<Child> allChildren, @Qualifier("childVaccinationProcessor") VaccinationProcessor vaccinationProcessor) {
+        super(allChildren, vaccinationProcessor);
     }
 
-    public void process(CareCase careCase) {
-        Child child = ChildMapper.map(careCase);
-        Child childFromDb = allChildren.findByCaseId(child.getCaseId());
+    protected void onProcess(Child child) {
+        Child childFromDb = allClients.findByCaseId(child.getCaseId());
 
         if(childFromDb == null)
             processNew(child);
@@ -31,50 +25,21 @@ public class ChildService {
     }
 
     private void processNew(Child child) {
-        allChildren.add(child);
+        allClients.add(child);
         if(child.shouldEnrollForSchedules()) {
-            childVaccinationProcessor.enrollUpdateVaccines(child);
+            vaccinationProcessor.enrollUpdateVaccines(child);
         }
-
-
     }
 
     private void processExisting(Child childFromDb, Child child) {
         childFromDb.setValuesFrom(child);
-        allChildren.update(childFromDb);
+        allClients.update(childFromDb);
 
         if(childFromDb.isActive()) {
-            childVaccinationProcessor.enrollUpdateVaccines(childFromDb);
+            vaccinationProcessor.enrollUpdateVaccines(childFromDb);
         }
         else {
-            childVaccinationProcessor.closeSchedules(childFromDb);
+            vaccinationProcessor.closeSchedules(childFromDb);
         }
     }
-
-    public boolean closeCase(String caseId) {
-        Child child = allChildren.findByCaseId(caseId);
-        if(child == null)
-            return false;
-
-        child.setClosedByCommcare(true);
-        allChildren.update(child);
-        childVaccinationProcessor.closeSchedules(child);
-        return true;
-    }
-
-
-    public boolean expireCase(String caseId) {
-        Child child = allChildren.findByCaseId(caseId);
-        if(child == null)
-            return false;
-
-        if(!child.isActive()) {
-            return true;
-        }
-        child.setExpired(true);
-        allChildren.update(child);
-        childVaccinationProcessor.closeSchedules(child);
-        return true;
-    }
-
 }

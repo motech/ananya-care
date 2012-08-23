@@ -3,6 +3,8 @@ package org.motechproject.care.service;
 import org.apache.log4j.Logger;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.request.CaseType;
+import org.motechproject.care.service.mapper.ChildMapper;
+import org.motechproject.care.service.mapper.MotherMapper;
 import org.motechproject.casexml.service.CaseService;
 import org.motechproject.casexml.service.exception.CaseException;
 import org.motechproject.util.StringUtil;
@@ -31,9 +33,9 @@ public class CareCaseService extends CaseService<CareCase>{
         validateCreateCase(careCase);
         String caseType = careCase.getCase_type();
         if(CaseType.Mother.getType().equals(caseType))
-            motherService.process(careCase);
+            motherService.process(MotherMapper.map(careCase));
         else if(CaseType.Child.getType().equals(caseType))
-            childService.process(careCase);
+            childService.process(ChildMapper.map(careCase));
         else
             logger.info(String.format("Ignoring Case with type: %s", caseType));
     }

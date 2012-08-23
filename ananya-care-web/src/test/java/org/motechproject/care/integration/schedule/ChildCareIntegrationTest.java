@@ -1,16 +1,16 @@
 package org.motechproject.care.integration.schedule;
 
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.ChildCareService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
@@ -35,8 +35,8 @@ public class ChildCareIntegrationTest extends SpringIntegrationTest {
     @Autowired
     private ScheduleTrackingService scheduleTrackingService;
     @Autowired
-
     private AllChildren allChildren;
+
     private String caseId;
     private ChildService childService;
 
@@ -49,17 +49,17 @@ public class ChildCareIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> ttServices = Arrays.asList((VaccinationService) childCareService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(ttServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(ttServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
     @Test
     public void shouldVerifyChildCareScheduleCreationWhenChildIsRegistered() {
         String childCareScheduleName = ExpirySchedule.ChildCare.getName();
-        LocalDate dob = DateUtil.today().plusMonths(4);
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).plusMonths(4);
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).build();
+        childService.process(child);
         markScheduleForUnEnrollment(caseId, childCareScheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(caseId)
@@ -69,8 +69,8 @@ public class ChildCareIntegrationTest extends SpringIntegrationTest {
         EnrollmentRecord enrollment = scheduleTrackingService.searchWithWindowDates(query).get(0);
 
         assertEquals(MilestoneType.ChildCare.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(dob, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(dob, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dob.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 }

@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.motechproject.care.domain.Child;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.casexml.exception.CaseParserException;
 import org.motechproject.casexml.parser.CommcareCaseParser;
@@ -17,9 +19,7 @@ import org.springframework.http.HttpEntity;
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,8 +41,8 @@ public class CareCaseServiceTest  {
     public void shouldRedirectToMotherServiceIfCaseTypeBelongsToMother() throws IOException {
         String xml = readFile("/sampleMotherCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
-        verify(motherService).process((CareCase) Matchers.any());
-        verify(childService, never()).process((CareCase) Matchers.any());
+        verify(motherService).process((Mother) Matchers.any());
+        verify(childService, never()).process((Child) Matchers.any());
     }
 
     @Test
@@ -56,8 +56,8 @@ public class CareCaseServiceTest  {
     public void shouldRedirectToChildServiceIfCaseTypeBelongsToChild() throws IOException {
         String xml = readFile("/sampleChildCase.xml");
         careCaseService.processCase(new HttpEntity<String>(xml));
-        verify(childService).process((CareCase) Matchers.any());
-        verify(motherService, never()).process((CareCase) Matchers.any());
+        verify(childService).process((Child) Matchers.any());
+        verify(motherService, never()).process((Mother) Matchers.any());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class CareCaseServiceTest  {
         String xml = readFile("/sampleChildCase.xml");
         xml = xml.replace("cc_bihar_newborn", "task");
         careCaseService.processCase(new HttpEntity<String>(xml));
-        verify(childService, never()).process((CareCase) Matchers.any());
-        verify(motherService, never()).process((CareCase) Matchers.any());
+        verify(childService, never()).process((Child) Matchers.any());
+        verify(motherService, never()).process((Mother) Matchers.any());
     }
 
     private String readFile(String resourcePath) throws IOException {

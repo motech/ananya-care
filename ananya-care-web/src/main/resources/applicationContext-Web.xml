@@ -16,7 +16,7 @@
     <import resource="classpath:applicationContext-commcare-gateway.xml"/>
 
 
-    <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.MotherVaccinationProcessor">
+    <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.VaccinationProcessor">
         <constructor-arg>
             <list>
                 <ref bean="TTService"/>
@@ -28,7 +28,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="childVaccinationProcessor" class="org.motechproject.care.service.ChildVaccinationProcessor">
+    <bean id="childVaccinationProcessor" class="org.motechproject.care.service.VaccinationProcessor">
         <constructor-arg>
             <list>
                 <ref bean="measlesService"/>

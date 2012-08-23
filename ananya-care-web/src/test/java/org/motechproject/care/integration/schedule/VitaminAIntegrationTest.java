@@ -7,12 +7,11 @@ import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.service.schedule.VitaService;
 import org.motechproject.care.utils.CaseUtils;
@@ -51,7 +50,7 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) vitaService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
     
@@ -61,8 +60,8 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
         String motherCaseId = "motherCaseId";
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId,vitaScheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -77,9 +76,9 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         assertEquals(dob.plusMonths(9), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
         assertEquals(dob.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob , child.getDOB());
-        assertNull(child.getVitamin1Date());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertNull(childFromDb.getVitamin1Date());
     }
 
     @Test
@@ -89,15 +88,15 @@ public class VitaminAIntegrationTest extends SpringIntegrationTest {
         DateTime vitaTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withVitamin1Date(vitaTaken.toString()).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withVitamin1Date(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
+        child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withVitamin1Date(vitaTaken).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         assertNull(trackingService.getEnrollment(caseId, vitaScheduleName));
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob, child.getDOB());
-        assertEquals(vitaTaken, child.getVitamin1Date());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertEquals(vitaTaken, childFromDb.getVitamin1Date());
     }
 }

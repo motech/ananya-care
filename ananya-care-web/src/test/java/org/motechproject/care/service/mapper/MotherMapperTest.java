@@ -7,9 +7,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CareCase;
 import org.motechproject.care.service.builder.MotherCareCaseBuilder;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class MotherMapperTest {
 

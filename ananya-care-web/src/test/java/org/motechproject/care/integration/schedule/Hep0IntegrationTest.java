@@ -6,12 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.Hep0Service;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
@@ -41,7 +40,7 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) hep0Service);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
@@ -57,8 +56,8 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
 
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId,  scheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -73,20 +72,20 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         assertEquals(dob, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
         assertEquals(dob.plusDays(1), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob , child.getDOB());
-        assertNull(child.getHep0Date());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertNull(childFromDb.getHep0Date());
     }
 
     @Test
     public void shouldVerifyHep0ScheduleIsNotActiveWhenChildIsOlderThanADay() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusDays(3));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).minusDays(3);
 
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -97,20 +96,20 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         List<EnrollmentRecord> enrollmentRecords = trackingService.searchWithWindowDates(query);
         assertTrue(enrollmentRecords.isEmpty());
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob, child.getDOB());
-        assertNull(child.getHep0Date());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertNull(childFromDb.getHep0Date());
     }
 
     @Test
     public void shouldVerifyHep0ScheduleFulfillmentWhenChildHasTakenHep0() {
         String scheduleName = ChildVaccinationSchedule.Hepatitis0.getName();
-        DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(2));
-        DateTime hep0Taken = DateUtil.newDateTime(DateUtil.today().minusMonths(1));
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).minusMonths(2);
+        DateTime hep0Taken = DateUtil.newDateTime(DateUtil.today()).minusMonths(1);
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withHep0Date(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         EnrollmentsQuery query = new EnrollmentsQuery()
                 .havingExternalId(caseId)
@@ -120,13 +119,13 @@ public class Hep0IntegrationTest extends SpringIntegrationTest {
         assertFalse(trackingService.searchWithWindowDates(query).isEmpty());
 
 
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withHep0Date(hep0Taken.toString()).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withHep0Date(hep0Taken).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         assertNull(trackingService.getEnrollment(caseId, scheduleName));
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob, child.getDOB());
-        assertEquals(hep0Taken, child.getHep0Date());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertEquals(hep0Taken, childFromDb.getHep0Date());
     }
 }

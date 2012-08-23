@@ -1,16 +1,16 @@
 package org.motechproject.care.integration.schedule;
 
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.service.MotherService;
-import org.motechproject.care.service.MotherVaccinationProcessor;
-import org.motechproject.care.service.builder.MotherCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.MotherBuilder;
 import org.motechproject.care.service.schedule.TTBoosterService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.service.util.PeriodUtil;
@@ -47,35 +47,35 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> ttServices = Arrays.asList((VaccinationService) ttBoosterService);
-        MotherVaccinationProcessor motherVaccinationProcessor = new MotherVaccinationProcessor(ttServices);
+        VaccinationProcessor motherVaccinationProcessor = new VaccinationProcessor(ttServices);
         motherService = new MotherService(allMothers, motherVaccinationProcessor);
     }
 
     @Test
     public void shouldVerifyTTBoosterScheduleCreationWhenMotherIsRegisteredWithLastPregSetToTrue() {
 
-        LocalDate edd = DateUtil.today().plusMonths(4);
+        DateTime edd = DateUtil.newDateTime(DateUtil.today()).plusMonths(4);
 
-        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withLastPregTT("yes").withTTBooster(null).build();
-        motherService.process(careCase);
+        Mother mother=new MotherBuilder().withCaseId(caseId).withEdd(edd).withLastPregTT(true).withTTBooster(null).build();
+        motherService.process(mother);
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(scheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.TTBooster.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(edd), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
     public void shouldVerifyTTBoosterScheduleFulfillmentWhenMotherHasTakenTTBooster() {
 
-        LocalDate today = DateUtil.today();
-        LocalDate edd = today.plusDays(PeriodUtil.DAYS_IN_9_MONTHS);
-        LocalDate ttBoosterDate = today.plusWeeks(4);
+        DateTime today = DateUtil.newDateTime(DateUtil.today());
+        DateTime edd = today.plusDays(PeriodUtil.DAYS_IN_9_MONTHS);
+        DateTime ttBoosterDate = today.plusWeeks(4);
 
-        CareCase careCase=new MotherCareCaseBuilder().withCaseId(caseId).withEdd(edd.toString()).withLastPregTT("yes").withTTBooster(ttBoosterDate.toString()).build();
-        motherService.process(careCase);
+        Mother mother=new MotherBuilder().withCaseId(caseId).withEdd(edd).withLastPregTT(true).withTTBooster(ttBoosterDate).build();
+        motherService.process(mother);
 
         assertNull(trackingService.getEnrollment(caseId, scheduleName));
     }

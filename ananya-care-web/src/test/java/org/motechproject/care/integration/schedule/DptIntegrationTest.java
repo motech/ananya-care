@@ -1,17 +1,17 @@
 package org.motechproject.care.integration.schedule;
 
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.DptService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
@@ -40,7 +40,7 @@ public class DptIntegrationTest extends SpringIntegrationTest {
     public void setUp() {
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) dptService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
@@ -51,67 +51,67 @@ public class DptIntegrationTest extends SpringIntegrationTest {
 
     @Test
     public void shouldVerifyDptScheduleCreationWhenChildIsRegistered() {
-        LocalDate dob = DateUtil.today().plusMonths(4);
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).plusMonths(4);
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withDpt1Date(null).withDpt2Date(null).build();
+        childService.process(child);
         markScheduleForUnEnrollment(caseId, dptScheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(dptScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.DPT1.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dob), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dob.plusWeeks(6)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dob.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(dob, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
+        assertEquals(dob.plusWeeks(6), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dob.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
     public void shouldVerifyDpt1ScheduleFulfillmentWhenDpt1VaccineIsOver() {
-        LocalDate dob = DateUtil.today().minusMonths(4);
-        LocalDate dpt1Date = dob.plusMonths(2);
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).minusMonths(4);
+        DateTime dpt1Date = dob.plusMonths(2);
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withDpt1Date(dpt1Date).withDpt2Date(null).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId, dptScheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(dptScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.DPT2.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dpt1Date.plusWeeks(4)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dpt1Date.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(dpt1Date.plusWeeks(4), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dpt1Date.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
     public void shouldVerifyDpt2ScheduleFulfillmentWhenDpt2VaccineIsOver() {
-        LocalDate dob = DateUtil.today().minusMonths(6);
-        LocalDate dpt1Date = dob.plusMonths(2);
-        LocalDate dpt2Date = dob.plusMonths(3);
+        DateTime dob = DateUtil.newDateTime(DateUtil.today()).minusMonths(6);
+        DateTime dpt1Date = dob.plusMonths(2);
+        DateTime dpt2Date = dob.plusMonths(3);
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).build();
-        childService.process(careCase);
-        careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(null).withDpt3Date(null).build();
-        childService.process(careCase);
-        careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(null).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withDpt1Date(null).withDpt2Date(null).withDpt3Date(null).build();
+        childService.process(child);
+        child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withDpt1Date(dpt1Date).withDpt2Date(null).withDpt3Date(null).build();
+        childService.process(child);
+        child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withDpt1Date(dpt1Date).withDpt2Date(dpt2Date).withDpt3Date(null).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId, dptScheduleName);
         EnrollmentRecord enrollment = getEnrollmentRecord(dptScheduleName, caseId, EnrollmentStatus.ACTIVE);
 
         assertEquals(MilestoneType.DPT3.toString(), enrollment.getCurrentMilestoneName());
-        assertEquals(DateUtil.newDateTime(dpt2Date.plusWeeks(4)), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(DateUtil.newDateTime(dpt2Date.plusMonths(24)), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(dpt2Date.plusWeeks(4), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
+        assertEquals(dpt2Date.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
     public void shouldVerifyDpt3ScheduleFulfillmentWhenDpt3VaccineIsOver() {
-        LocalDate today = DateUtil.today();
-        LocalDate dob = today.minusMonths(6);
-        LocalDate dpt1Date = dob.plusMonths(2);
-        LocalDate dpt2Date = dob.plusMonths(3);
-        LocalDate dpt3Date = today;
+        DateTime today = DateUtil.newDateTime(DateUtil.today());
+        DateTime dob = today.minusMonths(6);
+        DateTime dpt1Date = dob.plusMonths(2);
+        DateTime dpt2Date = dob.plusMonths(3);
+        DateTime dpt3Date = today;
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString())
-                .withDpt1Date(dpt1Date.toString()).withDpt2Date(dpt2Date.toString()).withDpt3Date(dpt3Date.toString()).withDptBoosterDate(null).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob)
+                .withDpt1Date(dpt1Date).withDpt2Date(dpt2Date).withDpt3Date(dpt3Date).withDptBoosterDate(null).build();
+        childService.process(child);
 
         Assert.assertNull(trackingService.getEnrollment(caseId, dptScheduleName));
     }

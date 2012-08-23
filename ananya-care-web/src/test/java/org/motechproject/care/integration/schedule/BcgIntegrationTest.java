@@ -6,12 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.BcgService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
@@ -44,7 +43,7 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) bcgService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
@@ -58,8 +57,8 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
         String motherCaseId = "motherCaseId";
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withBcgDate(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId, scheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -74,9 +73,9 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         assertEquals(dob, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
         assertEquals(dob.plusMonths(12), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob , child.getDOB());
-        assertNull(child.getBcgDate());
+        Child childFromDB = allChildren.findByCaseId(caseId);
+        assertEquals(dob , childFromDB.getDOB());
+        assertNull(childFromDB.getBcgDate());
     }
 
     @Test
@@ -86,15 +85,15 @@ public class BcgIntegrationTest extends SpringIntegrationTest {
         DateTime bcgTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase = new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withBcgDate( bcgTaken.toString()).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child = new ChildBuilder().withCaseId(caseId).withDOB(dob).withBcgDate(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
+        child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withBcgDate(bcgTaken).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         assertNull(trackingService.getEnrollment(caseId, bcgScheduleName));
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob, child.getDOB());
-        assertEquals(bcgTaken, child.getBcgDate());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertEquals(bcgTaken, childFromDb.getBcgDate());
     }
 }

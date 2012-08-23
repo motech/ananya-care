@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AllChildren extends MotechBaseRepository<Child> {
+public class AllChildren extends MotechBaseRepository<Child> implements AllClients<Child> {
 
     @Autowired
     public AllChildren(@Qualifier("ananyaCareDbConnector") CouchDbConnector dbCouchDbConnector) {
@@ -30,9 +30,8 @@ public class AllChildren extends MotechBaseRepository<Child> {
         return children.get(0);
     }
 
-    public void add(Child child){
+    public void add(Child child) {
         child.setDocCreateTime(DateTime.now());
         super.add(child);
     }
-
 }

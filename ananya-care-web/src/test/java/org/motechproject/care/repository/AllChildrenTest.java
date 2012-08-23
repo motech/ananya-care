@@ -10,9 +10,7 @@ import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class AllChildrenTest extends SpringIntegrationTest {
 

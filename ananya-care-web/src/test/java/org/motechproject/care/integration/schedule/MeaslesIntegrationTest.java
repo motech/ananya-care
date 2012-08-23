@@ -6,12 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllChildren;
-import org.motechproject.care.request.CareCase;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.service.ChildService;
-import org.motechproject.care.service.ChildVaccinationProcessor;
-import org.motechproject.care.service.builder.ChildCareCaseBuilder;
+import org.motechproject.care.service.VaccinationProcessor;
+import org.motechproject.care.service.builder.ChildBuilder;
 import org.motechproject.care.service.schedule.MeaslesService;
 import org.motechproject.care.service.schedule.VaccinationService;
 import org.motechproject.care.utils.CaseUtils;
@@ -42,7 +41,7 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
     public void setUp(){
         caseId = CaseUtils.getUniqueCaseId();
         List<VaccinationService> vaccinationServices = Arrays.asList((VaccinationService) measlesService);
-        ChildVaccinationProcessor childVaccinationProcessor = new ChildVaccinationProcessor(vaccinationServices);
+        VaccinationProcessor childVaccinationProcessor = new VaccinationProcessor(vaccinationServices);
         childService = new ChildService(allChildren, childVaccinationProcessor);
     }
 
@@ -56,8 +55,8 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         String measlesScheduleName = ChildVaccinationSchedule.Measles.getName();
         DateTime dob = DateUtil.newDateTime(DateUtil.today().minusMonths(4));
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withMeaslesDate(null).withMotherCaseId("motherCaseId").build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withMeaslesDate(null).withMotherCaseId("motherCaseId").build();
+        childService.process(child);
 
         markScheduleForUnEnrollment(caseId,  measlesScheduleName);
         EnrollmentsQuery query = new EnrollmentsQuery()
@@ -72,9 +71,9 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         assertEquals(dob.plusMonths(9), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
         assertEquals(dob.plusMonths(24), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob , child.getDOB());
-        assertNull(child.getMeaslesDate());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertNull(childFromDb.getMeaslesDate());
     }
 
     @Test
@@ -84,15 +83,15 @@ public class MeaslesIntegrationTest extends SpringIntegrationTest {
         DateTime measlesTaken = DateUtil.newDateTime(DateUtil.today().plusMonths(1));
         String motherCaseId = "motherCaseId";
 
-        CareCase careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withMeaslesDate(null).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
-        careCase=new ChildCareCaseBuilder().withCaseId(caseId).withDOB(dob.toString()).withMeaslesDate(measlesTaken.toString()).withMotherCaseId(motherCaseId).build();
-        childService.process(careCase);
+        Child child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withMeaslesDate(null).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
+        child=new ChildBuilder().withCaseId(caseId).withDOB(dob).withMeaslesDate(measlesTaken).withMotherCaseId(motherCaseId).build();
+        childService.process(child);
 
         assertNull(trackingService.getEnrollment(caseId, measlesScheduleName));
 
-        Child child = allChildren.findByCaseId(caseId);
-        assertEquals(dob, child.getDOB());
-        assertEquals(measlesTaken, child.getMeaslesDate());
+        Child childFromDb = allChildren.findByCaseId(caseId);
+        assertEquals(dob, childFromDb.getDOB());
+        assertEquals(measlesTaken, childFromDb.getMeaslesDate());
     }
 }
