@@ -6,7 +6,7 @@
     <groupId>org.motechproject.ananya-care</groupId>
     <artifactId>ananya-care</artifactId>
     <packaging>pom</packaging>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.7-SNAPSHOT</version>
     <modules>
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
@@ -20,7 +20,7 @@
         <spring.version>3.0.5.RELEASE</spring.version>
         <release.version>${version}</release.version>
         <motech.version>0.10.4</motech.version>
-        <motech.contrib.version>0.6-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.version>0.7-SNAPSHOT</motech.contrib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <db.server>localhost</db.server>
