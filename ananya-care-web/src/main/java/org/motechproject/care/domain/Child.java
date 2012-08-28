@@ -103,7 +103,7 @@ public class Child extends Client {
             nullAwareBeanUtilsBean.copyProperties(this, child);
         }
         catch (Exception e) {
-            // do something
+            throw new RuntimeException(e);
         }
     }
 

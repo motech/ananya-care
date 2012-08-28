@@ -19,7 +19,6 @@ public class ChildTest {
         child.setAlive(false);
         Assert.assertFalse(child.isActive());
         Assert.assertFalse(child.shouldEnrollForSchedules());
-
     }
 
     @Test
@@ -37,7 +36,6 @@ public class ChildTest {
         child.setExpired(true);
         Assert.assertFalse(child.isActive());
         Assert.assertFalse(child.shouldEnrollForSchedules());
-
     }
 
     @Test
@@ -48,19 +46,13 @@ public class ChildTest {
 
         child.setDOB(null);
         Assert.assertFalse(child.shouldEnrollForSchedules());
-
-
-
     }
+
     @Test
     public void shouldSetEnrollForSchedulesToTrueIfChildIsNotOlderThanAYearAndIsActive(){
         Child child = new Child();
         child.setDOB(DateTime.now());
         child.setAlive(true);
         Assert.assertTrue(child.shouldEnrollForSchedules());
-
-
-
-
     }
 }

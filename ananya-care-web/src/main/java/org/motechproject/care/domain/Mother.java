@@ -135,7 +135,7 @@ public class Mother extends Client {
             nullAwareBeanUtilsBean.copyProperties(this, mother);
         }
         catch (Exception e){
-            // do something
+            throw new RuntimeException(e);
         }
     }
 

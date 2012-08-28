@@ -83,7 +83,7 @@ public enum ValidationResponse {
             document.appendChild(documentElement);
             return document;
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -101,7 +101,7 @@ public enum ValidationResponse {
             String xmlString = stringWriter.toString();
             return xmlString;
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -110,7 +110,7 @@ public enum ValidationResponse {
             response.setStatus(responseCode);
             response.getOutputStream().print(toString(responseDocument));
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
