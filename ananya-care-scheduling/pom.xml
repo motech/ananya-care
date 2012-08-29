@@ -45,11 +45,16 @@
         </dependency>
 
         <dependency>
-            <artifactId>motech-platform-server-api</artifactId>
             <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-server-api</artifactId>
             <version>${motech.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-schedule-testing</artifactId>
