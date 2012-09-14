@@ -23,6 +23,7 @@ public class MotherBuilder {
     private DateTime anc4Date = new DateTime(2012, 1, 6, 0, 0, 0);
     private DateTime ttBoosterDate = new DateTime(2012, 1, 7, 0, 0, 0);
     private boolean isAlive = true;
+    private boolean expired;
 
 
     public Mother build(){
@@ -44,6 +45,7 @@ public class MotherBuilder {
         mother.setTt1Date(tt1Date);
         mother.setTt2Date(tt2Date);
         mother.setTtBoosterDate(ttBoosterDate);
+        mother.setExpired(expired);
         return mother;
     }
 
@@ -110,6 +112,11 @@ public class MotherBuilder {
     }
     public MotherBuilder withAlive(boolean isAlive){
         this.isAlive = isAlive;
+        return this;
+    }
+
+    public MotherBuilder withExpired(boolean expired){
+        this.expired = expired;
         return this;
     }
 }

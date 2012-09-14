@@ -350,7 +350,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
         schedule.assertNoAlerts("Child Care", earliest);
         schedule.assertNoAlerts("Child Care", due);
-        schedule.assertAlertsStartWith("Child Care", late, dob.plusMonths(24).toDate());
+        schedule.assertAlertsStartWith("Child Care", late, dob.plusMonths(24).plusDays(1).toDate());
         schedule.assertNoAlerts("Child Care", max);
         visualization.outputTo("child-care.html", 2);
     }
@@ -363,7 +363,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
         schedule.assertNoAlerts("Mother Care", earliest);
         schedule.assertNoAlerts("Mother Care", due);
-        schedule.assertAlertsStartWith("Mother Care", late, lmp.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).toDate());
+        schedule.assertAlertsStartWith("Mother Care", late, lmp.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusDays(1).toDate());
         schedule.assertNoAlerts("Mother Care", max);
         visualization.outputTo("mother-care.html", 2);
     }

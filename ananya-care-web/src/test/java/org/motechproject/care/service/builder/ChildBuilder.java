@@ -34,6 +34,7 @@ public class ChildBuilder {
     private DateTime opvBoosterDate=new DateTime(2012, 5, 2, 0, 0, 0);
 
     private boolean isAlive = true;
+    private boolean expired;
 
     public Child build(){
 
@@ -66,7 +67,7 @@ public class ChildBuilder {
         child.setOpv2Date(opv2Date);
         child.setOpv3Date(opv3Date);
         child.setOpvBoosterDate(opvBoosterDate);
-
+        child.setExpired(expired);
 
         return child;
     }
@@ -188,4 +189,10 @@ public class ChildBuilder {
         this.isAlive = isAlive;
         return this;
     }
+
+    public ChildBuilder withExpired(boolean expired){
+        this.expired = expired;
+        return this;
+    }
+
 }

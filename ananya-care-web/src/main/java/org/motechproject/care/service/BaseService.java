@@ -39,10 +39,6 @@ public abstract class BaseService<T extends Client> {
             T client = allClients.findByCaseId(caseId);
             if(client == null)
                 return false;
-
-            if(!client.isActive()) {
-                return true;
-            }
             client.setExpired(true);
             allClients.update(client);
             vaccinationProcessor.closeSchedules(client);

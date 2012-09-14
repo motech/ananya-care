@@ -5,8 +5,8 @@
             "name": "Child Care",
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
-                "due": ["24 Months"],
-                "late": ["24 Months", "1 Days"]
+                "due": ["24 Months","1 Day"],
+                "late": ["24 Months", "2 Days"]
             },
             "alerts": [
                 {

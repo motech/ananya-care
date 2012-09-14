@@ -10,7 +10,6 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
-import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllClients;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.service.builder.ChildBuilder;
@@ -215,6 +214,15 @@ public class ChildServiceTest {
         verify(allChildren).update(any(Child.class));
         verify(vaccinationProcessor,never()).enrollUpdateVaccines(Matchers.<Child>any());
 
+    }
+
+    @Test
+    public void shouldCloseSchedulesEvenForAnExpiredClientToEnableActiveMqRetriesIfExceptionsOccur(){
+        String caseId = "caseId";
+        Child child = new ChildBuilder().withExpired(true).build();
+        when(allChildren.findByCaseId(caseId)).thenReturn(child);
+        childService.expireCase(caseId);
+        verify(vaccinationProcessor).closeSchedules(child);
     }
 
     private Child childWithCaseId(String caseId) {

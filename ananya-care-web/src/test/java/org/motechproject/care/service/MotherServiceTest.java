@@ -75,6 +75,15 @@ public class MotherServiceTest {
     }
 
     @Test
+    public void shouldCloseSchedulesEvenForAnExpiredClientToEnableActiveMqRetriesIfExceptionsOccur(){
+        String caseId = "caseId";
+        Mother mother = new MotherBuilder().withExpired(true).build();
+        when(allMothers.findByCaseId(caseId)).thenReturn(mother);
+        motherService.expireCase(caseId);
+        verify(vaccinationProcessor).closeSchedules(mother);
+    }
+
+    @Test
     public void shouldUpdateMotherCaseIfItExists(){
         Mother mother = new MotherBuilder().withName("Aparna").withCaseId(caseId).withEdd(new DateTime(2012, 1, 2, 0, 0, 0)).withAlive(true).build();
         DateTime now = DateTime.now();
