@@ -2,32 +2,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.motechproject.ananya-care</groupId>
     <artifactId>ananya-care</artifactId>
     <packaging>pom</packaging>
-    <version>0.7-SNAPSHOT</version>
+    <version>0.8-SNAPSHOT</version>
+    <name>Ananya Care</name>
+
     <modules>
         <module>ananya-care-web</module>
         <module>ananya-care-scheduling</module>
         <module>ananya-care-dummy-commcare-hq</module>
         <module>ananya-care-functional-tests</module>
     </modules>
-    <name>Ananya Care</name>
 
     <properties>
         <jetty.port>9979</jetty.port>
         <spring.version>3.0.5.RELEASE</spring.version>
         <release.version>${version}</release.version>
         <motech.version>0.10.4</motech.version>
-        <motech.contrib.version>0.7-SNAPSHOT</motech.contrib.version>
+        <motech.contrib.version>0.8-SNAPSHOT</motech.contrib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <db.server>localhost</db.server>
         <db.port>5984</db.port>
-        <db.name.ananya.care>ananya-care</db.name.ananya.care>
-        <db.name.motech-scheduletracking>motech-scheduletracking</db.name.motech-scheduletracking>
+        <db.name>ananya-care motech-scheduletracking</db.name>
+
         <main.basedir>${project.basedir}</main.basedir>
+
+        <activemq.host>localhost</activemq.host>
+        <activemq.port>8161</activemq.port>
+        <activemq.queue.name>QueueForEventsCare QueueForScheduler</activemq.queue.name>
     </properties>
 
     <distributionManagement>
@@ -80,6 +87,7 @@
             <url>http://mvnrepository.com/artifact/javax.transaction/jta/1.1</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>central</id>
@@ -105,25 +113,27 @@
 
     <build>
         <finalName>ananya-care</finalName>
+
+        <pluginManagement>
             <plugins>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.9</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                        <encoding>UTF-8</encoding>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>2.5</version>
-                    <configuration>
-                        <encoding>UTF-8</encoding>
-                        <outputDirectory/>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -132,147 +142,190 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.9</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>integration-test</goal>
-                                <goal>verify</goal>
-                            </goals>
-                            <configuration>
-                                <argLine>-XX:MaxPermSize=1024M</argLine>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>properties-maven-plugin</artifactId>
-                    <version>1.0-alpha-2</version>
-                    <executions>
-                        <execution>
-                            <phase>initialize</phase>
-                            <goals>
-                                <goal>read-project-properties</goal>
-                            </goals>
-                            <configuration>
-                                <files>
-                                    <file>${main.basedir}/build/maven.properties</file>
-                                </files>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.6</version>
-                    <executions>
-                        <execution>
-                            <id>Drop DB Before Unit and Repository Tests</id>
-                            <phase>process-test-classes</phase>
-                            <configuration>
-                                <target>
-                                    <echo message="Dropping DBs: START"/>
-                                    <exec executable="curl">
-                                        <arg value="-s"/>
-                                        <arg value="-S"/>
-                                        <arg value="-X"/>
-                                        <arg value="DELETE"/>
-                                        <arg value="http://${db.server}:${db.port}/${db.name.ananya.care}"/>
-                                        <arg value="http://${db.server}:${db.port}/${db.name.motech-scheduletracking}"/>
-                                    </exec>
-                                    <echo message="Dropping DB: END"/>
-                                </target>
-                            </configuration>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>sql-maven-plugin</artifactId>
                     <version>1.5</version>
-
-                    <dependencies>
-                        <!-- specify the dependent jdbc driver here -->
-                        <dependency>
-                            <groupId>postgresql</groupId>
-                            <artifactId>postgresql</artifactId>
-                            <version>9.1-901.jdbc4</version>
-                        </dependency>
-                    </dependencies>
-
-                    <!-- common configuration shared by all executions -->
-                    <configuration>
-                        <driver>org.postgresql.Driver</driver>
-                        <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
-                        <username>${postgres.other.user}</username>
-                        <password>${postgres.other.password}</password>
-                        <!--all executions are ignored if -Dmaven.test.skip=true-->
-                        <skip>${maven.test.skip}</skip>
-                    </configuration>
-
-                    <executions>
-                        <execution>
-                            <id>drop-quartz-db</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>execute</goal>
-                            </goals>
-                            <configuration>
-                                <!-- need another database to drop the targeted one -->
-                                <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
-                                <autocommit>true</autocommit>
-                                <sqlCommand>drop database ${postgres.db}</sqlCommand>
-                                <!-- ignore error when database is not available -->
-                                <onError>continue</onError>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>create-quartz-db</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>execute</goal>
-                            </goals>
-                            <configuration>
-                                <!-- need another database to drop the targeted one -->
-                                <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
-                                <username>${postgres.other.user}</username>
-                                <password>${postgres.other.password}</password>
-                                <autocommit>true</autocommit>
-                                <sqlCommand>create database ${postgres.db}</sqlCommand>
-                                <!-- ignore error when database is not available -->
-                                <onError>abort</onError>
-                            </configuration>
-                        </execution>
-
-                        <execution>
-                            <id>create-schema</id>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>execute</goal>
-                            </goals>
-                            <configuration>
-                                <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
-                                <username>${postgres.user}</username>
-                                <password>${postgres.password}</password>
-                                <autocommit>true</autocommit>
-                                <srcFiles>
-                                    <srcFile>../build/sql/tables_postgres.sql</srcFile>
-                                </srcFiles>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <outputDirectory/>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>-XX:MaxPermSize=1024M</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${main.basedir}/build/maven.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Clear ActiveMQ Before Integration Tests</id>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Clearing ActiveMQ Queues: START"/>
+                                <exec executable="sh">
+                                    <arg value="${main.basedir}/build/deleteQueue.sh"/>
+                                    <arg value="${activemq.host}:${activemq.port}"/>
+                                    <arg value="${activemq.queue.name}"/>
+                                </exec>
+                                <echo message="Clearing ActiveMQ Queues: END"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Clear Couchdb Before Integration Tests</id>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Clearing Couchdb: START"/>
+                                <exec executable="sh">
+                                    <arg value="${main.basedir}/build/deleteCouchDb.sh"/>
+                                    <arg value="${db.server}:${db.port}"/>
+                                    <arg value="${db.name}"/>
+                                </exec>
+                                <echo message="Clearing Couchdb: END"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+
+                <dependencies>
+                    <!-- specify the dependent jdbc driver here -->
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>9.1-901.jdbc4</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- common configuration shared by all executions -->
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
+                    <username>${postgres.other.user}</username>
+                    <password>${postgres.other.password}</password>
+                    <!--all executions are ignored if -Dmaven.test.skip=true-->
+                    <skip>${maven.test.skip}</skip>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>drop-quartz-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- need another database to drop the targeted one -->
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>drop database ${postgres.db}</sqlCommand>
+                            <!-- ignore error when database is not available -->
+                            <onError>continue</onError>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-quartz-db</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <!-- need another database to drop the targeted one -->
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}:postgres</url>
+                            <username>${postgres.other.user}</username>
+                            <password>${postgres.other.password}</password>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>create database ${postgres.db}</sqlCommand>
+                            <!-- ignore error when database is not available -->
+                            <onError>abort</onError>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:postgresql://${postgres.server}:${postgres.port}/${postgres.db}</url>
+                            <username>${postgres.user}</username>
+                            <password>${postgres.password}</password>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>../build/sql/tables_postgres.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
@@ -395,21 +448,23 @@
     <profiles>
         <profile>
             <id>DefaultDevProfile</id>
-            <activation><activeByDefault>true</activeByDefault></activation>
-           <build>
-               <plugins>
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-surefire-plugin</artifactId>
-                       <version>2.7.2</version>
-                       <configuration>
-                           <excludes>
-                               <exclude>**/qa/*.java</exclude>
-                           </excludes>
-                       </configuration>
-                   </plugin>
-               </plugins>
-           </build>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.7.2</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/qa/*.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>qae2e</id>
