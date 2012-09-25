@@ -72,7 +72,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
 
         assertEquals(MilestoneType.TT2.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(tt1Taken.plusWeeks(4), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(tt1Taken.plusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(tt1Taken.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class TTIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.TT1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
 
         mother=new MotherBuilder().withCaseId(caseId).withEdd(edd).withTT1(null).withTT2(null).withAlive(false).build();

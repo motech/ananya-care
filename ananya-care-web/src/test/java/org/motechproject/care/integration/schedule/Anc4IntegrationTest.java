@@ -73,7 +73,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.Anc4.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(expectedReferenceDate, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(expectedStartDueDate, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class Anc4IntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.Anc4.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(expectedReferenceDate, enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(expectedStartDueDate, enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(expectedStartLateDate, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(expectedStartLateDate.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

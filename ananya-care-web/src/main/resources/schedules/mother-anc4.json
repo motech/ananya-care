@@ -5,7 +5,7 @@
             "name": "Anc 4",
             "scheduleWindows": {
                 "earliest": ["2 Weeks"],
-                "due": ["91 Days", "2 Weeks"]
+                "due": ["91 Days", "2 Weeks", "2 Weeks"]
             },
             "alerts": [
                 {

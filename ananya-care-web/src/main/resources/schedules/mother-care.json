@@ -5,8 +5,8 @@
             "name": "Mother Care",
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
-                "due": ["275 Days"],
-                "late": ["275 Days", "1 Day"]
+                "due": ["275 Days", "2 Weeks"],
+                "late": ["275 Days", "2 Weeks", "1 Day"]
             },
             "alerts": [
                 {

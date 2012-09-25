@@ -64,7 +64,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.Anc1.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
 
         assertEquals(MilestoneType.Anc2.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(anc1Date.plusDays(30), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(anc1Date.plusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(anc1Date.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
 
     }
 
@@ -106,7 +106,7 @@ public class AncIntegrationTest extends SpringIntegrationTest {
 
         assertEquals(MilestoneType.Anc3.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(anc2FulfillmentDate.plusDays(30), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(anc2FulfillmentDate.plusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(anc2FulfillmentDate.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

@@ -363,7 +363,7 @@ public class CareSchedulesIntegrationTest extends SpringIntegrationTest {
 
         schedule.assertNoAlerts("Mother Care", earliest);
         schedule.assertNoAlerts("Mother Care", due);
-        schedule.assertAlertsStartWith("Mother Care", late, lmp.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusDays(1).toDate());
+        schedule.assertAlertsStartWith("Mother Care", late, lmp.plusDays(PeriodUtil.DAYS_IN_9_MONTHS).plusWeeks(2).plusDays(1).toDate());
         schedule.assertNoAlerts("Mother Care", max);
         visualization.outputTo("mother-care.html", 2);
     }

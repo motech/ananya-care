@@ -72,6 +72,6 @@ public class MotherCareIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.MotherCare.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd.plusDays(1), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2).plusDays(1), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 }

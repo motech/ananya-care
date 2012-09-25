@@ -64,7 +64,7 @@ public class TTBoosterIntegrationTest extends SpringIntegrationTest {
         assertEquals(MilestoneType.TTBooster.toString(), enrollment.getCurrentMilestoneName());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getReferenceDateTime().withTimeAtStartOfDay());
         assertEquals(edd.minusDays(PeriodUtil.DAYS_IN_9_MONTHS), enrollment.getStartOfDueWindow().withTimeAtStartOfDay());
-        assertEquals(edd, enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
+        assertEquals(edd.plusWeeks(2), enrollment.getStartOfLateWindow().withTimeAtStartOfDay());
     }
 
     @Test

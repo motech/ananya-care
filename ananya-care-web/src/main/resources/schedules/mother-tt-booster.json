@@ -5,7 +5,7 @@
             "name": "TT Booster",
             "scheduleWindows": {
                 "earliest": ["0 Weeks"],
-                "due": ["274 Days"]
+                "due": ["274 Days", "2 Weeks"]
             },
             "alerts": [
                 {
