@@ -32,4 +32,9 @@ public class PeriodUtil {
         String scheduleOffset = ananyaCareProperties.getProperty("schedule.offset");
         return Period.parse(scheduleOffset, periodFormatter);
     }
+
+    public Period getMotherVaccinationExtensionPeriod(){
+        String motherVaccinationExtensionPeriod = ananyaCareProperties.getProperty("mother.vaccination.extension.period");
+        return Period.parse(motherVaccinationExtensionPeriod, periodFormatter);
+    }
 }
