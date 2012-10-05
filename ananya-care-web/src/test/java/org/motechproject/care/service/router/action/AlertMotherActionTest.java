@@ -11,7 +11,6 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.care.service.util.PeriodUtil;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
 import org.motechproject.scheduletracking.api.domain.Milestone;
@@ -39,8 +38,6 @@ public class AlertMotherActionTest {
     private AllCareCaseTasks allCareCaseTasks;
     @Mock
     private Properties ananyaCareProperties;
-    @Mock
-    private PeriodUtil periodUtil;
 
     private AlertMotherAction alertMotherAction;
 
@@ -48,7 +45,7 @@ public class AlertMotherActionTest {
     @Before
     public void setUp() {
         initMocks(this);
-        this.alertMotherAction = new AlertMotherAction(allMothers, commcareCaseGateway, allCareCaseTasks, ananyaCareProperties, periodUtil);
+        this.alertMotherAction = new AlertMotherAction(allMothers, commcareCaseGateway, allCareCaseTasks, ananyaCareProperties);
     }
 
     @Test
@@ -129,7 +126,7 @@ public class AlertMotherActionTest {
     }
 
     @Test
-    public void shouldComputeCorrectExpiryDate() {
+    public void shouldHandleWhenExpiryDateIsBeyondEDDBeforeSendingToGateway() {
         String scheduleName = "TT Vaccination";
         String motherCaseId = "0A8MF30IJWI0FJW3JFW0J0W3A8";
         String caseName = "TT 1";
@@ -139,8 +136,6 @@ public class AlertMotherActionTest {
         DateTime now = DateTime.now();
         DateTime edd = now.plusMonths(2);
         DateTime startScheduleDate = edd.minusMonths(8);
-        
-        
 
         Milestone milestone = new Milestone(caseName, null, months(9), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startScheduleDate);
@@ -148,8 +143,6 @@ public class AlertMotherActionTest {
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
-        Period vaccinationExtensionPeriod = Period.weeks(2);
-        when(periodUtil.getMotherVaccinationExtensionPeriod()).thenReturn(vaccinationExtensionPeriod);
         String commCareUrl = "commCareUrl";
         String motechUserId = "motechUserId";
         when(ananyaCareProperties.getProperty("commcare.hq.url")).thenReturn(commCareUrl);
@@ -161,7 +154,7 @@ public class AlertMotherActionTest {
         verify(commcareCaseGateway).submitCase(eq(commCareUrl), argumentCaptor.capture());
         CaseTask task = argumentCaptor.getValue();
 
-        assertEquals(edd.plus(vaccinationExtensionPeriod).toString("yyyy-MM-dd"), task.getDateExpires());
+        assertEquals(edd.toString("yyyy-MM-dd"), task.getDateExpires());
     }
 
     @Test
