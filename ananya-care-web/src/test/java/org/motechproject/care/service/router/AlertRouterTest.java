@@ -6,16 +6,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.motechproject.scheduletracking.api.domain.Milestone;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 
 import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
+import static org.joda.time.Period.weeks;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.util.DateUtil.newDateTime;
 
 public class AlertRouterTest {
 
@@ -23,8 +26,7 @@ public class AlertRouterTest {
 
     @Mock
     private AlertRoutes alertRoutes;
-    @Mock
-    private MilestoneAlert milestoneAlert;
+
 
     @Before
     public void setup() {
@@ -34,6 +36,11 @@ public class AlertRouterTest {
     @Test
     public void shouldRouteAlertsToAlertRouter() {
         alertRouter = new AlertRouter(alertRoutes, new Properties());
+
+        Milestone milestone = new Milestone("milestonename", weeks(1), weeks(1), weeks(1), weeks(1));
+        DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
+
         MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime());
 
         alertRouter.handle(milestoneEvent.toMotechEvent());
@@ -53,6 +60,11 @@ public class AlertRouterTest {
         Properties ananyaCareProperties = new Properties();
         ananyaCareProperties.setProperty(AlertRouter.IGNORE_VACCINATION_ALERTS_PROPERTY, "true");
         alertRouter = new AlertRouter(alertRoutes, ananyaCareProperties);
+
+        Milestone milestone = new Milestone("milestonename", weeks(1), weeks(1), weeks(1), weeks(1));
+        DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
+
         MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime());
 
         alertRouter.handle(milestoneEvent.toMotechEvent());

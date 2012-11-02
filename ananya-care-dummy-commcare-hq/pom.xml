@@ -6,11 +6,11 @@
     <parent>
         <artifactId>ananya-care</artifactId>
         <groupId>org.motechproject.ananya-care</groupId>
-        <version>0.8-SNAPSHOT</version>
+        <version>0.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ananya-care-dummy-commcare-hq</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Ananya Care Dummy Commcare HQ</name>
 
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.motechproject.ananya-care</groupId>
             <artifactId>ananya-care-web</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
-            <version>1.8.5</version>
+            <version>${quartz.version}</version>
         </dependency>
     </dependencies>
 

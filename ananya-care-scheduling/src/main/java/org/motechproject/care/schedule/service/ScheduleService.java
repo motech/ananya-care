@@ -1,5 +1,6 @@
 package org.motechproject.care.schedule.service;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -12,17 +13,51 @@ import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class ScheduleService {
+    public static final String DEFINITIONS_DIRECTORY_NAME = "/schedules";
+    public static final String JSON_SUFFIX = ".json";
     protected ScheduleTrackingService trackingService;
     Logger logger = Logger.getLogger(ScheduleService.class);
 
     @Autowired
     public ScheduleService(ScheduleTrackingService trackingService) {
         this.trackingService = trackingService;
+        try {
+            registerAllSchedulesJsons();
+        } catch (IOException e) {
+            logger.error("Error occurred while parsing schedule jsons", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void registerAllSchedulesJsons() throws IOException {
+        for (File file : getAllJsonFiles(DEFINITIONS_DIRECTORY_NAME)) {
+            trackingService.add(IOUtils.toString(new FileReader(file)));
+        }
+    }
+
+    private File[] getAllJsonFiles(String definitionsDirectoryName) {
+        String schedulesDirectoryPath = getClass().getResource(definitionsDirectoryName).getPath();
+        File[] files = new File(schedulesDirectoryPath).listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String filename) {
+                return filename.endsWith(JSON_SUFFIX);
+            }
+        });
+
+        if(files == null) {
+            return new File[0];
+        }
+
+        return files;
     }
 
     public void enroll(String caseId, DateTime referenceDate, String scheduleName) {
@@ -88,6 +123,14 @@ public class ScheduleService {
         Time referenceTime = DateUtil.time(now.plusMinutes(2));
         LocalDate enrollmentDate = DateUtil.today();
         Time enrollmentTime = referenceTime;
-        return new EnrollmentRequest(caseId, scheduleName, null, referenceDate, referenceTime, enrollmentDate, enrollmentTime, null, null);
+        EnrollmentRequest enrollmentRequest = new EnrollmentRequest();
+        enrollmentRequest.setExternalId(caseId);
+        enrollmentRequest.setScheduleName(scheduleName);
+        enrollmentRequest.setReferenceDate(referenceDate);
+        enrollmentRequest.setReferenceTime(referenceTime);
+        enrollmentRequest.setEnrollmentDate(enrollmentDate);
+        enrollmentRequest.setEnrollmentTime(enrollmentTime);
+
+        return enrollmentRequest;
     }
 }

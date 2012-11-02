@@ -71,6 +71,8 @@ public class VaccinationServiceTest {
     }
 
     private EnrollmentRecord enrollmentRecordForMilestone(String currentMilestoneName) {
-        return new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null);
+        EnrollmentRecord enrollmentRecord = new EnrollmentRecord();
+        enrollmentRecord.setCurrentMilestoneName(currentMilestoneName);
+        return enrollmentRecord;
     }
 }

@@ -11,7 +11,6 @@ import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.testing.utils.BaseUnitTest;
-import org.quartz.utils.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,5 +80,23 @@ public abstract class SpringIntegrationTest extends BaseUnitTest {
 
         List<EnrollmentRecord> enrollmentRecords = trackingService.searchWithWindowDates(query);
         return enrollmentRecords.isEmpty() ? null : enrollmentRecords.get(0);
+    }
+
+    private class Pair {
+        private final String first;
+        private final String second;
+
+        public Pair(String first, String second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public String getFirst() {
+            return first;
+        }
+
+        public String getSecond() {
+            return second;
+        }
     }
 }

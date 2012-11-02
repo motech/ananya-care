@@ -17,13 +17,11 @@ import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.motechproject.util.DateUtil;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -130,7 +128,7 @@ public class ScheduleServiceTest {
     @Test
     public void shouldUnenrollFromScheduleIfEnrolledAndShouldReturnTheLatestUnenrolledRecord() {
         String caseId = "caseId";
-        EnrollmentRecord enrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "myMilestone", null, null, null, null, null, null, null);
+        EnrollmentRecord enrollmentRecord = enrollmentRecord("caseId", "scheduleName", "myMilestone");
 
         when(trackingService.getEnrollment(caseId,scheduleName)).thenReturn(enrollmentRecord);
         EnrollmentRecord record = schedulerService.unenroll(caseId, scheduleName);
@@ -148,7 +146,7 @@ public class ScheduleServiceTest {
     @Test
     public void shouldUnenrollFromScheduleIfEnrolledAndShouldReturnTheAnyEnrollmentRecord() {
         String caseId = "caseId";
-        EnrollmentRecord oldDefaultedEnrollmentRecord = new EnrollmentRecord("caseId", "scheduleName", "myMilestone", null, null, null, null, null, null, null);
+        EnrollmentRecord oldDefaultedEnrollmentRecord = enrollmentRecord("caseId", "scheduleName", "myMilestone");
 
         when(trackingService.getEnrollment(caseId,scheduleName)).thenReturn(null);
         when(trackingService.search(Matchers.<EnrollmentsQuery>any())).thenReturn(Arrays.asList(oldDefaultedEnrollmentRecord));
@@ -165,12 +163,27 @@ public class ScheduleServiceTest {
     }
 
     private EnrollmentRecord dummyEnrollmentRecord(String currentMilestoneName) {
-        return new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null);
+        return enrollmentRecord(null, null, currentMilestoneName);
     }
 
     private ArrayList<EnrollmentRecord> dummyEnrollmentRecordFromQuery(String currentMilestoneName) {
         ArrayList<EnrollmentRecord> enrollmentRecords = new ArrayList<EnrollmentRecord>();
-        enrollmentRecords.add(new EnrollmentRecord(null, null, currentMilestoneName, null, null, null, null, null, null, null));
+        enrollmentRecords.add(enrollmentRecord(null, null, currentMilestoneName));
         return enrollmentRecords;
+    }
+
+    private EnrollmentRecord enrollmentRecord(String externalId, String scheduleName, String currentMileStoneName) {
+        EnrollmentRecord enrollmentRecord = new EnrollmentRecord();
+        enrollmentRecord.setCurrentMilestoneName(currentMileStoneName);
+        enrollmentRecord.setExternalId(externalId);
+        enrollmentRecord.setScheduleName(scheduleName);
+        return enrollmentRecord;
+    }
+
+    @Test
+    public void shouldRegisterScheduleJsons() {
+        verify(trackingService).add("test-1");
+        verify(trackingService).add("test-2");
+        verifyNoMoreInteractions(trackingService);
     }
 }

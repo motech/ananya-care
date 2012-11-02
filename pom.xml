@@ -8,7 +8,7 @@
     <groupId>org.motechproject.ananya-care</groupId>
     <artifactId>ananya-care</artifactId>
     <packaging>pom</packaging>
-    <version>0.8-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <name>Ananya Care</name>
 
     <modules>
@@ -20,10 +20,12 @@
 
     <properties>
         <jetty.port>9979</jetty.port>
-        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.version>3.1.0.RELEASE</spring.version>
+        <httpcomponents.version>4.1.2</httpcomponents.version>
+        <quartz.version>2.1.5</quartz.version>
         <release.version>${version}</release.version>
-        <motech.version>0.10.4</motech.version>
-        <motech.contrib.version>0.8-SNAPSHOT</motech.contrib.version>
+        <motech.version>0.12.5</motech.version>
+        <motech.contrib.version>0.9-SNAPSHOT</motech.contrib.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <db.server>localhost</db.server>
@@ -158,8 +160,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -424,25 +426,47 @@
         </dependency>
         <dependency>
             <groupId>org.ektorp</groupId>
-            <artifactId>org.ektorp</artifactId>
-            <version>1.1.1</version>
+            <artifactId>org.ektorp.spring</artifactId>
+            <version>1.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.ektorp</groupId>
             <artifactId>org.ektorp.spring</artifactId>
-            <version>1.1.1</version>
+            <version>1.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
-            <groupId>org.motechproject.contrib-ananya-care</groupId>
-            <artifactId>motech-common</artifactId>
-            <version>${motech.contrib.version}</version>
-        </dependency>
-
     </dependencies>
 
     <profiles>
@@ -481,7 +505,7 @@
                                     <goal>verify</goal>
                                 </goals>
                                 <configuration>
-                                    <argLine>-XX:MaxPermSize=1024M</argLine>
+                                    <!--<argLine>-XX:MaxPermSize=1024M -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000</argLine>-->
                                     <includes>
                                         <include>**/qa/*.java</include>
                                     </includes>

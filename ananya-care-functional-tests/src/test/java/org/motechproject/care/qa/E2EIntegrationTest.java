@@ -13,9 +13,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.motechproject.care.domain.Client;
 import org.motechproject.care.utils.DbUtils;
+import org.motechproject.care.utils.Pair;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
-import org.quartz.utils.Pair;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

@@ -1,5 +1,6 @@
 package org.motechproject.care.service.router;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -8,16 +9,17 @@ import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
 import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.service.router.action.*;
+import org.motechproject.scheduletracking.api.domain.Milestone;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.domain.WindowName;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 
+import static org.joda.time.Period.weeks;
 import static org.mockito.Matchers.any;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.motechproject.util.DateUtil.newDateTime;
 
 public class AlertRoutesTest {
-    @Mock
-    private MilestoneAlert milestoneAlert;
     @Mock
     private AlertChildAction alertChildAction;
     @Mock
@@ -75,6 +77,10 @@ public class AlertRoutesTest {
 
     @Test(expected = NoRoutesMatchException.class)
     public void shouldThrowExceptionIfNoRouteFound() {
+        Milestone milestone = new Milestone("milestonename", weeks(1), weeks(1), weeks(1), weeks(1));
+        DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
+
         MilestoneEvent milestoneEvent = new MilestoneEvent(null, "random", milestoneAlert, "random", null);
         alertRoutes.route(milestoneEvent);
     }
@@ -83,6 +89,10 @@ public class AlertRoutesTest {
         verifyWasCalledFor(scheduleName, alertClientAction, null);
     }
     private void verifyWasCalledFor(String scheduleName, Action alertClientAction, String windowName) {
+        Milestone milestone = new Milestone("milestonename", weeks(1), weeks(1), weeks(1), weeks(1));
+        DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
+        MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
+
         MilestoneEvent milestoneEvent = new MilestoneEvent(null, scheduleName, milestoneAlert, windowName, null);
         alertRoutes.route(milestoneEvent);
         Mockito.verify(alertClientAction).invoke(any(MilestoneEvent.class));
