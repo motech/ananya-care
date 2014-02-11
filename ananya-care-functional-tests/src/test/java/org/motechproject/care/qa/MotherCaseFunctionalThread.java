@@ -16,7 +16,7 @@ import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.quartz.SchedulerException;
 import org.springframework.web.client.RestTemplate;
 

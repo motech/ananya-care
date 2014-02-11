@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AllCareCaseTasksTest extends SpringIntegrationTest {

@@ -8,13 +8,11 @@
         <version>0.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>0.9-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <artifactId>ananya-care-scheduling</artifactId>
-    <name>Ananya Care Scheduling</name>
 
     <properties>
         <main.basedir>${project.basedir}/..</main.basedir>
+	    <motech.version>0.21.1</motech.version>
     </properties>
 
     <build>
@@ -31,11 +29,10 @@
         </plugins>
     </build>
 
-
     <dependencies>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
+            <artifactId>motech-platform-commons-date</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -54,11 +51,6 @@
                     <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject.delivery-ananya-care</groupId>
-            <artifactId>motech-schedule-testing</artifactId>
-            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>

@@ -31,7 +31,7 @@ public class Opv0ExpiryActionTest {
         String caseId = "caseID";
         Child child = new Child();
         child.setCaseId(caseId);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null, null);
         when(allChildren.findByCaseId(caseId)).thenReturn(child);
         opv0ExpiryAction.invoke(milestoneEvent);
         verify(opv0Service).close(child);

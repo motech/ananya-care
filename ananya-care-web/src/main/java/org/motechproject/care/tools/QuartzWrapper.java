@@ -5,7 +5,15 @@ import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.constants.EventDataKeys;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
-import org.quartz.*;
+
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerKey;
+import org.quartz.TriggerUtils;
 import org.quartz.impl.calendar.BaseCalendar;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.OperableTrigger;
@@ -24,17 +32,14 @@ public class QuartzWrapper {
     private Scheduler scheduler;
     private ScheduleTrackingService trackingService;
 
-
     @Autowired
-    public QuartzWrapper(SchedulerFactoryBean schedulerFactoryBean,ScheduleTrackingService trackingService) {
+    public QuartzWrapper(SchedulerFactoryBean schedulerFactoryBean, ScheduleTrackingService trackingService) {
         this.scheduler = schedulerFactoryBean.getScheduler();
         this.trackingService = trackingService;
-
     }
 
     public AlertDetails checkQuartzQueueForNextAlertsForThisSchedule(String externalId, String scheduleName) throws SchedulerException, IOException {
         AlertDetails nextAlertDetails = new NullAlertDetails();
-
 
         GroupMatcher<TriggerKey> groupMatcher = GroupMatcher.groupEquals("default");
         Set<TriggerKey> triggersInGroup = scheduler.getTriggerKeys(groupMatcher);

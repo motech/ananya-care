@@ -3,7 +3,7 @@ package org.motechproject.commcarehq.service;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.motechproject.commcarehq.domain.AlertDocCase;
 import org.motechproject.commcarehq.repository.AllAlertDocCases;
-import org.motechproject.util.StringUtil;
+import org.motechproject.commons.date.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

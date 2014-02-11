@@ -8,7 +8,9 @@ import org.motechproject.care.service.ChildService;
 import org.motechproject.care.service.MotherService;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ClientExpiryActionTest {
@@ -28,7 +30,7 @@ public class ClientExpiryActionTest {
     public void shouldExpireMotherSchedulesWhenMotherExpired(){
         String caseId = "";
         String scheduleName = ExpirySchedule.MotherCare.getName();
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, scheduleName, null, null, null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, scheduleName, null, null, null, null);
 
         when(motherService.expireCase(caseId)).thenReturn(true);
         clientExpiryAction.invoke(milestoneEvent);
@@ -40,7 +42,7 @@ public class ClientExpiryActionTest {
     public void shouldExpireChildSchedulesWhenChildExpired(){
         String caseId = "";
         String scheduleName = ExpirySchedule.ChildCare.getName();
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, scheduleName, null, null, null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, scheduleName, null, null, null, null);
 
         when(motherService.expireCase(caseId)).thenReturn(false);
         clientExpiryAction.invoke(milestoneEvent);

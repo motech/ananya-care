@@ -31,7 +31,7 @@ public class BcgExpiryActionTest {
         String caseId = "caseID";
         Child child = new Child();
         child.setCaseId(caseId);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null, null);
         when(allChildren.findByCaseId(caseId)).thenReturn(child);
         bcgExpiryAction.invoke(milestoneEvent);
         verify(bcgService).close(child);

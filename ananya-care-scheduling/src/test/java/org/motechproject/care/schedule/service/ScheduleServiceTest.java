@@ -10,12 +10,12 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.schedule.vaccinations.ChildVaccinationSchedule;
-import org.motechproject.model.Time;
+import org.motechproject.commons.date.model.Time;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentRequest;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

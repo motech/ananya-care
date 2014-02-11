@@ -20,7 +20,7 @@ import org.motechproject.care.utils.DummyCareCaseTaskService;
 import org.motechproject.care.utils.SpringIntegrationTest;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;

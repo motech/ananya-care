@@ -2,8 +2,8 @@ package org.motechproject.care.domain;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.joda.time.DateTime;
-import org.motechproject.model.MotechBaseDataObject;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
+import org.motechproject.commons.date.util.DateUtil;
 
 public abstract class Client extends MotechBaseDataObject{
 

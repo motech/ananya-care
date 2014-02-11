@@ -5,7 +5,7 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

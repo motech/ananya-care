@@ -10,15 +10,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ananya-care-dummy-commcare-hq</artifactId>
-    <version>0.9-SNAPSHOT</version>
-    <packaging>war</packaging>
-    <name>Ananya Care Dummy Commcare HQ</name>
 
     <properties>
         <jetty.port>9978</jetty.port>
         <main.basedir>${project.basedir}/..</main.basedir>
         <db.name>dummy-commcare-hq</db.name>
         <activemq.queue.name>DummyQueueForEventsCare</activemq.queue.name>
+	<motech.version>0.21.1</motech.version>
     </properties>
 
     <dependencies>
@@ -34,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-common</artifactId>
+            <artifactId>motech-platform-commons-date</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>

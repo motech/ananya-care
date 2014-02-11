@@ -31,7 +31,7 @@ public class Hep0ExpiryActionTest {
         String caseId = "caseID";
         Child child = new Child();
         child.setCaseId(caseId);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(caseId, null, null, WindowName.late.name(), null, null);
         when(allChildren.findByCaseId(caseId)).thenReturn(child);
         hep0ExpiryAction.invoke(milestoneEvent);
         verify(hep0Service).close(child);

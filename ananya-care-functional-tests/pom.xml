@@ -8,9 +8,6 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>ananya-care-functional-tests</artifactId>
-  <version>0.9-SNAPSHOT</version>
-  <name>Ananya Care Functional Tests</name>
-  <packaging>jar</packaging>
 
     <properties>
         <main.basedir>${project.basedir}/..</main.basedir>
@@ -70,7 +67,6 @@
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>8.0.1.v20110908</version>
                 <configuration>
-                    <webApp>${project.parent.basedir}/ananya-care-web/target/ananya-care-web-${release.version}.war</webApp>
                     <classesDirectory>${project.parent.basedir}/ananya-care-functional-tests/target/test-classes</classesDirectory>
                     <systemProperties>
                         <systemProperty>

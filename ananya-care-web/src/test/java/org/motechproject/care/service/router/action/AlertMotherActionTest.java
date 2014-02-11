@@ -11,12 +11,12 @@ import org.motechproject.care.domain.Mother;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllMothers;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.casexml.domain.CaseTask;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.domain.CaseTask;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 import org.motechproject.scheduletracking.api.domain.Milestone;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.Properties;
 
@@ -60,7 +60,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(0), weeks(36), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule, null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, DateTime.now().plusYears(1), null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
@@ -99,7 +99,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(caseName, weeks(0), weeks(36), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startScheduleDate);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startScheduleDate);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startScheduleDate, null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, startScheduleDate.plusYears(1), null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
@@ -139,7 +139,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(caseName, null, months(9), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startScheduleDate);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startScheduleDate);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startScheduleDate, null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
@@ -172,7 +172,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(milestoneName, months(0), months(9), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule, null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(childCaseId)).thenReturn(client);
@@ -199,7 +199,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(caseName, null, months(9), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startScheduleDate);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now(), null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
@@ -222,7 +222,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(caseName, null, months(9), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startScheduleDate);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now());
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", DateUtil.now(), null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, edd, null, null, null, false, null, null, null, null, null, true);
         when(allMothers.findByCaseId(motherCaseId)).thenReturn(client);
@@ -243,7 +243,7 @@ public class AlertMotherActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(0), weeks(36), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(motherCaseId, scheduleName, milestoneAlert, "due", startOfSchedule, null);
 
         Mother client = new Mother(motherCaseId, null, flwId, motherName, groupId, DateTime.now().plusYears(1), null, null, null, false, null, null, null, null, null, true);
         client.setClosedByCommcare(true);

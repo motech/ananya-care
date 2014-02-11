@@ -12,12 +12,12 @@ import org.motechproject.care.domain.Child;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.request.CaseType;
-import org.motechproject.casexml.domain.CaseTask;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.domain.CaseTask;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 import org.motechproject.scheduletracking.api.domain.Milestone;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.Properties;
 
@@ -63,7 +63,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(15), weeks(20), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -104,7 +104,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(15), weeks(20), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -143,7 +143,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(5), weeks(40), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -171,7 +171,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, months(20), months(10), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -199,7 +199,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(110), weeks(10), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -223,7 +223,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, months(9), months(15), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, startOfSchedule);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", startOfSchedule, null);
 
         Child client = new Child(childCaseId, null, flwId,childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         when(allChildren.findByCaseId(childCaseId)).thenReturn(client);
@@ -246,7 +246,7 @@ public class AlertChildActionTest {
 
         Milestone milestone = new Milestone(milestoneName, weeks(15), weeks(20), null, null);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, dob);
-        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(childCaseId, scheduleName, milestoneAlert, "due", dob, null);
 
         Child client = new Child(childCaseId, null, flwId, childName, groupId, dob, null, null, null, motherCaseId, null, null, null, null,null,null,null,null,null,null,null,null,null,true);
         client.setClosedByCommcare(true);

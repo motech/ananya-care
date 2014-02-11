@@ -8,7 +8,7 @@ import org.motechproject.care.request.CaseType;
 import org.motechproject.care.schedule.service.MilestoneType;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.commcarehq.domain.AlertDocCase;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.HashMap;
 import java.util.Properties;

@@ -12,16 +12,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Mother;
 import org.motechproject.care.request.CareCase;
-import org.motechproject.casexml.builder.ResponseMessageBuilder;
-import org.motechproject.casexml.exception.CaseParserException;
-import org.motechproject.casexml.parser.CommcareCaseParser;
-import org.motechproject.casexml.service.exception.CaseException;
+import org.motechproject.care.builder.ResponseMessageBuilder;
+import org.motechproject.care.exception.CaseParserException;
+import org.motechproject.care.parser.CommcareCaseParser;
+import org.motechproject.care.service.exception.CaseException;
 import org.springframework.http.HttpEntity;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)

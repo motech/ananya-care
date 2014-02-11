@@ -3,7 +3,7 @@ package org.motechproject.care.service;
 import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

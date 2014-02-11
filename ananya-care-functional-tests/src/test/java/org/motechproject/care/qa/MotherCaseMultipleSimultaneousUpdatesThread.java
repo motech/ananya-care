@@ -9,7 +9,7 @@ import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.tools.QuartzWrapper;
 import org.motechproject.care.utils.DbUtils;
 import org.motechproject.care.utils.StringTemplateHelper;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Properties;

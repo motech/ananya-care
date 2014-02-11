@@ -24,8 +24,7 @@
         <httpcomponents.version>4.1.2</httpcomponents.version>
         <quartz.version>2.1.5</quartz.version>
         <release.version>${version}</release.version>
-        <motech.version>0.12.5</motech.version>
-        <motech.contrib.version>0.9-SNAPSHOT</motech.contrib.version>
+        <motech.version>0.21.1</motech.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <db.server>localhost</db.server>
@@ -466,11 +465,6 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject.contrib-ananya-care</groupId>
-            <artifactId>motech-web-utils</artifactId>
-            <version>${motech.contrib.version}</version>
         </dependency>
     </dependencies>
 

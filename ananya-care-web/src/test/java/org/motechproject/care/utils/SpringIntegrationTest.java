@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.care.service.util.PeriodUtil;
-import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.scheduletracking.api.domain.EnrollmentStatus;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
 import org.motechproject.scheduletracking.api.service.EnrollmentsQuery;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath*:applicationContext.xml")
+@ContextConfiguration("classpath*:META-INF/motech/*.xml")
 public abstract class SpringIntegrationTest extends BaseUnitTest {
 
     @Qualifier("ananyaCareDbConnector")

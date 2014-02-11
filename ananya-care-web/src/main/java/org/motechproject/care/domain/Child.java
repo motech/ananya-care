@@ -5,7 +5,7 @@ import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.service.util.NullAwareBeanUtilsBean;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 @TypeDiscriminator("doc.type == 'Child'")
 public class Child extends Client {

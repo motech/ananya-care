@@ -5,7 +5,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.ektorp.support.TypeDiscriminator;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Client;
-import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 
 @TypeDiscriminator("doc.type == 'AlertDocCase'")
 public class AlertDocCase extends MotechBaseDataObject {

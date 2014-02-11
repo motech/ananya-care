@@ -5,7 +5,7 @@ import org.ektorp.ViewQuery;
 import org.ektorp.support.GenerateView;
 import org.joda.time.DateTime;
 import org.motechproject.care.domain.Mother;
-import org.motechproject.dao.MotechBaseRepository;
+import org.motechproject.commons.couchdb.dao.MotechBaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;

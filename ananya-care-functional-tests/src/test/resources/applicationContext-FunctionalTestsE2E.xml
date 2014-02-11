@@ -7,12 +7,10 @@
                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-
     <context:spring-configured/>
     <context:annotation-config/>
 
-
-    <import resource="classpath:applicationContext-Web.xml"/>
+    <import resource="classpath:META-INF/motech/applicationAnanyaCareTest.xml"/>
 
     <util:properties id="quartzProperties" location="classpath:quartzQA.properties"/>
 

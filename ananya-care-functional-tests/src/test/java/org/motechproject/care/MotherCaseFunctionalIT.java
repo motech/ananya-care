@@ -12,7 +12,7 @@ import org.motechproject.care.schedule.vaccinations.ExpirySchedule;
 import org.motechproject.care.schedule.vaccinations.MotherVaccinationSchedule;
 import org.motechproject.care.utils.StringTemplateHelper;
 import org.motechproject.scheduletracking.api.service.EnrollmentRecord;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 

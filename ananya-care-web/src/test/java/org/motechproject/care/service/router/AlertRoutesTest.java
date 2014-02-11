@@ -17,7 +17,7 @@ import org.motechproject.scheduletracking.api.events.MilestoneEvent;
 import static org.joda.time.Period.weeks;
 import static org.mockito.Matchers.any;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.util.DateUtil.newDateTime;
+import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
 public class AlertRoutesTest {
     @Mock
@@ -81,7 +81,7 @@ public class AlertRoutesTest {
         DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
 
-        MilestoneEvent milestoneEvent = new MilestoneEvent(null, "random", milestoneAlert, "random", null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(null, "random", milestoneAlert, "random", null, null);
         alertRoutes.route(milestoneEvent);
     }
 
@@ -93,7 +93,7 @@ public class AlertRoutesTest {
         DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
 
-        MilestoneEvent milestoneEvent = new MilestoneEvent(null, scheduleName, milestoneAlert, windowName, null);
+        MilestoneEvent milestoneEvent = new MilestoneEvent(null, scheduleName, milestoneAlert, windowName, null, null);
         alertRoutes.route(milestoneEvent);
         Mockito.verify(alertClientAction).invoke(any(MilestoneEvent.class));
         initMocks(this);

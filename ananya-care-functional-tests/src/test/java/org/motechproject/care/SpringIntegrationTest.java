@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.motechproject.care.utils.Pair;
-import org.motechproject.model.MotechBaseDataObject;
+import org.motechproject.commons.couchdb.model.MotechBaseDataObject;
 import org.motechproject.scheduletracking.api.service.ScheduleTrackingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +22,6 @@ public abstract class SpringIntegrationTest {
     @Qualifier("ananyaCareDbConnector")
     @Autowired
     protected CouchDbConnector ananyaCareDbConnector;
-
 
     @Qualifier("ananyaCareProperties")
     @Autowired

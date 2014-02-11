@@ -6,10 +6,10 @@ import org.motechproject.care.domain.Client;
 import org.motechproject.care.domain.Window;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.schedule.service.MilestoneType;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 import org.motechproject.scheduletracking.api.domain.MilestoneAlert;
 import org.motechproject.scheduletracking.api.events.MilestoneEvent;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 
 import java.util.Properties;
 import java.util.UUID;

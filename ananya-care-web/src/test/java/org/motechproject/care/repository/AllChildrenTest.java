@@ -7,7 +7,7 @@ import org.motechproject.care.domain.Child;
 import org.motechproject.care.request.CaseType;
 import org.motechproject.care.utils.CaseUtils;
 import org.motechproject.care.utils.SpringIntegrationTest;
-import org.motechproject.util.DateUtil;
+import org.motechproject.commons.date.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static junit.framework.Assert.*;

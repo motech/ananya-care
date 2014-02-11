@@ -18,7 +18,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.motechproject.util.DateUtil.newDateTime;
+import static org.motechproject.commons.date.util.DateUtil.newDateTime;
 
 public class AlertRouterTest {
 
@@ -41,7 +41,7 @@ public class AlertRouterTest {
         DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
 
-        MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime());
+        MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime(), null);
 
         alertRouter.handle(milestoneEvent.toMotechEvent());
 
@@ -65,7 +65,7 @@ public class AlertRouterTest {
         DateTime referenceDateTime = newDateTime(2000, 1, 1, 0, 0, 0);
         MilestoneAlert milestoneAlert = MilestoneAlert.fromMilestone(milestone, referenceDateTime);
 
-        MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime());
+        MilestoneEvent milestoneEvent = new MilestoneEvent("myExternalId", "myScheduleName", milestoneAlert, "myWindow", new DateTime(), null);
 
         alertRouter.handle(milestoneEvent.toMotechEvent());
         verify(alertRoutes, never()).route(any(MilestoneEvent.class));

@@ -9,15 +9,18 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
-import org.motechproject.casexml.domain.CaseTask;
-import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.care.domain.CaseTask;
+import org.motechproject.care.gateway.CommcareCaseGateway;
 
 import java.util.Properties;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CareCaseTaskServiceTest {
