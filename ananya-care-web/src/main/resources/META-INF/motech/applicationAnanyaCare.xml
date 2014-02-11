@@ -9,32 +9,10 @@
 
     <mvc:annotation-driven/>
 
-    <import resource="classpath:applicationContext-commcare-gateway.xml"/>
+    <import resource="classpath:applicationContext-Scheduling.xml"/>
 
-    <!-- get a settings instance to store your module's properties -->
-    <bean id="ananyaCareSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
-        <property name="moduleName" value="ananya-care-web"/>
-        <property name="configFiles">
-            <list>
-                <value>classpath:ananyaCare.properties</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="httpAgent" class="org.ektorp.spring.HttpClientFactoryBean">
-        <property name="properties" ref="couchdbProperties"/>
-    </bean>
-
-    <bean id="ananyaCareDbInstance" class="org.ektorp.impl.StdCouchDbInstance">
-        <constructor-arg>
-
-        </constructor-arg>
-    </bean>
-
-    <bean id="ananyaCareDbConnector" class="org.ektorp.CouchDbConnector">
-        <constructor-arg value="ananya-care"/>
-        <constructor-arg ref="ananyaCareDbInstance"/>
-    </bean>
+    <context:component-scan base-package="org.motechproject.care"/>
+    <context:component-scan base-package="org.motechproject.http"/>
 
     <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.VaccinationProcessor">
         <constructor-arg>

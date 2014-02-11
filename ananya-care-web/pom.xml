@@ -159,14 +159,14 @@
                         <Import-Package>
                             org.motechproject.server.config;version=${motech.version},
                             org.motechproject.server.config.service;version=${motech.version},
-			                org.motechproject.event.metrics;version=${motech.version},
-			                org.motechproject.event.metrics.impl;version=${motech.version}
-			                org.motechproject.event.listener;version=${motech.version},
+                            org.motechproject.event.metrics;version=${motech.version},
+                            org.motechproject.event.metrics.impl;version=${motech.version}
+                            org.motechproject.event.listener;version=${motech.version},
                             org.motechproject.event.listener.annotations;version=${motech.version},
-			                org.motechproject.http.agent.service;version=${motech.version},
-			                org.motechproject.commons.date;version=${motech.version},
-			                org.motechproject.testing.utils;version=${motech.version},
-			                org.motechproject.scheduletracking.api;version=${motech.version},
+                            org.motechproject.http.agent.service;version=${motech.version},
+                            org.motechproject.commons.date;version=${motech.version},
+                            org.motechproject.testing.utils;version=${motech.version},
+                            org.motechproject.scheduletracking.api;version=${motech.version},
                             org.motechproject.osgi.web;version=${motech.version},
                             org.motechproject.commcare.builder;version=${motech.version},
                             org.springframework.orm.hibernate3.annotation,
