@@ -12,7 +12,7 @@
     <name>Ananya Care</name>
 
     <modules>
-        <module>ananya-care-web</module>
+        <module>ananya-care-bundle</module>
         <module>ananya-care-scheduling</module>
         <module>ananya-care-dummy-commcare-hq</module>
         <module>ananya-care-functional-tests</module>

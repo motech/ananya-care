@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>org.motechproject.ananya-care</groupId>
-            <artifactId>ananya-care-web</artifactId>
+            <artifactId>ananya-care-bundle</artifactId>
             <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -51,7 +51,7 @@
         <finalName>ananya-care-dummy-commcare-hq-${release.version}</finalName>
         <testResources>
             <testResource>
-                <directory>../ananya-care-web/src/main/resources</directory>
+                <directory>../ananya-care-bundle/src/main/resources</directory>
             </testResource>
         </testResources>
         <plugins>

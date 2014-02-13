@@ -25,5 +25,5 @@ test-output/
 servers.bat
 src/main/webapp/emulator/*
 .DS_Store
-ananya-care-web/doc/
+ananya-care-bundle/doc/
 ananya-care-scheduling/doc/schedules/*.html
