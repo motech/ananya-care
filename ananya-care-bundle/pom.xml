@@ -42,16 +42,14 @@
             <artifactId>motech-platform-commons-date</artifactId>
             <version>${motech.version}</version>
         </dependency>
-        <!-- to send/receive motech events -->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-http-agent-bundle</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-event</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <!-- to schedule jobs on motech -->
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-http-agent</artifactId>
             <version>${motech.version}</version>
         </dependency>
         <dependency>
@@ -101,7 +99,6 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.stringtemplate</artifactId>
@@ -153,8 +150,6 @@
                         <Context-Path>ananya-care-bundle</Context-Path>
                         <Resource-Path>ananya-care-bundle/resources</Resource-Path>
                         <Import-Package>
-                            !org.motechproject.care.schedule.vaccinations;version=${ananya.version},
-                            !org.motechproject.care.schedule.service;version=${ananya.version},
                             org.motechproject.server.config;version=${motech.version},
                             org.motechproject.server.config.service;version=${motech.version},
                             org.motechproject.event.metrics;version=${motech.version},
@@ -181,6 +176,7 @@
                             !org.apache.commons.io,
                             *
                         </Import-Package>
+                        <Embed-Dependency>ananya-care-scheduling;inline=true</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
