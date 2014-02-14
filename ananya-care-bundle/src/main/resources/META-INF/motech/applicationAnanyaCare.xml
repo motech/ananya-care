@@ -12,7 +12,6 @@
     <import resource="classpath:applicationContext-Scheduling.xml"/>
 
     <context:component-scan base-package="org.motechproject.care"/>
-    <context:component-scan base-package="org.motechproject.http"/>
 
     <bean id="motherVaccinationProcessor" class="org.motechproject.care.service.VaccinationProcessor">
         <constructor-arg>

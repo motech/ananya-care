@@ -21,22 +21,6 @@
     </properties>
 
     <dependencies>
-        <!-- to configure your module properties -->
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-server-config</artifactId>
-            <version>${motech.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>org.springframework.context.support</artifactId>
-                    <groupId>org.springframework</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>com.springsource.slf4j.api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-commons-date</artifactId>
@@ -49,11 +33,6 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-platform-event</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
         </dependency>
@@ -61,18 +40,6 @@
             <groupId>org.quartz-scheduler</groupId>
             <artifactId>quartz</artifactId>
             <version>2.1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
-            <artifactId>motech-testing-utils</artifactId>
-            <version>${motech.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>quartz</groupId>
-                    <artifactId>quartz</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.motechproject.ananya-care</groupId>
@@ -126,6 +93,11 @@
             <version>3.1.0.RELEASE</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.orm</artifactId>
+            <version>3.1.0.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -150,18 +122,10 @@
                         <Context-Path>ananya-care-bundle</Context-Path>
                         <Resource-Path>ananya-care-bundle/resources</Resource-Path>
                         <Import-Package>
-                            org.motechproject.server.config;version=${motech.version},
-                            org.motechproject.server.config.service;version=${motech.version},
-                            org.motechproject.event.metrics;version=${motech.version},
-                            org.motechproject.event.metrics.impl;version=${motech.version}
-                            org.motechproject.event.listener;version=${motech.version},
-                            org.motechproject.event.listener.annotations;version=${motech.version},
-                            !org.motechproject.http.agent.service;version=${motech.version},
-                            !org.motechproject.http.agent.domain;version=${motech.version},
                             org.motechproject.commons.date;version=${motech.version},
-                            !org.motechproject.testing.utils;version=${motech.version},
                             !org.motechproject.scheduletracking.api.*;version=${motech.version},
                             org.motechproject.osgi.web;version=${motech.version},
+                            org.motechproject.scheduler,
                             !org.motechproject.commcare.builder;version=${motech.version},
                             !org.springframework.orm.hibernate3.annotation,
                             org.springframework.aop,
@@ -176,7 +140,10 @@
                             !org.apache.commons.io,
                             *
                         </Import-Package>
-                        <Embed-Dependency>ananya-care-scheduling;inline=true</Embed-Dependency>
+                        <Embed-Dependency>
+                            ananya-care-scheduling;inline=true,
+                            motech-http-agent-bundle;inline=true
+                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
