@@ -56,11 +56,6 @@
         </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
-            <artifactId>motech-scheduletracking-api</artifactId>
-            <version>${motech.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.motechproject</groupId>
             <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
         </dependency>
@@ -106,10 +101,11 @@
             <artifactId>velocity</artifactId>
             <version>1.7</version>
         </dependency>
+
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>stringtemplate</artifactId>
-            <version>3.2</version>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.stringtemplate</artifactId>
+            <version>3.2_1</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -126,11 +122,6 @@
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
             <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -162,19 +153,22 @@
                         <Context-Path>ananya-care-bundle</Context-Path>
                         <Resource-Path>ananya-care-bundle/resources</Resource-Path>
                         <Import-Package>
+                            !org.motechproject.care.schedule.vaccinations;version=${ananya.version},
+                            !org.motechproject.care.schedule.service;version=${ananya.version},
                             org.motechproject.server.config;version=${motech.version},
                             org.motechproject.server.config.service;version=${motech.version},
                             org.motechproject.event.metrics;version=${motech.version},
                             org.motechproject.event.metrics.impl;version=${motech.version}
                             org.motechproject.event.listener;version=${motech.version},
                             org.motechproject.event.listener.annotations;version=${motech.version},
-                            org.motechproject.http.agent.service;version=${motech.version},
+                            !org.motechproject.http.agent.service;version=${motech.version},
+                            !org.motechproject.http.agent.domain;version=${motech.version},
                             org.motechproject.commons.date;version=${motech.version},
-                            org.motechproject.testing.utils;version=${motech.version},
-                            org.motechproject.scheduletracking.api;version=${motech.version},
+                            !org.motechproject.testing.utils;version=${motech.version},
+                            !org.motechproject.scheduletracking.api.*;version=${motech.version},
                             org.motechproject.osgi.web;version=${motech.version},
-                            org.motechproject.commcare.builder;version=${motech.version},
-                            org.springframework.orm.hibernate3.annotation,
+                            !org.motechproject.commcare.builder;version=${motech.version},
+                            !org.springframework.orm.hibernate3.annotation,
                             org.springframework.aop,
                             org.springframework.aop.framework,
                             org.springframework.beans.factory,
@@ -182,12 +176,9 @@
                             net.sf.cglib.proxy,
                             net.sf.cglib.reflect,
                             org.aopalliance.aop,
-                            org.hibernate,
-                            org.hibernate.jdbc,
-                            org.hibernate.proxy,
-                            javassist.util.proxy,
-                            org.apache.commons.dbcp,
                             org.postgresql,
+                            !org.antlr.stringtemplate,
+                            !org.apache.commons.io,
                             *
                         </Import-Package>
                     </instructions>
