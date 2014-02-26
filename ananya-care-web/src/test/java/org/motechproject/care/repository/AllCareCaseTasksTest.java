@@ -60,18 +60,6 @@ public class AllCareCaseTasksTest extends SpringIntegrationTest {
         Assert.assertNull(careCaseTaskFromDb);
     }
 
-    @Test
-    public void shouldNotDeleteCareTaskIfTaskIsOpen() {
-        CareCaseTask careCaseTask = createCareTasks();
-        careCaseTask.setOpen(false);
-        allCareCaseTasks.add(careCaseTask);
-        List<CareCaseTask> careCaseTasks = new ArrayList<CareCaseTask>();
-        careCaseTasks.add(careCaseTask);
-        allCareCaseTasks.deleteDuplicateCareTasksIfOpen(careCaseTasks);
-        CareCaseTask careCaseTaskFromDb = allCareCaseTasks.findByClientCaseIdAndMilestoneName(careCaseTask.getClientCaseId(), careCaseTask.getMilestoneName());
-        Assert.assertNotNull(careCaseTaskFromDb);
-    }
-
     private CareCaseTask createCareTasks() {
         String caseId = CaseUtils.getUniqueCaseId();
         String clientCaseId = CaseUtils.getUniqueCaseId();
