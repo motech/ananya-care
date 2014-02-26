@@ -116,5 +116,9 @@ public class CareCaseTask extends MotechBaseDataObject{
     public void setOpen(Boolean open) {
         isOpen = open;
     }
+
+    public void setCurrentTime(String currentTime) {
+        this.currentTime  = currentTime;
+    }
 }
 

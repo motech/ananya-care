@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,7 @@ public class CareCaseTaskService {
         }
         logger.info(String.format("Sending close case to Commcare for Client Case Id: %s; Milestone Name: %s", clientCaseId, milestoneName));
         careCaseTask.setOpen(false);
+        careCaseTask.setCurrentTime(DateUtil.now().toString());
         allCareCaseTasks.update(careCaseTask);
         String commcareUrl = ananyaCareProperties.getProperty("commcare.hq.url");
         commcareCaseGateway.closeCase(commcareUrl, careCaseTask.toCaseTask());

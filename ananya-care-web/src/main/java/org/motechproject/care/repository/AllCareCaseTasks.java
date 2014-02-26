@@ -22,8 +22,13 @@ public class AllCareCaseTasks extends MotechBaseRepository<CareCaseTask> {
     }
 
     @View(name = "by_clientCaseId_and_milestoneName", map = "function(doc) {if(doc.type == 'CareCaseTask') {emit([doc.clientCaseId, doc.milestoneName]);}}")
-    public CareCaseTask findByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
+    public List<CareCaseTask> findTasksByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
         List<CareCaseTask> careCaseTasks = queryView("by_clientCaseId_and_milestoneName", ComplexKey.of(clientCaseId, milestoneName));
+        return careCaseTasks;
+    }
+
+    public CareCaseTask findByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
+        List<CareCaseTask> careCaseTasks = findTasksByClientCaseIdAndMilestoneName(clientCaseId, milestoneName);
         return careCaseTasks.isEmpty() ? null : careCaseTasks.get(0);
     }
 
@@ -36,4 +41,11 @@ public class AllCareCaseTasks extends MotechBaseRepository<CareCaseTask> {
         }
         return careCaseTasks.get(0);
     }
+
+    public void deleteDuplicateCareTasksIfOpen(List<CareCaseTask> careCaseTasks) {
+        for (CareCaseTask careCaseTask : careCaseTasks) {
+             super.remove(careCaseTask);
+        }
+    }
+
 }

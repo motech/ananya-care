@@ -11,10 +11,12 @@ import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.casexml.domain.CaseTask;
 import org.motechproject.casexml.gateway.CommcareCaseGateway;
+import org.motechproject.util.DateUtil;
 
 import java.util.Properties;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -81,6 +83,8 @@ public class CareCaseTaskServiceTest {
         String milestoneName = "milestoneName";
         CareCaseTask careCaseTask = new CareCaseTask();
         careCaseTask.setOpen(true);
+        String currentTime = DateUtil.now().toString();
+        careCaseTask.setCurrentTime(currentTime);
         when(allCareCaseTasks.findByClientCaseIdAndMilestoneName(clientCaseId, milestoneName)).thenReturn(careCaseTask);
 
         careCaseTaskService.close(clientCaseId, milestoneName);
@@ -89,5 +93,6 @@ public class CareCaseTaskServiceTest {
 
         CareCaseTask value = captor.getValue();
         assertFalse(value.getOpen());
+        assertNotSame(currentTime,careCaseTask.getCurrentTime());
     }
 }
