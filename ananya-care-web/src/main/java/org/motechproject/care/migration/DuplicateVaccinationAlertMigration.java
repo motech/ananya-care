@@ -78,7 +78,7 @@ public class DuplicateVaccinationAlertMigration {
         List<String> caseIds = readFile();
 
         for (String caseId : caseIds) {
-            System.out.println("deleting details for the case Id : " + caseId);
+            logger.info("deleting details for the case Id : " + caseId);
             deleteAndUnEnrollDuplicateVaccinationAlerts(caseId);
 
         }
@@ -91,6 +91,7 @@ public class DuplicateVaccinationAlertMigration {
         List<String> caseIds = new ArrayList<String>();
 
         try {
+            logger.info("Reading from caseIds CSV file ");
             InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("caseIdList.csv");
             bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             line = bufferedReader.readLine();

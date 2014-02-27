@@ -1,6 +1,7 @@
 package org.motechproject.care.migration;
 
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllChildren;
 import org.motechproject.care.repository.AllMothers;
@@ -22,6 +23,7 @@ public class DuplicateVaccinationAlertMigrationController {
     private ScheduleService scheduleService;
     private EnrollmentAlertService enrollmentAlertService;
     private AllEnrollments allEnrollments;
+    Logger logger = Logger.getLogger(DuplicateVaccinationAlertMigrationController.class);
 
 
     @Autowired
@@ -37,6 +39,7 @@ public class DuplicateVaccinationAlertMigrationController {
     @RequestMapping(value = "/deleteDuplicateVaccinations", method = RequestMethod.GET)
     public void deleteDuplicateVaccinationAlerts() {
         DuplicateVaccinationAlertMigration duplicateVaccinationAlertMigration = new DuplicateVaccinationAlertMigration(allCareCaseTasks, scheduleService, allMothers, allChildren, enrollmentAlertService, allEnrollments);
+        logger.info("Starting to load Case Ids from CSV...");
         duplicateVaccinationAlertMigration.loadCaseIdsFromCSVAndDeleteDuplicateTasks();
     }
 }

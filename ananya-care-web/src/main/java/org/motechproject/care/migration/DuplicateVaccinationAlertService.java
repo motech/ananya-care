@@ -1,6 +1,7 @@
 package org.motechproject.care.migration;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.repository.AllCareCaseTasks;
 import org.motechproject.care.repository.AllChildren;
@@ -22,6 +23,7 @@ public class DuplicateVaccinationAlertService {
     private HashMap<String, String> vaccinationScheduleName;
     private List<String> childVaccinations = new ArrayList();
     private List<String> motherVaccinations = new ArrayList();
+    Logger logger = Logger.getLogger(DuplicateVaccinationAlertService.class);
 
 
     public DuplicateVaccinationAlertService(AllMothers allMothers, AllCareCaseTasks allCareCaseTasks, AllChildren allChildren, AllEnrollments allEnrollments, EnrollmentAlertService enrollmentAlertService) {
@@ -95,7 +97,7 @@ public class DuplicateVaccinationAlertService {
         List<CareCaseTask> careCaseTasks;
 
         for (String vaccination : childVaccinations) {
-            System.out.println("deleting details for the case Id for vaccination : " + vaccination);
+            logger.info("deleting details for the child case Id for vaccination : " + vaccination);
             careCaseTasks = allCareCaseTasks.findTasksByClientCaseIdAndMilestoneName(clientCaseID, vaccination);
             careCaseTasks = sortCareCaseTasksBasedOnCurrentTime(careCaseTasks);
             boolean allTasksOpen = false;
@@ -114,6 +116,7 @@ public class DuplicateVaccinationAlertService {
     public void deleteCareTasksForGivenMotherCase(String clientCaseID) {
         List<CareCaseTask> careCaseTasks;
         for (String vaccination : motherVaccinations) {
+            logger.info("deleting details for the mother case Id for vaccination : " + vaccination);
             careCaseTasks = allCareCaseTasks.findTasksByClientCaseIdAndMilestoneName(clientCaseID, vaccination);
             careCaseTasks = sortCareCaseTasksBasedOnCurrentTime(careCaseTasks);
             boolean allTasksOpen = false;
@@ -171,7 +174,7 @@ public class DuplicateVaccinationAlertService {
             for (int i = count; i < careCaseTasks.size(); i++) {
                 careCaseTasksForDelete.add(careCaseTasks.get(i));
             }
-            System.out.println("deleting duplicate care case tasks for the case Id");
+            logger.info("deleting duplicate care case tasks for the case Id");
             allCareCaseTasks.deleteDuplicateCareTasksIfOpen(careCaseTasksForDelete);
             unScheduleAlertTasks(clientCaseID, vaccination);
         }
@@ -181,7 +184,7 @@ public class DuplicateVaccinationAlertService {
         String scheduleName = vaccinationScheduleName.get(vaccination);
         Enrollment activeEnrollment = allEnrollments.getActiveEnrollment(clientCaseID, scheduleName);
         if (activeEnrollment != null) {
-            System.out.println("unschedule AllAlerts for the  Id  " + activeEnrollment.getId());
+           logger.info("unschedule AllAlerts for the  Id  " + activeEnrollment.getId());
             enrollmentAlertService.unscheduleAllAlerts(activeEnrollment);
         }
     }
