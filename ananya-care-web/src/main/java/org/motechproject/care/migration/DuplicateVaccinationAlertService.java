@@ -62,6 +62,9 @@ public class DuplicateVaccinationAlertService {
         childVaccinations.add("OPV 2");
         childVaccinations.add("OPV 3");
         childVaccinations.add("Vita");
+        childVaccinations.add("Measles");
+        childVaccinations.add("DPT Booster");
+        childVaccinations.add("OPV Booster");
     }
 
     private void populateVaccinationScheduleName() {
