@@ -15,6 +15,7 @@ import java.util.*;
 
 public class DuplicateVaccinationAlertService {
 
+    Logger logger = Logger.getLogger(DuplicateVaccinationAlertService.class);
     private AllChildren allChildren;
     private AllMothers allMothers;
     private AllCareCaseTasks allCareCaseTasks;
@@ -23,7 +24,6 @@ public class DuplicateVaccinationAlertService {
     private HashMap<String, String> vaccinationScheduleName;
     private List<String> childVaccinations = new ArrayList();
     private List<String> motherVaccinations = new ArrayList();
-    Logger logger = Logger.getLogger(DuplicateVaccinationAlertService.class);
 
 
     public DuplicateVaccinationAlertService(AllMothers allMothers, AllCareCaseTasks allCareCaseTasks, AllChildren allChildren, AllEnrollments allEnrollments, EnrollmentAlertService enrollmentAlertService) {
@@ -109,10 +109,10 @@ public class DuplicateVaccinationAlertService {
             if (careCaseTasks.size() == careCaseTasksForDelete.size()) {
                 allTasksOpen = true;
             }
-            if(careCaseTasks.size() == 1 && careCaseTasksForDelete.size() == 1 ){
+            if (careCaseTasks.size() == 1 && careCaseTasksForDelete.size() == 1) {
                 deleteAllTasks = false;
             }
-            deleteDuplicateCareCaseTasks(careCaseTasksForDelete, clientCaseID, vaccination, allTasksOpen,deleteAllTasks);
+            deleteDuplicateCareCaseTasks(careCaseTasksForDelete, clientCaseID, vaccination, allTasksOpen, deleteAllTasks);
         }
     }
 
@@ -128,7 +128,7 @@ public class DuplicateVaccinationAlertService {
             if (careCaseTasks.size() == careCaseTasksForDelete.size()) {
                 allTasksOpen = true;
             }
-            if(careCaseTasks.size() == 1 && careCaseTasksForDelete.size() == 1 ){
+            if (careCaseTasks.size() == 1 && careCaseTasksForDelete.size() == 1) {
                 deleteAllTasks = false;
             }
             deleteDuplicateCareCaseTasks(careCaseTasksForDelete, clientCaseID, vaccination, allTasksOpen, deleteAllTasks);
@@ -169,7 +169,7 @@ public class DuplicateVaccinationAlertService {
     }
 
 
-    private void deleteDuplicateCareCaseTasks(List<CareCaseTask> careCaseTasks, String clientCaseID, String vaccination, boolean allTasksOpen,boolean deleteAllTasks) {
+    private void deleteDuplicateCareCaseTasks(List<CareCaseTask> careCaseTasks, String clientCaseID, String vaccination, boolean allTasksOpen, boolean deleteAllTasks) {
         List<CareCaseTask> careCaseTasksForDelete = new ArrayList<CareCaseTask>();
         if (careCaseTasks.size() >= 1 && deleteAllTasks) {
             int count = 0;
@@ -187,7 +187,7 @@ public class DuplicateVaccinationAlertService {
         String scheduleName = vaccinationScheduleName.get(vaccination);
         Enrollment activeEnrollment = allEnrollments.getActiveEnrollment(clientCaseID, scheduleName);
         if (activeEnrollment != null) {
-           logger.info("unschedule AllAlerts for the  Id  " + activeEnrollment.getId());
+            logger.info("un schedule all alerts for the  Id  " + activeEnrollment.getId());
             enrollmentAlertService.unscheduleAllAlerts(activeEnrollment);
         }
     }
