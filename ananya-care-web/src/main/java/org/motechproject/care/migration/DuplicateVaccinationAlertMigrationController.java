@@ -10,6 +10,7 @@ import org.motechproject.scheduletracking.api.repository.AllEnrollments;
 import org.motechproject.scheduletracking.api.service.impl.EnrollmentAlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -24,7 +25,8 @@ public class DuplicateVaccinationAlertMigrationController {
     private EnrollmentAlertService enrollmentAlertService;
     private AllEnrollments allEnrollments;
     Logger logger = Logger.getLogger(DuplicateVaccinationAlertMigrationController.class);
-
+    @Autowired
+    private CloseVaccinationsFix closeVaccinationsFix;
 
     @Autowired
     public DuplicateVaccinationAlertMigrationController(AllCareCaseTasks allCareCaseTasks, ScheduleService scheduleService, AllMothers allMothers, AllChildren allChildren, EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments) {
@@ -35,11 +37,16 @@ public class DuplicateVaccinationAlertMigrationController {
         this.enrollmentAlertService = enrollmentAlertService;
         this.allEnrollments = allEnrollments;
     }
-
-    @RequestMapping(value = "/deleteDuplicateVaccinations", method = RequestMethod.GET)
-    public void deleteDuplicateVaccinationAlerts() {
+    
+    @RequestMapping(value = "/deleteDuplicateVaccinations/{fileName}", method = RequestMethod.GET)
+    public void deleteDuplicateVaccinationAlerts(@PathVariable String fileName) {
         DuplicateVaccinationAlertMigration duplicateVaccinationAlertMigration = new DuplicateVaccinationAlertMigration(allCareCaseTasks, scheduleService, allMothers, allChildren, enrollmentAlertService, allEnrollments);
         logger.info("Starting to load Case Ids from CSV...");
-        duplicateVaccinationAlertMigration.loadCaseIdsFromCSVAndDeleteDuplicateTasks();
+        duplicateVaccinationAlertMigration.loadCaseIdsFromCSVAndDeleteDuplicateTasks(fileName);
+    }
+    
+    @RequestMapping(value="/forceCloseCase/{fileName}" , method = RequestMethod.GET)
+    public void forceCloseCaseTask(@PathVariable String fileName){
+    	closeVaccinationsFix.forceCloseCases(fileName);
     }
 }

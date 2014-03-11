@@ -45,8 +45,8 @@ public class DuplicateVaccinationAlertMigration {
 
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationCareMigrationContext.xml");
-        DuplicateVaccinationAlertMigration duplicateVaccinationAlertMigration = (DuplicateVaccinationAlertMigration) context.getBean("duplicateVaccinationAlertMigration");
-        duplicateVaccinationAlertMigration.loadCaseIdsFromCSVAndDeleteDuplicateTasks();
+//        DuplicateVaccinationAlertMigration duplicateVaccinationAlertMigration = (DuplicateVaccinationAlertMigration) context.getBean("duplicateVaccinationAlertMigration");
+//        duplicateVaccinationAlertMigration.loadCaseIdsFromCSVAndDeleteDuplicateTasks();
     }
 
     /**
@@ -73,48 +73,13 @@ public class DuplicateVaccinationAlertMigration {
         }
     }
 
-    public void loadCaseIdsFromCSVAndDeleteDuplicateTasks() {
+    public void loadCaseIdsFromCSVAndDeleteDuplicateTasks(String fileName) {
 
-        List<String> caseIds = readFile();
-
+    	List<String> caseIds = MigrationUtil.readFile(fileName);
         for (String caseId : caseIds) {
             logger.info("deleting details for the case Id : " + caseId);
             deleteAndUnEnrollDuplicateVaccinationAlerts(caseId);
 
         }
     }
-
-    public List<String> readFile() {
-        BufferedReader bufferedReader = null;
-        String line = "";
-        String cvsSplitBy = ",";
-        List<String> caseIds = new ArrayList<String>();
-
-        try {
-            logger.info("Reading from caseIds CSV file ");
-            InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("caseIdList.csv");
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            line = bufferedReader.readLine();
-            if (line != null) {
-                caseIds = Arrays.asList(line.split(cvsSplitBy));
-            }
-        } catch (FileNotFoundException e) {
-            logger.error("Error occurred while read file containing case ids", e);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            logger.error("Error occurred while read file containing case ids", e);
-            throw new RuntimeException(e);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    logger.error("Error occurred while closing readers and streams", e);
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return caseIds;
-    }
-
 }
