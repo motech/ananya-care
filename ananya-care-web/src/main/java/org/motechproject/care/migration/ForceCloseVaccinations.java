@@ -10,9 +10,9 @@ import org.motechproject.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 @Component
-public class CloseVaccinationsFix {
+public class ForceCloseVaccinations {
 	
-	Logger logger = Logger.getLogger(CloseVaccinationsFix.class);
+	Logger logger = Logger.getLogger(ForceCloseVaccinations.class);
 	@Autowired
 	private CareCaseTaskService careCaseTaskService;
 	

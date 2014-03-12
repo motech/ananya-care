@@ -26,7 +26,7 @@ public class DuplicateVaccinationAlertMigrationController {
     private AllEnrollments allEnrollments;
     Logger logger = Logger.getLogger(DuplicateVaccinationAlertMigrationController.class);
     @Autowired
-    private CloseVaccinationsFix closeVaccinationsFix;
+    private ForceCloseVaccinations forceCloseVaccinations;
 
     @Autowired
     public DuplicateVaccinationAlertMigrationController(AllCareCaseTasks allCareCaseTasks, ScheduleService scheduleService, AllMothers allMothers, AllChildren allChildren, EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments) {
@@ -47,6 +47,6 @@ public class DuplicateVaccinationAlertMigrationController {
     
     @RequestMapping(value="/forceCloseCase/{fileName}" , method = RequestMethod.GET)
     public void forceCloseCaseTask(@PathVariable String fileName){
-    	closeVaccinationsFix.forceCloseCases(fileName);
+    	forceCloseVaccinations.forceCloseCases(fileName);
     }
 }
