@@ -19,7 +19,18 @@ import org.quartz.Trigger;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.matchers.GroupMatcher;
-
+/**
+ * This is a part of fix to migrate the  quartz jobs created using the older version(1.8)
+ * to new jobs using the updated version(2+).
+ * We will declare a scheduler instance by name TestScheduler to read the left over jobs 
+ * as the default scheduler name is set to the TestScheduler when we run the quartz migation 
+ * script for the leftover jobs. Job class MotechScheduledJob path has been changed in the 0.12.6 
+ * and thus the database job details needs to be changed.
+ * 
+ * This migration is triggered by the GET request to the Controller(MigrationController) used to trigger various fix 
+ * on the production.
+ * 
+ * */
 public class MigrateOldJobs {
 	
     private final static Logger logger = Logger.getLogger(MigrateOldJobs.class);
@@ -70,8 +81,9 @@ public class MigrateOldJobs {
         return new MotechEvent(eventType, params);
     }
 
-    /*Start time of the job remains same as the old jobs if the job is scheduled in sometime future.
-    If the job is supposed to run in past, Reschedule the job to run after particular time(@HOUR_INTERVAL)*/
+    /**
+     * Start time of the job remains same as the old jobs if the job is scheduled in sometime future.
+      If the job is supposed to run in past, Reschedule the job to run after particular time(@HOUR_INTERVAL)*/
     public Date getStartDateForTrigger(Trigger trigger){
         Date startDate = trigger.getStartTime();
         if(startDate.before(new Date())){
@@ -91,7 +103,7 @@ public class MigrateOldJobs {
     public JobDetail getJobDetail(Trigger trigger) throws SchedulerException{
 	 return scheduler.getJobDetail(trigger.getJobKey());
     }
-
+	
     public void runMigration() throws SchedulerException{
         logger.info("Starting Scheduler");
         setSchedulertoStandBy();							                 //   To stop the misfire of the old jobs.
