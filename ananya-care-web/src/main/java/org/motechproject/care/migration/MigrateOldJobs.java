@@ -88,7 +88,7 @@ public class MigrateOldJobs {
         Date startDate = trigger.getStartTime();
         if(startDate.before(new Date())){
 	    DateTime startTime = new DateTime().plusHours(HOUR_INTERVAL);
-	    startDate = startTime.plusSeconds(intervalBetweenJobs++).toDate();  //  Interval between two jobs is one second for misfired jobs
+	    startDate = startTime.plusSeconds(intervalBetweenJobs++*3).toDate();  //  Interval between two jobs is one second for misfired jobs
         }
         return startDate;
     }
