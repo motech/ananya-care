@@ -72,9 +72,9 @@ public class DuplicateVaccinationAlertService {
         vaccinationScheduleName.put("Hep 1", "Hepatitis Vaccination");
         vaccinationScheduleName.put("Hep 2", "Hepatitis Vaccination");
         vaccinationScheduleName.put("Hep 3", "Hepatitis Vaccination");
-        vaccinationScheduleName.put("Opv 1", "OPV Vaccination");
-        vaccinationScheduleName.put("Opv 2", "OPV Vaccination");
-        vaccinationScheduleName.put("Opv 3", "OPV Vaccination");
+        vaccinationScheduleName.put("OPV 1", "OPV Vaccination");
+        vaccinationScheduleName.put("OPV 2", "OPV Vaccination");
+        vaccinationScheduleName.put("OPV 3", "OPV Vaccination");
         vaccinationScheduleName.put("DPT 1", "DPT Vaccination");
         vaccinationScheduleName.put("DPT 2", "DPT Vaccination");
         vaccinationScheduleName.put("DPT 3", "DPT Vaccination");
