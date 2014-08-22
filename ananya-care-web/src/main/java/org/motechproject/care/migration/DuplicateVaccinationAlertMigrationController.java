@@ -1,6 +1,8 @@
 package org.motechproject.care.migration;
 
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,9 +34,10 @@ public class DuplicateVaccinationAlertMigrationController {
     Logger logger = Logger.getLogger(DuplicateVaccinationAlertMigrationController.class);
     @Autowired
     private ForceCloseVaccinations forceCloseVaccinations;
-    
     @Autowired
     private MotechSchedulerService motechSchedulerService;
+    @Autowired
+    private OpenTasksForClosedCases openTasksForClosedCases;
     
     @Autowired
     public DuplicateVaccinationAlertMigrationController(AllCareCaseTasks allCareCaseTasks, ScheduleService scheduleService, AllMothers allMothers, AllChildren allChildren, EnrollmentAlertService enrollmentAlertService, AllEnrollments allEnrollments) {
@@ -68,4 +71,11 @@ public class DuplicateVaccinationAlertMigrationController {
 			e.printStackTrace();
 		}
     }
+    
+    @RequestMapping(value="/openTasks" , method = RequestMethod.GET)
+    public void printCaseIds() throws IOException{
+    	openTasksForClosedCases.writeTaskIdsToFile();
+    }
+    
+    
 }

@@ -20,6 +20,13 @@ public class AllCareCaseTasks extends MotechBaseRepository<CareCaseTask> {
     public AllCareCaseTasks(@Qualifier("ananyaCareDbConnector") CouchDbConnector dbCouchDbConnector) {
         super(CareCaseTask.class, dbCouchDbConnector);
     }
+    
+    
+	@View(name = "by_isOpen", map = "function(doc) {if(doc.type == 'CareCaseTask') {emit([doc.isOpen]);}}")
+	public List<CareCaseTask> findAllTasksOpen(boolean val){
+		List<CareCaseTask> careCaseTasks = queryView("by_isOpen",ComplexKey.of(val));
+		return careCaseTasks;
+	}
 
     @View(name = "by_clientCaseId_and_milestoneName", map = "function(doc) {if(doc.type == 'CareCaseTask') {emit([doc.clientCaseId, doc.milestoneName]);}}")
     public List<CareCaseTask> findTasksByClientCaseIdAndMilestoneName(String clientCaseId, String milestoneName) {
