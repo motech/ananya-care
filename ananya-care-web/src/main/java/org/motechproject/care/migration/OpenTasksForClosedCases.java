@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.motechproject.care.domain.CareCaseTask;
 import org.motechproject.care.domain.Child;
 import org.motechproject.care.domain.Client;
@@ -25,6 +26,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OpenTasksForClosedCases {
+	
+	Logger logger = Logger.getLogger(OpenTasksForClosedCases.class);
+	
 	@Autowired
 	private AllCareCaseTasks allCareCaseTasks;
 	@Autowired
@@ -67,6 +71,7 @@ public class OpenTasksForClosedCases {
 			if (task.getOpen() && clientMap.containsKey(task.getClientCaseId())) {
 				String content1 = String.format("%s,", task.getCaseId());
 				bw.write(content1);
+				logger.info("writing task id which is open to csv file.");
 			}
 		}
 		bw.close();
