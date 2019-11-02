@@ -20,7 +20,7 @@
 
     <properties>
         <jetty.port>9979</jetty.port>
-        <spring.version>3.1.0.RELEASE</spring.version>
+        <spring.version>5.2.1.RELEASE</spring.version>
         <httpcomponents.version>4.1.2</httpcomponents.version>
         <quartz.version>2.1.5</quartz.version>
         <release.version>${version}</release.version>
